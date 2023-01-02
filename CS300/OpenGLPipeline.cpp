@@ -18,7 +18,7 @@ void OpenGLPipeline::Init() {
 	
 	mProjectionMatrix = glm::perspective(1.f, 0.75f, 1.f, 100.f);
 
-	model.LoadMesh(std::string("Content/Meshes/sphere_20_face.obj"));
+	model.LoadMesh(std::string("Content/Meshes/suzanne.obj"));
 }
 
 void OpenGLPipeline::PreRender() {

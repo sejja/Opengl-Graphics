@@ -156,10 +156,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Core\ResourceManager.cpp" />
     <ClCompile Include="CS300Parser.cpp" />
     <ClCompile Include="Graphics\Primitives\Shader.cpp" />
     <ClCompile Include="Graphics\Primitives\ShaderProgram.cpp" />
     <ClCompile Include="Renderables.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SDLWindow.cpp" />
     <ClCompile Include="Dependencies\GLM\detail\glm.cpp" />
     <ClCompile Include="Dependencies\STB\stb_vorbis.c" />
@@ -168,6 +170,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Core\Allocator.h" />
+    <ClInclude Include="Core\CommonDefines.h" />
+    <ClInclude Include="Core\ResourceManager.h" />
+    <ClInclude Include="Core\Singleton.h" />
     <ClInclude Include="CS300Parser.h" />
     <ClInclude Include="Dependencies\TinyOBJLoader\tinyobjloader.h" />
     <ClInclude Include="Graphics\Primitives\Color.h" />
@@ -175,6 +181,7 @@
     <ClInclude Include="Graphics\Primitives\ShaderProgram.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Renderables.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="SDLWindow.h" />
     <ClInclude Include="Dependencies\GLEW\Include\eglew.h" />
     <ClInclude Include="Dependencies\GLEW\Include\glew.h" />

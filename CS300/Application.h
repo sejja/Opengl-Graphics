@@ -5,6 +5,7 @@
 #include <type_traits>
 #include "Core/Window.h"
 #include "Core/Pipeline.h"
+#include "Scene.h"
 
 class Application {
 public:
