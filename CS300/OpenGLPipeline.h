@@ -13,8 +13,10 @@ public:
 	void PostRender() override;
 	void Shutdown() override;
 	virtual void SetDimensions(const glm::lowp_u16vec2& dim) override;
+	void AddRenderable(std::weak_ptr<Core::Renderable> renderer);
 
 private:
+	std::vector<std::weak_ptr<Core::Renderable>> renderables;
 	glm::mat4x4 mProjectionMatrix;
 };
 

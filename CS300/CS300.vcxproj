@@ -156,10 +156,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Core\Importers.cpp" />
     <ClCompile Include="Core\ResourceManager.cpp" />
     <ClCompile Include="CS300Parser.cpp" />
     <ClCompile Include="Graphics\Primitives\Shader.cpp" />
     <ClCompile Include="Graphics\Primitives\ShaderProgram.cpp" />
+    <ClCompile Include="Graphics\Primitives\Model.cpp" />
     <ClCompile Include="Renderables.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SDLWindow.cpp" />
@@ -172,6 +174,7 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="Core\Allocator.h" />
     <ClInclude Include="Core\CommonDefines.h" />
+    <ClInclude Include="Core\Importers.h" />
     <ClInclude Include="Core\ResourceManager.h" />
     <ClInclude Include="Core\Singleton.h" />
     <ClInclude Include="CS300Parser.h" />
@@ -179,6 +182,7 @@
     <ClInclude Include="Graphics\Primitives\Color.h" />
     <ClInclude Include="Graphics\Primitives\Shader.h" />
     <ClInclude Include="Graphics\Primitives\ShaderProgram.h" />
+    <ClInclude Include="Graphics\Primitives\Model.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Renderables.h" />
     <ClInclude Include="Scene.h" />

@@ -5,8 +5,6 @@
 #include "Graphics/Primitives/ShaderProgram.h"
 #include "Renderables.h"
 
-static Core::ModelRenderer<Core::GraphicsAPIS::OpenGL> model;
-
 void OpenGLPipeline::Init() {
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
@@ -17,8 +15,6 @@ void OpenGLPipeline::Init() {
 	glDisable(GL_STENCIL_TEST);
 	
 	mProjectionMatrix = glm::perspective(1.f, 0.75f, 1.f, 100.f);
-
-	model.LoadMesh(std::string("Content/Meshes/suzanne.obj"));
 }
 
 void OpenGLPipeline::PreRender() {
@@ -39,7 +35,21 @@ void OpenGLPipeline::Render() {
 	projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 	program.SetShaderUniform("uTransform", &projection);
 	program.SetShaderUniform("uView", &view);
-	model.Render();
+
+	std::vector<std::vector<std::weak_ptr<Core::Renderable>>::iterator> obsoletes;
+	
+	for (auto it = renderables.begin(); it != renderables.end(); ++it) {
+		if (auto renderable = it->lock()) {
+			renderable->Render();
+		}
+		else {
+			obsoletes.push_back(it);
+		}
+	}
+
+	for (auto& x : obsoletes) {
+		renderables.erase(x);
+	}
 }
 
 void OpenGLPipeline::PostRender() {
@@ -50,4 +60,8 @@ void OpenGLPipeline::Shutdown() {
 
 void OpenGLPipeline::SetDimensions(const glm::lowp_u16vec2& dim) {
 	glViewport(0, 0, dim.x, dim.y);
+}
+
+void OpenGLPipeline::AddRenderable(std::weak_ptr<Core::Renderable> renderer) {
+	renderables.push_back(renderer);
 }

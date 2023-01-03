@@ -6,6 +6,7 @@
 #include "Core/Window.h"
 #include "Core/Pipeline.h"
 #include "Scene.h"
+#include "Core/ResourceManager.h"
 
 class Application {
 public:
@@ -21,7 +22,6 @@ public:
 	void Run() override;
 	void SetTickFunction(const std::function<void()>& const tick);
 	void SetDimensions(const glm::lowp_u16vec2& dim);
-private:
 	WINDOW mWindow;
 	PIPELINE mPipe;
 	std::function<void()> mTick;
@@ -32,6 +32,7 @@ GraphicApplication<WINDOW, PIPELINE>::GraphicApplication() {
 	static_assert(std::is_base_of<Core::Window, WINDOW>::value);
 	static_assert(std::is_base_of<Core::Pipeline, PIPELINE>::value);
 	mWindow.Create();
+	GContent->Initialize();
 	mPipe.Init();
 }
 
