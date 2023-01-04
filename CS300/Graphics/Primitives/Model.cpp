@@ -2,8 +2,21 @@
 #include <tinyobjloader.h>
 #include <glew.h>
 #include <iostream>
+#include "glm/glm.hpp"
+
+Model::~Model() {
+	Clear();
+}
+
+void Model::Clear() {
+	glDeleteVertexArrays(1, &mVAO);
+	glDeleteBuffers(1, &mVBO);
+	glDeleteBuffers(1, &mIBO);
+}
 
 void Model::LoadFromFile(const std::string& inputfile) {
+	Clear();
+	
 	tinyobj::attrib_t attrib;
 	std::vector<tinyobj::shape_t> shapes;
 	std::vector<tinyobj::material_t> materials;
@@ -27,12 +40,6 @@ void Model::LoadFromFile(const std::string& inputfile) {
 	if (!ret) {
 		exit(1);
 	}
-
-	glGenVertexArrays(1, &mVAO);
-	glGenBuffers(1, &mVBO);
-	glGenBuffers(1, &mIBO);
-
-	glBindVertexArray(mVAO);
 
 	// Loop over shapes
 	for (size_t s = 0; s < shapes.size(); s++) {
@@ -84,6 +91,16 @@ void Model::LoadFromFile(const std::string& inputfile) {
 			shapes[s].mesh.material_ids[f];
 		}
 	}
+
+	UploadToGPU(vertices, indexes);
+}
+
+void Model::UploadToGPU(std::vector<float>& vertices, std::vector<int>& indexes) {
+	glGenVertexArrays(1, &mVAO);
+	glGenBuffers(1, &mVBO);
+	glGenBuffers(1, &mIBO);
+
+	glBindVertexArray(mVAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(tinyobj::real_t) * vertices.size(),

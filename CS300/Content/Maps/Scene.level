@@ -8,37 +8,6 @@ far 500
 camPosition 0 0 0
 camTarget 0 0 50
 camUp 0 1 0
-    
-#scene data
-object plane
-translate -40 0 50
-rotation 0 0 0
-scale 10 10 10
-mesh PLANE
-
-object cube
-translate -20 0 50
-rotation 0 0 0
-scale 10 10 10
-mesh CUBE
-
-object cone
-translate 0 0 50
-rotation 0 0 0
-scale 10 10 10
-mesh CONE
-
-object cylinder
-translate 20 0 50
-rotation 0 0 0
-scale 10 10 10
-mesh CYLINDER
-
-object sphere
-translate 40 0 50
-rotation 0 0 0
-scale 10 10 10
-mesh SPHERE
 
 # mesh shapes
 object plane_mesh

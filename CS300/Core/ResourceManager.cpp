@@ -10,6 +10,7 @@
 #include <algorithm>
 #include "ResourceManager.h"
 #include "Importers.h"
+#include "../Graphics/Primitives/Model.h"
 
 // ------------------------------------------------------------------------
 /*! Initialize
@@ -17,7 +18,10 @@
 *  Initializes the Resource Manager
 */ // --------------------------------------------------------------------
 void ResourceManager::Initialize() {
+
 	importers.insert({ "obj", new ModelImporter });
+
+
 }
 
 // ------------------------------------------------------------------------

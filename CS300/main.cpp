@@ -17,7 +17,6 @@
 *   Program Entry point
 */ //----------------------------------------------------------------------
 int main() {
-
     struct MyOpenGLApp : public
         GraphicApplication<SDLWindow, OpenGLPipeline> {
        Scene mScene;

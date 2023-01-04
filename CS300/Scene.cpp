@@ -6,12 +6,12 @@ void Scene::CreateScene(const char* file) {
 	for (auto& x : parser.objects) {
 		Object obj;
 
-		if (x.mesh == "PLANE" || x.mesh == "CUBE" || x.mesh == "CONE"
-			|| x.mesh == "CYLINDER" || x.mesh == "SPHERE")
-			continue;
-
 		obj.modelrend.get()->SetMesh(GContent->GetResource<Model>(x.mesh.c_str()));
+		obj.modelrend.get()->pos = x.pos;
+		obj.modelrend.get()->scale = x.sca;
+		obj.modelrend.get()->rot = x.rot;
 		
 		objects.push_back(obj);
+		
 	}
 }

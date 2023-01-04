@@ -32,8 +32,8 @@ GraphicApplication<WINDOW, PIPELINE>::GraphicApplication() {
 	static_assert(std::is_base_of<Core::Window, WINDOW>::value);
 	static_assert(std::is_base_of<Core::Pipeline, PIPELINE>::value);
 	mWindow.Create();
-	GContent->Initialize();
 	mPipe.Init();
+	GContent->Initialize();
 }
 
 template<class WINDOW, class PIPELINE>

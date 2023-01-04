@@ -17,6 +17,7 @@ namespace Core {
 	class Renderable {
 	public:
 		virtual void Render() = 0;
+		glm::vec3 pos, scale, rot;
 	};
 
 	template<GraphicsAPIS E>
@@ -31,10 +32,9 @@ namespace Core {
 		}
 		
 		void Render() override {
-			glBindVertexArray(mModel->Get()->mVAO);
-			glDrawArrays(GL_TRIANGLES, 0, mModel->Get()->mCount);
+			glBindVertexArray(mModel->Get()->GetVao());
+			glDrawArrays(GL_TRIANGLES, 0, mModel->Get()->GetVertexCount());
 		}
-
 	private:
 		Asset<Model> mModel;
 	};

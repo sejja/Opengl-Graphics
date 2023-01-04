@@ -40,6 +40,14 @@ void OpenGLPipeline::Render() {
 	
 	for (auto it = renderables.begin(); it != renderables.end(); ++it) {
 		if (auto renderable = it->lock()) {
+			glm::mat4 view = glm::mat4(1.0f);
+			auto pos = renderable->pos;
+			// note that we're translating the scene in the reverse direction of where we want to move
+			view = glm::translate(view, glm::vec3(0.0f, 1.0f, -20.0f) + glm::vec3(pos.x / 10, pos.y / 10, 0));
+			glm::mat4 projection;
+			projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+			program.SetShaderUniform("uTransform", &projection);
+			program.SetShaderUniform("uView", &view);
 			renderable->Render();
 		}
 		else {
