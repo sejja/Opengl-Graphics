@@ -19,7 +19,7 @@
 */ // --------------------------------------------------------------------
 void ResourceManager::Initialize() {
 
-	importers.insert({ "obj", new ModelImporter });
+	importers.insert({ "obj", new Assets::ModelImporter });
 
 
 }

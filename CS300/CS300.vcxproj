@@ -166,7 +166,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="Core\Importers.cpp" />
+    <ClCompile Include="Core\Assets\Importers.cpp" />
     <ClCompile Include="Core\InputManager.cpp" />
     <ClCompile Include="Core\ObjectAllocator.cpp" />
     <ClCompile Include="Core\ResourceManager.cpp" />
