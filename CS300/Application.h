@@ -7,6 +7,7 @@
 #include "Core/Pipeline.h"
 #include "Scene.h"
 #include "Core/ResourceManager.h"
+#include "Core/InputManager.h"
 
 class Application {
 public:
@@ -45,11 +46,14 @@ GraphicApplication<WINDOW, PIPELINE>::~GraphicApplication() {
 template<class WINDOW, class PIPELINE>
 void GraphicApplication<WINDOW, PIPELINE>::Run() {
 	while(mWindow.Present()) {
+		GInput->ProcessInput();
 		if(mTick) mTick();
 		mPipe.PreRender();
 		mPipe.Render();
 		mPipe.PostRender();
 	}
+
+	GContent->ShutDown();
 }
 
 template<class WINDOW, class PIPELINE>

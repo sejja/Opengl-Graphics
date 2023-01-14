@@ -4,5 +4,5 @@
 
 class ModelImporter : public IResourceImporter {
 public:
-	DONTDISCARD IResource* ImportFromFile(const char* filename) const override;
+	DONTDISCARD std::shared_ptr<IResource> ImportFromFile(const std::string_view& filename) const override;
 };

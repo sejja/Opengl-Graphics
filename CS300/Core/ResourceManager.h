@@ -21,16 +21,13 @@ struct IResource {
 
 class IResourceImporter {
 public:
-	virtual IResource* ImportFromFile(const char* filename) const = 0;
+	virtual std::shared_ptr<IResource> ImportFromFile(const std::string_view& filename) const = 0;
 };
 
 template<typename Ty_>
 class TResource : public IResource {
 public:
 	~TResource() {
-		Allocator<Ty_> alloc;
-		alloc.destroy(rawData);
-		alloc.deallocate(rawData);
 	}
 	// ------------------------------------------------------------------------
 	/*! Get
@@ -38,10 +35,10 @@ public:
 	*   Gets the Resource as something
 	*/ // --------------------------------------------------------------------
 	DONTDISCARD Ty_ inline* Get() {
-		return reinterpret_cast<Ty_*>(rawData);
+		return reinterpret_cast<Ty_*>(rawData.get());
 	}
 
-	Ty_* rawData = nullptr;
+	std::unique_ptr<Ty_> rawData = nullptr;
 };
 
 class ResourceManager : public Singleton<ResourceManager> {

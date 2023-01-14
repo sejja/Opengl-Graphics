@@ -6,9 +6,10 @@ layout(location = 0) in vec2 aUVs;
 
 uniform mat4 uTransform;
 uniform mat4 uView;
+uniform mat4 uModel;
 out vec2 oUVs;
 
 void main() {
-	gl_Position = uTransform * uView * vec4(aPos.x, aPos.y, aPos.z, 1.0);
 	oUVs = aUVs;
+	gl_Position = uTransform * uView * uModel * vec4(aPos, 1.0);
 }
