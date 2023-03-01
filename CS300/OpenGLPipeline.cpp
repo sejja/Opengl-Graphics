@@ -5,6 +5,9 @@
 #include "Graphics/Primitives/ShaderProgram.h"
 #include "Renderables.h"
 #include "Graphics/Camera.h"
+#include "Graphics/Primitives/Texture.h"
+
+static Graphics::Texture texture("Content/Textures/UV.jpg");
 
 void OpenGLPipeline::Init() {
 	glEnable(GL_DEPTH_TEST);
@@ -14,7 +17,9 @@ void OpenGLPipeline::Init() {
 	glFrontFace(GL_CCW);
 	glDisable(GL_BLEND);
 	glDisable(GL_STENCIL_TEST);
-	
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT, GL_FILL);
+	texture.UploadToGPU();
 	mProjectionMatrix = glm::perspective(1.f, 0.75f, 1.f, 100.f);
 }
 
@@ -25,11 +30,11 @@ void OpenGLPipeline::PreRender() {
 void OpenGLPipeline::Render() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	static Graphics::ShaderProgram program(new Graphics::Shader("Content/Shaders/fragment.frag", Graphics::Shader::EType::Fragment),
-															  new Graphics::Shader("Content/Shaders/vertex.vert", Graphics::Shader::EType::Vertex));
-															  
+	static Graphics::ShaderProgram program(new Graphics::Shader("Content/Shaders/Textured.frag", Graphics::Shader::EType::Fragment),
+															  new Graphics::Shader("Content/Shaders/Transform.vert", Graphics::Shader::EType::Vertex));
+									
 	static Camera cam;
-													
+							
 	program.Bind();
 	glm::mat4 view = glm::mat4(1.0f);
 	// note that we're translating the scene in the reverse direction of where we want to move
@@ -56,6 +61,8 @@ void OpenGLPipeline::Render() {
 				glm::scale(glm::mat4(1.0f), renderable->scale);
 
 			program.SetShaderUniform("uModel", &matrix);
+
+			texture.Bind();
 			renderable->Render();
 		}
 		else {

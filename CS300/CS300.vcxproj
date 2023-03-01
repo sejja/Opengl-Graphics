@@ -175,6 +175,7 @@
     <ClCompile Include="Graphics\Primitives\Shader.cpp" />
     <ClCompile Include="Graphics\Primitives\ShaderProgram.cpp" />
     <ClCompile Include="Graphics\Primitives\Model.cpp" />
+    <ClCompile Include="Graphics\Primitives\Texture.cpp" />
     <ClCompile Include="Renderables.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SDLWindow.cpp" />
@@ -186,8 +187,8 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Core\Allocator.h" />
-    <ClInclude Include="Core\CommonDefines.h" />
-    <ClInclude Include="Core\Importers.h" />
+    <ClInclude Include="CommonDefines.h" />
+    <ClInclude Include="Core\Assets\Importers.h" />
     <ClInclude Include="Core\InputManager.h" />
     <ClInclude Include="Core\ObjectAllocator.h" />
     <ClInclude Include="Core\PageAllocator.h" />
@@ -200,6 +201,7 @@
     <ClInclude Include="Graphics\Primitives\Shader.h" />
     <ClInclude Include="Graphics\Primitives\ShaderProgram.h" />
     <ClInclude Include="Graphics\Primitives\Model.h" />
+    <ClInclude Include="Graphics\Primitives\Texture.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Renderables.h" />
     <ClInclude Include="Scene.h" />
@@ -602,8 +604,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\Maps\Scene.level" />
-    <None Include="Content\Shaders\fragment.frag" />
-    <None Include="Content\Shaders\vertex.vert" />
+    <None Include="Content\Shaders\Textured.frag" />
+    <None Include="Content\Shaders\UV.frag" />
+    <None Include="Content\Shaders\Transform.vert" />
     <None Include="Dependencies\GLM\detail\func_common.inl" />
     <None Include="Dependencies\GLM\detail\func_common_simd.inl" />
     <None Include="Dependencies\GLM\detail\func_exponential.inl" />

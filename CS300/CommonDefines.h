@@ -6,6 +6,9 @@
 //	Copyright © 2023. All Rights reserved
 //
 
-#pragma once
+#ifndef _COMMONDEFINES__H_
+#define _COMMONDEFINES__H_
 
 #define DONTDISCARD	[[nodiscard]]
+
+#endif

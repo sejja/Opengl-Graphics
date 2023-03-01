@@ -9,7 +9,7 @@
 #include <stack>
 #include <algorithm>
 #include "ResourceManager.h"
-#include "Importers.h"
+#include "Assets/Importers.h"
 #include "../Graphics/Primitives/Model.h"
 
 // ------------------------------------------------------------------------
@@ -20,7 +20,7 @@
 void ResourceManager::Initialize() {
 
 	importers.insert({ "obj", new Assets::ModelImporter });
-
+	importers.insert({ "png", new Assets::TextureImporter });
 
 }
 

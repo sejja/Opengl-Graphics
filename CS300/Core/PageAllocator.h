@@ -9,7 +9,7 @@
 #ifndef _PAGE_ALLOCATOR__H_
 #define _PAGE_ALLOCATOR__H_
 
-#include "CommonDefines.h"
+#include "../CommonDefines.h"
 #include "ObjectAllocator.h"
 
 template<typename TYPE>

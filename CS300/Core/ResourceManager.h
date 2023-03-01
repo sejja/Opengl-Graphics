@@ -9,6 +9,7 @@
 #ifndef _RESOURCE_MANAGER__H_
 #define _RESOURCE_MANAGER__H_
 
+#include "../CommonDefines.h"
 #include <string>
 #include <memory>
 #include <unordered_map>

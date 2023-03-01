@@ -66,6 +66,9 @@
     <ClCompile Include="Core\ObjectAllocator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\Primitives\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dependencies\STB\stb.h">
@@ -1289,13 +1292,13 @@
     <ClInclude Include="Core\Allocator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\CommonDefines.h">
+    <ClInclude Include="CommonDefines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Core\Singleton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Importers.h">
+    <ClInclude Include="Core\Assets\Importers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Primitives\Model.h">
@@ -1311,6 +1314,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Core\PageAllocator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Primitives\Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1726,9 +1732,10 @@
     <None Include="Dependencies\GLM\gtx\wrap.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="Content\Shaders\vertex.vert" />
-    <None Include="Content\Shaders\fragment.frag" />
+    <None Include="Content\Shaders\Transform.vert" />
+    <None Include="Content\Shaders\UV.frag" />
     <None Include="Content\Maps\Scene.level" />
+    <None Include="Content\Shaders\Textured.frag" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Dependencies\GLM\CMakeLists.txt" />

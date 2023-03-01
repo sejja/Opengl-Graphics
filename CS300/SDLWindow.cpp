@@ -17,7 +17,7 @@ void SDLWindow::Create() {
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
-    mWindow = SDL_CreateWindow("CS300",
+    mWindow = SDL_CreateWindow("OpenGL Graphics",
         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
         960, 540, 
         SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);

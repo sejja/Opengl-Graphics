@@ -10,7 +10,7 @@
 #define _INPUT_MANAGER__H_
 
 #include <Windows.h>
-#include "CommonDefines.h"
+#include "../CommonDefines.h"
 #include <glm/vec2.hpp>
 
 namespace Engine {
