@@ -12,6 +12,8 @@
 #include "Shader.h"
 #include <glm/glm.hpp>
 #include "Color.h"
+#include "CommonDefines.h"
+#include <string>
 
 namespace Graphics {
 	class ShaderProgram {
@@ -34,7 +36,7 @@ namespace Graphics {
 		void SetShaderUniform(const char* name, glm::vec3* value, int count = 1);
 		void SetShaderUniform(const char* name, glm::vec4* value, int count = 1);
 		void SetShaderUniform(const char* name, Color* value, int count = 1);
-		[[nodiscard]] unsigned int GetOpenGLHandle();
+		DONTDISCARD unsigned int GetOpenGLHandle();
 
 	private:
 		void Link();

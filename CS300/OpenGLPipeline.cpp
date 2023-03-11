@@ -6,8 +6,10 @@
 #include "Renderables.h"
 #include "Graphics/Camera.h"
 #include "Graphics/Primitives/Texture.h"
+#include "Core/InputManager.h"
 
 static Graphics::Texture texture("Content/Textures/UV.jpg");
+Graphics::ShaderProgram* uv_program;
 
 void OpenGLPipeline::Init() {
 	glEnable(GL_DEPTH_TEST);
@@ -17,10 +19,10 @@ void OpenGLPipeline::Init() {
 	glFrontFace(GL_CCW);
 	glDisable(GL_BLEND);
 	glDisable(GL_STENCIL_TEST);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glPolygonMode(GL_FRONT, GL_FILL);
 	texture.UploadToGPU();
 	mProjectionMatrix = glm::perspective(1.f, 0.75f, 1.f, 100.f);
+	uv_program = new Graphics::ShaderProgram(new Graphics::Shader("Content/Shaders/UV.frag", Graphics::Shader::EType::Fragment),
+																	new Graphics::Shader("Content/Shaders/Transform.vert", Graphics::Shader::EType::Vertex));
 }
 
 void OpenGLPipeline::PreRender() {
@@ -32,10 +34,24 @@ void OpenGLPipeline::Render() {
 
 	static Graphics::ShaderProgram program(new Graphics::Shader("Content/Shaders/Textured.frag", Graphics::Shader::EType::Fragment),
 															  new Graphics::Shader("Content/Shaders/Transform.vert", Graphics::Shader::EType::Vertex));
-									
+						
 	static Camera cam;
-							
-	program.Bind();
+					
+	if (GInput->IsKeyDown('Z')) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+	else {
+		glPolygonMode(GL_FRONT, GL_FILL);
+	}
+
+	if (GInput->IsKeyDown('V')) {
+		uv_program->Bind();
+	}
+	else {
+		program.Bind();
+		texture.Bind();
+	}
+
 	glm::mat4 view = glm::mat4(1.0f);
 	// note that we're translating the scene in the reverse direction of where we want to move
 	view = glm::translate(view, glm::vec3(0.0f, 1.0f, -20.0f));
@@ -61,9 +77,9 @@ void OpenGLPipeline::Render() {
 				glm::scale(glm::mat4(1.0f), renderable->scale);
 
 			program.SetShaderUniform("uModel", &matrix);
-
-			texture.Bind();
-			renderable->Render();
+			auto r = reinterpret_cast<Core::ModelRenderer<Core::GraphicsAPIS::OpenGL>*>(renderable.get());
+			//r->SetShaderProgram(program);
+			r->Render();
 		}
 		else {
 			obsoletes.push_back(it);

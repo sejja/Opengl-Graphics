@@ -79,6 +79,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <EnableManagedIncrementalBuild>true</EnableManagedIncrementalBuild>
+    <PublicIncludeDirectories>$(ProjectDir);$(PublicIncludeDirectories)</PublicIncludeDirectories>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -134,7 +135,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Dependencies\GLEW\Include;$(ProjectDir)Dependencies\SDL\Include;$(ProjectDir)Dependencies\GLM;$(ProjectDir)Dependencies\STB;$(ProjectDir)Dependencies\TinyOBJLoader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Dependencies\GLEW\Include;$(ProjectDir)Dependencies\SDL\Include;$(ProjectDir)Dependencies\GLM;$(ProjectDir)Dependencies\STB;$(ProjectDir)Dependencies\TinyOBJLoader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -172,6 +173,7 @@
     <ClCompile Include="Core\ResourceManager.cpp" />
     <ClCompile Include="CS300Parser.cpp" />
     <ClCompile Include="Graphics\Camera.cpp" />
+    <ClCompile Include="Graphics\Primitives\Material.cpp" />
     <ClCompile Include="Graphics\Primitives\Shader.cpp" />
     <ClCompile Include="Graphics\Primitives\ShaderProgram.cpp" />
     <ClCompile Include="Graphics\Primitives\Model.cpp" />
@@ -195,9 +197,48 @@
     <ClInclude Include="Core\ResourceManager.h" />
     <ClInclude Include="Core\Singleton.h" />
     <ClInclude Include="CS300Parser.h" />
+    <ClInclude Include="Dependencies\Json\include\adl_serializer.hpp" />
+    <ClInclude Include="Dependencies\Json\include\byte_container_with_subtype.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\conversions\from_json.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\conversions\to_chars.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\conversions\to_json.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\exceptions.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\hash.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\input\binary_reader.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\input\input_adapters.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\input\json_sax.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\input\lexer.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\input\parser.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\input\position_t.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\iterators\internal_iterator.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\iterators\iteration_proxy.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\iterators\iterator_traits.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\iterators\iter_impl.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\iterators\json_reverse_iterator.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\iterators\primitive_iterator.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\json_pointer.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\json_ref.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\macro_scope.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\macro_unscope.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\meta\cpp_future.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\meta\detected.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\meta\is_sax.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\meta\type_traits.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\meta\void_t.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\output\binary_writer.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\output\output_adapters.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\output\serializer.hpp" />
+    <ClInclude Include="Dependencies\Json\include\detail\value_t.hpp" />
+    <ClInclude Include="Dependencies\Json\include\json.hpp" />
+    <ClInclude Include="Dependencies\Json\include\json_fwd.hpp" />
+    <ClInclude Include="Dependencies\Json\include\ordered_map.hpp" />
+    <ClInclude Include="Dependencies\Json\include\thirdparty\hedley\hedley.hpp" />
+    <ClInclude Include="Dependencies\Json\include\thirdparty\hedley\hedley_undef.hpp" />
+    <ClInclude Include="Dependencies\Json\single_include\json.hpp" />
     <ClInclude Include="Dependencies\TinyOBJLoader\tinyobjloader.h" />
     <ClInclude Include="Graphics\Camera.h" />
     <ClInclude Include="Graphics\Primitives\Color.h" />
+    <ClInclude Include="Graphics\Primitives\Material.h" />
     <ClInclude Include="Graphics\Primitives\Shader.h" />
     <ClInclude Include="Graphics\Primitives\ShaderProgram.h" />
     <ClInclude Include="Graphics\Primitives\Model.h" />
@@ -605,6 +646,7 @@
   <ItemGroup>
     <None Include="Content\Maps\Scene.level" />
     <None Include="Content\Shaders\Textured.frag" />
+    <None Include="Content\Shaders\Textured.shader" />
     <None Include="Content\Shaders\UV.frag" />
     <None Include="Content\Shaders\Transform.vert" />
     <None Include="Dependencies\GLM\detail\func_common.inl" />
@@ -749,6 +791,9 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Dependencies\GLM\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Content\Textures\UV.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

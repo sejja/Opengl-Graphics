@@ -22,6 +22,7 @@ void Model::LoadFromFile(const std::string& inputfile) {
 	std::vector<tinyobj::material_t> materials;
 	std::vector<tinyobj::real_t> vertices;
 	std::vector<tinyobj::real_t> normals;
+	std::vector<tinyobj::real_t> tangents;
 	std::vector<int> indexes;
 
 	std::string warn;
@@ -35,10 +36,6 @@ void Model::LoadFromFile(const std::string& inputfile) {
 
 	if (!err.empty()) {
 		std::cerr << err << std::endl;
-	}
-
-	if (!ret) {
-		exit(1);
 	}
 
 	// Loop over shapes
@@ -80,6 +77,7 @@ void Model::LoadFromFile(const std::string& inputfile) {
 					//tinyobj::real_t tx = attrib.texcoords[2 * size_t(idx.texcoord_index) + 0];
 					//tinyobj::real_t ty = attrib.texcoords[2 * size_t(idx.texcoord_index) + 1];
 				}
+
 				// Optional: vertex colors
 				// tinyobj::real_t red   = attrib.colors[3*size_t(idx.vertex_index)+0];
 				// tinyobj::real_t green = attrib.colors[3*size_t(idx.vertex_index)+1];
@@ -87,12 +85,48 @@ void Model::LoadFromFile(const std::string& inputfile) {
 			}
 			index_offset += fv;
 
-			// per-face material
-			shapes[s].mesh.material_ids[f];
+			if (shapes[s].mesh.material_ids[f] != -1) {
+				// per-face material
+				mMaterial.SetAmbient(glm::vec4(materials[shapes[s].mesh.material_ids[f]].ambient[0],
+					materials[shapes[s].mesh.material_ids[f]].ambient[1],
+					materials[shapes[s].mesh.material_ids[f]].ambient[2], 1.f));
+				mMaterial.SetDiffuse(glm::vec4(materials[shapes[s].mesh.material_ids[f]].diffuse[0],
+					materials[shapes[s].mesh.material_ids[f]].diffuse[1],
+					materials[shapes[s].mesh.material_ids[f]].diffuse[2], 1.f));
+				mMaterial.SetEmissive(glm::vec4(materials[shapes[s].mesh.material_ids[f]].emission[0],
+					materials[shapes[s].mesh.material_ids[f]].emission[1],
+					materials[shapes[s].mesh.material_ids[f]].emission[2], 1.f));
+				mMaterial.SetSpecular(glm::vec4(materials[shapes[s].mesh.material_ids[f]].specular[0],
+					materials[shapes[s].mesh.material_ids[f]].specular[1],
+					materials[shapes[s].mesh.material_ids[f]].specular[2], 1.f));
+				mMaterial.SetShininess(materials[shapes[s].mesh.material_ids[f]].shininess);
+			} else {
+				mMaterial.SetAmbient(glm::vec4(1.f, 1.f, 1.f, 1.f));
+				mMaterial.SetDiffuse(glm::vec4(1.f, 1.f, 1.f, 1.f));
+				mMaterial.SetEmissive(glm::vec4(1.f, 1.f, 1.f, 1.f));
+				mMaterial.SetSpecular(glm::vec4(1.f, 1.f, 1.f, 1.f));
+				mMaterial.SetShininess(1.f);
+			}
 		}
 	}
 
 	UploadToGPU(vertices, indexes);
+}
+
+void Model::set_uniforms(Graphics::ShaderProgram& s) const {
+	float _shininess = mMaterial.GetShininess();
+	glm::vec4 buffer[] = {
+		mMaterial.GetEmissive(),
+		mMaterial.GetAmbient(),
+		mMaterial.GetDiffuse(),
+		mMaterial.GetSpecular(),
+	};
+
+	s.SetShaderUniform("material.emission", buffer);
+	s.SetShaderUniform("material.ambient", buffer + 1);
+	s.SetShaderUniform("material.diffuse", buffer + 2);
+	s.SetShaderUniform("material.specular", buffer + 3);
+	s.SetShaderUniform("material.shininess", &_shininess);
 }
 
 void Model::UploadToGPU(std::vector<float>& vertices, std::vector<int>& indexes) {

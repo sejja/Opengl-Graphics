@@ -7,6 +7,7 @@
 #include <iostream>
 #include "Graphics/Primitives/Model.h"
 #include "Core/ResourceManager.h"
+#include "Graphics/Primitives/ShaderProgram.h"
 
 namespace Core {
 	struct Vertex {
@@ -30,12 +31,18 @@ namespace Core {
 		void SetMesh(AssetReference<Model> model) {
 			mModel = model.lock();
 		}
+
+		void SetShaderProgram(AssetReference<Graphics::ShaderProgram>& s) {
+			mShaderProgram = s.lock();
+		}
 		
 		void Render() override {
+			//mModel->Get()->set_uniforms(*mShaderProgram->Get());
 			glBindVertexArray(mModel->Get()->GetVao());
 			glDrawArrays(GL_TRIANGLES, 0, mModel->Get()->GetVertexCount());
 		}
 	private:
 		Asset<Model> mModel;
+		Asset<Graphics::ShaderProgram> mShaderProgram;
 	};
 }

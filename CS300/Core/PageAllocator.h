@@ -1,9 +1,9 @@
 //
 //	PageAllocator.h
-//	Good Neighbours
+//	OpenGL Graphics
 //
 //	Created by Diego Revilla on 19/05/21
-//	Copyright © 2021 Digipen. All Rights reserved
+//	Copyright © 2021. All Rights reserved
 //
 
 #ifndef _PAGE_ALLOCATOR__H_

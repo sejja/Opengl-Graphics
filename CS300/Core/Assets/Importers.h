@@ -21,6 +21,16 @@ namespace Assets {
 	public:
 		DONTDISCARD std::shared_ptr<IResource> ImportFromFile(const std::string_view& filename) const override;
 	};
+
+	class ShaderProgramImporter : public IResourceImporter {
+	public:
+		DONTDISCARD std::shared_ptr<IResource> ImportFromFile(const std::string_view& filename) const override;
+	};
+
+	class ShaderImporter : public IResourceImporter {
+	public:
+		DONTDISCARD std::shared_ptr<IResource> ImportFromFile(const std::string_view& filename) const override;
+	};
 }
 
 #endif

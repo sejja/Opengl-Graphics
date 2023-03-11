@@ -9,6 +9,8 @@
 #include "ShaderProgram.h"
 #include <glew.h>
 #include <Windows.h>
+#include <fstream>
+#include "Core/ResourceManager.h"
 
 	namespace Graphics {
 		// ------------------------------------------------------------------------

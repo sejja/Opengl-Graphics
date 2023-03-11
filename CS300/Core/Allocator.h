@@ -48,12 +48,17 @@ constexpr TYPE inline* Allocator<TYPE>::reallocate(TYPE* mem, const size_t size)
 /*! Deallocate
 *
 *   Deallocates the passed chunk
-*/ //-------------------------------------------------------------------
+*/ //----------------------------------------------------------------------
 template<typename TYPE>
 void inline Allocator<TYPE>::deallocate(TYPE* data) noexcept {
 	free(data);
 }
 
+// ------------------------------------------------------------------------
+/*! New
+*
+*   Allocates and constructs "count" ammount of elements
+*/ //----------------------------------------------------------------------
 template<typename TYPE>
 constexpr TYPE inline* Allocator<TYPE>::New(size_t count) noexcept {
 	TYPE* temp_ = allocate(count);

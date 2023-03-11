@@ -1,3 +1,11 @@
+//
+//	Pipeline.h
+//	Good Neighbours
+//
+//	Created by Diego Revilla on 10/03/22
+//	Copyright © 2023. All Rights reserved
+//
+
 #ifndef _PIPELINE__H_
 #define _PIPELINE__H_
 
@@ -6,7 +14,6 @@
 #include <glm/glm.hpp>
 
 namespace Core {
-
 	class Renderable;
 
 	enum class GraphicsAPIS : unsigned char {

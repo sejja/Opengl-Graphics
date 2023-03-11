@@ -21,7 +21,9 @@ void ResourceManager::Initialize() {
 
 	importers.insert({ "obj", new Assets::ModelImporter });
 	importers.insert({ "png", new Assets::TextureImporter });
-
+	importers.insert({ "shader", new Assets::ShaderProgramImporter });
+	importers.insert({ "vertex", new Assets::ShaderImporter });
+	importers.insert({ "frag", new Assets::ShaderImporter });
 }
 
 // ------------------------------------------------------------------------

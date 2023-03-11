@@ -1,13 +1,23 @@
-#pragma once
+﻿//
+//  SDL_Window.h
+//  OpenGL Graphics
+//
+//  Created by Diego Revilla on 11/03/23
+//  Copyright � 2023. All rights reserved.
+//
+
+#ifndef _SDL_WINDOW__H_
+#define _SDL_WINDOW__H_
 
 #include "Core/Window.h"
 #include <SDL.h>
-#include <glm/glm.hpp>
+#include "CommonDefines.h"
 
 #undef main
 
 class SDLWindow : public Core::Window {
 public:
+	SDLWindow();
 	void Create() override;
 	bool Present() override;
 	void Destroy() override;
@@ -15,6 +25,8 @@ public:
 
 private:
 	SDL_GLContext mContext;
-	SDL_Window* mWindow;
+	std::deleted_pointer<SDL_Window> mWindow;
 	glm::lowp_u16vec2 mDimensions;
 };
+
+#endif

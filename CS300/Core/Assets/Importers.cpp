@@ -7,12 +7,12 @@
 //
 
 #include "Importers.h"
-#include "../../Renderables.h"
-#include "../../Graphics/Primitives/Model.h"
-#include "../Allocator.h"
-#include "../PageAllocator.h"
+#include "Graphics/Primitives/Model.h"
+#include "Core/Allocator.h"
+#include "Core/PageAllocator.h"
 #include "Importers.h"
-#include "../../Graphics/Primitives/Texture.h"
+#include "Graphics/Primitives/Texture.h"
+#include "Dependencies/Json/single_include/json.hpp"
 
 namespace Assets {
 	// ------------------------------------------------------------------------
@@ -43,6 +43,7 @@ namespace Assets {
 	std::shared_ptr<IResource> Assets::TextureImporter::ImportFromFile(const std::string_view& filename) const {
 		using Graphics::Texture;
 		PageAllocator<TResource<Texture>> resalloc;
+		PageAllocator<Texture> texalloc;
 
 		std::shared_ptr<TResource<Texture>> const rawResource(resalloc.New(), [](TResource<Texture>* p) {
 			PageAllocator<TResource<Texture>> resalloc_;
@@ -50,13 +51,18 @@ namespace Assets {
 			resalloc_.deallocate(p);
 			});
 
-
-		Graphics::Texture* _tex = Allocator<Texture>::New();
+		Graphics::Texture* const _tex = texalloc.New();
 		_tex->LoadFromFile(filename.data());
 		rawResource->rawData.reset(_tex);
-		auto toup = reinterpret_cast<Texture*>(rawResource->rawData.get());
-		toup->UploadToGPU();
-
+		
 		return rawResource;
+	}
+
+	std::shared_ptr<IResource> ShaderProgramImporter::ImportFromFile(const std::string_view& filename) const {
+		return  std::shared_ptr<IResource>();
+	}
+
+	std::shared_ptr<IResource> ShaderImporter::ImportFromFile(const std::string_view& filename) const {
+		return  std::shared_ptr<IResource>();
 	}
 }
