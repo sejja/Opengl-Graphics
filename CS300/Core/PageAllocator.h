@@ -35,7 +35,8 @@ public:
 	PageAllocator(const PageAllocator& other) : mOA(other.mOA) {};
 	template <class U1> PageAllocator(const PageAllocator<U1>& other) : mOA(sizeof(TYPE), other.mOA.config()) {};
 	DONTDISCARD constexpr TYPE inline* allocate(const size_t size = 1) const noexcept;
-	DONTDISCARD constexpr TYPE inline* New(const size_t size = 1) const noexcept;
+	template<typename ...Args>
+	DONTDISCARD constexpr TYPE inline* New(const size_t size = 1, Args ...ag) const noexcept;
 	void inline deallocate(TYPE* data) const noexcept;
 	template<typename ...Args>
 	void inline construct(TYPE* data, Args... ag) const noexcept;
@@ -60,9 +61,10 @@ constexpr TYPE inline* PageAllocator<TYPE>::allocate(size_t) const noexcept {
 *   Allocates an construct new memory
 */ //----------------------------------------------------------------------
 template<typename TYPE>
-inline constexpr DONTDISCARD TYPE* PageAllocator<TYPE>::New(const size_t size) const noexcept {
+template<typename ...Args>
+inline constexpr DONTDISCARD TYPE* PageAllocator<TYPE>::New(const size_t size, Args ...ag) const noexcept {
 	pointer _temp = allocate(size);
-	construct(_temp);
+	construct(_temp, ag...);
 	return _temp;
 }
 

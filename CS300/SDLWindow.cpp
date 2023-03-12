@@ -6,9 +6,9 @@
 //  Copyright � 2023. All rights reserved.
 //
 
-#include "SDLWindow.h"
 #include <iostream>
 #include <glew.h>
+#include "Core/Window/SDLWindow.h"
 
 SDLWindow::SDLWindow() :
     mWindow(nullptr, SDL_DestroyWindow) {

@@ -9,7 +9,10 @@
 #ifndef _IMPORTERS__H_
 #define _IMPORTERS__H_
 
+#include "Graphics/Primitives/Shader.h"
 #include "../ResourceManager.h"
+#include "Core/Allocator.h"
+#include "Core/PageAllocator.h"
 
 namespace Assets {
 	class ModelImporter : public IResourceImporter {
@@ -27,7 +30,17 @@ namespace Assets {
 		DONTDISCARD std::shared_ptr<IResource> ImportFromFile(const std::string_view& filename) const override;
 	};
 
-	class ShaderImporter : public IResourceImporter {
+	template<Graphics::Shader::EType TYPE>
+	class ShaderImporter : public IResourceImporter {};
+
+	template<>
+	class ShaderImporter<Graphics::Shader::EType::Vertex> : public IResourceImporter {
+	public:
+		DONTDISCARD std::shared_ptr<IResource> ImportFromFile(const std::string_view& filename) const override;
+	};
+
+	template<>
+	class ShaderImporter<Graphics::Shader::EType::Fragment> : public IResourceImporter {
 	public:
 		DONTDISCARD std::shared_ptr<IResource> ImportFromFile(const std::string_view& filename) const override;
 	};

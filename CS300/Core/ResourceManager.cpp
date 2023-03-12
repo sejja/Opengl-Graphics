@@ -21,9 +21,10 @@ void ResourceManager::Initialize() {
 
 	importers.insert({ "obj", new Assets::ModelImporter });
 	importers.insert({ "png", new Assets::TextureImporter });
+	importers.insert({ "jpg", new Assets::TextureImporter });
 	importers.insert({ "shader", new Assets::ShaderProgramImporter });
-	importers.insert({ "vertex", new Assets::ShaderImporter });
-	importers.insert({ "frag", new Assets::ShaderImporter });
+	importers.insert({ "vert", new Assets::ShaderImporter<Graphics::Shader::EType::Vertex> });
+	importers.insert({ "frag", new Assets::ShaderImporter<Graphics::Shader::EType::Fragment> });
 }
 
 // ------------------------------------------------------------------------
@@ -66,13 +67,9 @@ std::shared_ptr<IResource> ResourceManager::AddResource(raw_text mPath) {
 	try {
 		IResourceImporter* ireimp_ =
 			GetImporterByExtension(temp_.substr(temp_.find_last_of(".") + 1).data());
-		std::shared_ptr<IResource> res_(ireimp_->ImportFromFile(mPath));
+		resources.insert(std::make_pair(mPath, std::move(std::shared_ptr<IResource>(ireimp_->ImportFromFile(mPath)))));
 
-		
-		if (res_)
-			resources.insert(std::make_pair(mPath, res_));
-
-		return res_;
+		return resources[mPath];
 
 		//If we could not find an importer
 	}

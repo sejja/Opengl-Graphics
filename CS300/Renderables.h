@@ -32,12 +32,12 @@ namespace Core {
 			mModel = model.lock();
 		}
 
-		void SetShaderProgram(AssetReference<Graphics::ShaderProgram>& s) {
+		void SetShaderProgram(const AssetReference<Graphics::ShaderProgram>& s) {
 			mShaderProgram = s.lock();
 		}
 		
 		void Render() override {
-			//mModel->Get()->set_uniforms(*mShaderProgram->Get());
+			mModel->Get()->set_uniforms(*mShaderProgram->Get());
 			glBindVertexArray(mModel->Get()->GetVao());
 			glDrawArrays(GL_TRIANGLES, 0, mModel->Get()->GetVertexCount());
 		}

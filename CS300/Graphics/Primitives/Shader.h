@@ -9,27 +9,27 @@
 #ifndef _SHADER__H_
 #define _SHADER__H_
 
-	namespace Graphics {
-		class  Shader {
-		public:
-			enum class EType : unsigned char {
-				Vertex,
-				Fragment
-			};
-			Shader();
-			~Shader();
-			Shader(const char* filename, EType type);
-			bool LoadSource(const char* filename = nullptr);
-			bool Compile(const char* filename);
-			void SetShaderType(EType type, bool createDeviceShader = false);
-			bool CreateDeviceShader();
-
-		private:
-			friend class ShaderProgram;
-			unsigned int Handle;
-			char* Source;
-			EType ShaderType;
+namespace Graphics {
+	class  Shader {
+	public:
+		enum class EType : unsigned char {
+			Vertex,
+			Fragment
 		};
-	}
+		Shader();
+		~Shader();
+		Shader(const char* filename, EType type);
+		bool LoadSource(const char* filename = nullptr);
+		bool Compile(const char* filename);
+		void SetShaderType(EType type, bool createDeviceShader = false);
+		bool CreateDeviceShader();
+
+	private:
+		friend class ShaderProgram;
+		unsigned int Handle;
+		char* Source;
+		EType ShaderType;
+	};
+}
 
 #endif

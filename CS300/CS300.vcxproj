@@ -246,7 +246,7 @@
     <ClInclude Include="Object.h" />
     <ClInclude Include="Renderables.h" />
     <ClInclude Include="Scene.h" />
-    <ClInclude Include="SDLWindow.h" />
+    <ClInclude Include="Core\Window\SDLWindow.h" />
     <ClInclude Include="Dependencies\GLEW\Include\eglew.h" />
     <ClInclude Include="Dependencies\GLEW\Include\glew.h" />
     <ClInclude Include="Dependencies\GLEW\Include\glxew.h" />
@@ -649,6 +649,7 @@
     <None Include="Content\Shaders\Textured.shader" />
     <None Include="Content\Shaders\UV.frag" />
     <None Include="Content\Shaders\Transform.vert" />
+    <None Include="Content\Shaders\UVs.shader" />
     <None Include="Dependencies\GLM\detail\func_common.inl" />
     <None Include="Dependencies\GLM\detail\func_common_simd.inl" />
     <None Include="Dependencies\GLM\detail\func_exponential.inl" />

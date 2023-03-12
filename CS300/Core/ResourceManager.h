@@ -15,6 +15,7 @@
 #include <unordered_map>
 #include "Allocator.h"
 #include "Singleton.h"
+#include "Graphics/Primitives/Shader.h"
 
 struct IResource {
 	virtual ~IResource();
@@ -28,8 +29,14 @@ public:
 template<typename Ty_>
 class TResource : public IResource {
 public:
+	TResource() = default;
+	TResource(Ty_* data) :
+		rawData(data){
+		
+	}
 	~TResource() {
 	}
+	
 	// ------------------------------------------------------------------------
 	/*! Get
 	*
