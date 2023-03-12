@@ -641,7 +641,7 @@
     <ClInclude Include="Core\Pipeline.h" />
     <ClInclude Include="Core\Window.h" />
     <ClInclude Include="OpenGLPipeline.h" />
-    <ClInclude Include="Transform.h" />
+    <ClInclude Include="Core\Math\Transform.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\Maps\Scene.level" />
