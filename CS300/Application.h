@@ -40,7 +40,6 @@ GraphicApplication<WINDOW, PIPELINE>::GraphicApplication() {
 template<class WINDOW, class PIPELINE>
 GraphicApplication<WINDOW, PIPELINE>::~GraphicApplication() {
 	mPipe.Shutdown();
-	mWindow.Destroy();
 }
 
 template<class WINDOW, class PIPELINE>

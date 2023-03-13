@@ -25,6 +25,13 @@ int main() {
     app.SetDimensions({ 1072, 780 });
 	app.mScene.CreateScene("Content/Maps/Scene.level");
     app.mScene.UploadObjectsToPipeline(app.mPipe);
+    app.mTick = [&app]() {
+		for (auto& obj : app.mScene.objects) {
+			for (auto& comp : obj->components) {
+				comp->Update();
+			}
+		}
+    };
     app.Run();
 
     return 0;

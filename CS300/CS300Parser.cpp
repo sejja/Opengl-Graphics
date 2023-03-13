@@ -33,6 +33,14 @@ void CS300Parser::LoadDataFromFile(const char* filename)
 
     std::string str;
 
+    enum class LastAdded
+    {
+        NONE,
+        OBJECT,
+        LIGHT
+    };
+    LastAdded last = LastAdded::NONE;
+
     while (!inFile.eof())
     {
         str = "";
@@ -84,14 +92,25 @@ void CS300Parser::LoadDataFromFile(const char* filename)
             Transform newObj;
             inFile >> newObj.name;
             objects.push_back(newObj);
+            last = LastAdded::OBJECT;
         }
         else if (id == "translate")
         {
             glm::vec3 pos = ReadVec3(inFile);
 
-            if (objects.size() > 0)
+            if (last == LastAdded::OBJECT)
             {
-                objects.back().pos = pos;
+                if (objects.size() > 0)
+                {
+                    objects.back().pos = pos;
+                }
+            }
+            else if (last == LastAdded::LIGHT)
+            {
+                if (lights.size() > 0)
+                {
+                    lights.back().pos = pos;
+                }
             }
         }
         else if (id == "rotation")
@@ -119,6 +138,97 @@ void CS300Parser::LoadDataFromFile(const char* filename)
             if (objects.size() > 0)
             {
                 objects.back().mesh = mesh;
+            }
+        }
+        else if (id == "shininess")
+        {
+            float ns = ReadFloat(inFile);
+
+            if (objects.size() > 0)
+            {
+                objects.back().ns = ns;
+            }
+        }
+        else if (id == "light")
+        {
+            Light newLight;
+
+            lights.push_back(newLight);
+            last = LastAdded::LIGHT;
+        }
+        else if (id == "color")
+        {
+            glm::vec3 col = ReadVec3(inFile);
+
+            if (lights.size() > 0)
+            {
+                lights.back().col = col;
+            }
+        }
+        else if (id == "ambient")
+        {
+            float ambient = ReadFloat(inFile);
+
+            if (lights.size() > 0)
+            {
+                lights.back().amb = ambient;
+            }
+        }
+        else if (id == "lightType")
+        {
+            std::string type;
+            inFile >> type;
+            if (lights.size() > 0)
+            {
+                lights.back().type = type;
+            }
+        }
+        else if (id == "attenuation")
+        {
+            glm::vec3 att = ReadVec3(inFile);
+
+            if (lights.size() > 0)
+            {
+                lights.back().att = att;
+            }
+        }
+        else if (id == "direction")
+        {
+            glm::vec3 dir = ReadVec3(inFile);
+
+            if (lights.size() > 0)
+            {
+                lights.back().dir = dir;
+            }
+        }
+        else if (id == "spotAttenuation")
+        {
+            glm::vec3 spotAtt = ReadVec3(inFile);
+
+            if (lights.size() > 0)
+            {
+                lights.back().inner = spotAtt.x;
+                lights.back().outer = spotAtt.y;
+                lights.back().falloff = spotAtt.z;
+            }
+        }
+        else if (Animations::NameToUpdater.find(id) != Animations::NameToUpdater.end())
+        {
+            glm::vec3 param = ReadVec3(inFile);
+
+            if (last == LastAdded::OBJECT)
+            {
+                if (objects.size() > 0)
+                {
+                    objects.back().anims.push_back({ Animations::NameToUpdater.at(id), param });
+                }
+            }
+            else if (last == LastAdded::LIGHT)
+            {
+                if (lights.size() > 0)
+                {
+                    lights.back().anims.push_back({ Animations::NameToUpdater.at(id), param });
+                }
             }
         }
     }

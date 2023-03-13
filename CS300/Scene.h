@@ -1,13 +1,11 @@
 #pragma once
+#include <memory>
 #include "CS300Parser.h"
 #include "Renderables.h"
 
-struct Object {	
-	glm::vec3 position, scale, rotation;
-	
-	std::shared_ptr<Core::ModelRenderer<Core::GraphicsAPIS::OpenGL>> modelrend
-		= std::make_shared<Core::ModelRenderer<Core::GraphicsAPIS::OpenGL>>();
-};
+namespace Core {
+	class Renderable;
+}
 
 class Scene {
 public:
@@ -15,12 +13,19 @@ public:
 
 	template<typename PIPE>
 	void UploadObjectsToPipeline(PIPE& pipe) {
-		for (auto& obj : objects) {
-			pipe.AddRenderable(obj.modelrend);
+		using namespace Core;
+
+		for (auto& x : objects) {
+			for (auto& comp : x->components) {
+				if (std::dynamic_pointer_cast<Renderable>(comp).get() != nullptr) {
+					pipe.AddRenderable(std::dynamic_pointer_cast<Renderable>(comp));
+				}
+			}
 		}
 	}
 
-private:
+public:
 	CS300Parser parser;
-	std::vector<Object> objects;
+	std::vector<std::shared_ptr<Object>> objects;
+	std::vector<Object> lights;
 };

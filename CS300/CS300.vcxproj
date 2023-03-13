@@ -166,10 +166,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Behaviors\AnimationComponent.cpp" />
     <ClCompile Include="Core\Assets\Importers.cpp" />
     <ClCompile Include="Core\InputManager.cpp" />
     <ClCompile Include="Core\ObjectAllocator.cpp" />
+    <ClCompile Include="Core\Pipeline.cpp" />
     <ClCompile Include="Core\ResourceManager.cpp" />
     <ClCompile Include="CS300Parser.cpp" />
     <ClCompile Include="Graphics\Camera.cpp" />
@@ -180,17 +183,21 @@
     <ClCompile Include="Graphics\Primitives\Texture.cpp" />
     <ClCompile Include="Renderables.cpp" />
     <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="SDLWindow.cpp" />
+    <ClCompile Include="Core\Window\SDLWindow.cpp" />
     <ClCompile Include="Dependencies\GLM\detail\glm.cpp" />
     <ClCompile Include="Dependencies\STB\stb_vorbis.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="OpenGLPipeline.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Behaviors\AnimationComponent.h" />
     <ClInclude Include="Core\Allocator.h" />
     <ClInclude Include="CommonDefines.h" />
     <ClInclude Include="Core\Assets\Importers.h" />
+    <ClInclude Include="Core\ECSystem\Component.h" />
+    <ClInclude Include="Core\ECSystem\Object.h" />
     <ClInclude Include="Core\InputManager.h" />
     <ClInclude Include="Core\ObjectAllocator.h" />
     <ClInclude Include="Core\PageAllocator.h" />
@@ -645,11 +652,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\Maps\Scene.level" />
+    <None Include="Content\Shaders\SolidColor.vert" />
     <None Include="Content\Shaders\Textured.frag" />
     <None Include="Content\Shaders\Textured.shader" />
     <None Include="Content\Shaders\UV.frag" />
     <None Include="Content\Shaders\Transform.vert" />
     <None Include="Content\Shaders\UVs.shader" />
+    <None Include="Content\Shaders\White.frag" />
+    <None Include="Content\Shaders\White.shader" />
     <None Include="Dependencies\GLM\detail\func_common.inl" />
     <None Include="Dependencies\GLM\detail\func_common_simd.inl" />
     <None Include="Dependencies\GLM\detail\func_exponential.inl" />

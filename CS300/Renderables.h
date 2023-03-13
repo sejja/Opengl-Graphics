@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Core/ECSystem/Object.h"
+#include "Core/ECSystem/Component.h"
+#include "Scene.h"
 #include <glm/glm.hpp>
 #include "Core/Pipeline.h"
 #include <glew.h>
@@ -14,11 +17,11 @@ namespace Core {
 		glm::vec3 mPosition;
 		glm::vec2 mUVs;
 	};
-	
-	class Renderable {
+
+	class Renderable : public Component {
 	public:
+		Renderable(std::weak_ptr<Object> parent) : Component(parent) {}
 		virtual void Render() = 0;
-		glm::vec3 pos, scale, rot;
 	};
 
 	template<GraphicsAPIS E>
@@ -28,6 +31,8 @@ namespace Core {
 	template<>
 	class ModelRenderer<GraphicsAPIS::OpenGL> : public Renderable {
 	public:
+		ModelRenderer(std::weak_ptr<Object> parent): Renderable(parent) {}
+		
 		void SetMesh(AssetReference<Model> model) {
 			mModel = model.lock();
 		}
@@ -41,6 +46,11 @@ namespace Core {
 			glBindVertexArray(mModel->Get()->GetVao());
 			glDrawArrays(GL_TRIANGLES, 0, mModel->Get()->GetVertexCount());
 		}
+
+		AssetReference<Graphics::ShaderProgram> GetShaderProgram() {
+			return mShaderProgram;
+		}
+
 	private:
 		Asset<Model> mModel;
 		Asset<Graphics::ShaderProgram> mShaderProgram;

@@ -26,12 +26,9 @@ void OpenGLPipeline::PreRender() {
 	glClearColor(0.f, 0.f, 0.f, 0.f);
 }
 
-#define TEST 1
-
 void OpenGLPipeline::Render() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	auto program = GContent->GetResource<Graphics::ShaderProgram>("Content/Shaders/Textured.shader");
 	auto uv = GContent->GetResource<Graphics::ShaderProgram>("Content/Shaders/UVs.shader")->Get();
 	static Camera cam;
 					
@@ -46,7 +43,6 @@ void OpenGLPipeline::Render() {
 		uv->Bind();
 	}
 	else {
-		program->Get()->Bind();
 		texture.Bind();
 	}
 
@@ -61,21 +57,25 @@ void OpenGLPipeline::Render() {
 	for (auto it = renderables.begin(); it != renderables.end(); ++it) {
 		if (auto renderable = it->lock()) {
 			glm::mat4 view = glm::mat4(1.0f);
-			auto pos = renderable->pos;
+
+			auto parent = renderable->mParent.lock();
+			
+			auto pos = parent->transform.mPostion;
 			// note that we're translating the scene in the reverse direction of where we want to move
 			view = cam.GetViewMatrix();
 			glm::mat4 projection;
 			projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 10000.0f);
-			program->Get()->SetShaderUniform("uTransform", &projection);
-			program->Get()->SetShaderUniform("uView", &view);
+			Asset<Graphics::ShaderProgram> shader = std::dynamic_pointer_cast<Core::ModelRenderer<Core::GraphicsAPIS::OpenGL>>(renderable)->GetShaderProgram().lock();
+			shader->Get()->Bind();
+			shader->Get()->SetShaderUniform("uTransform", &projection);
+			shader->Get()->SetShaderUniform("uView", &view);
 
-			glm::mat4 matrix = glm::translate(glm::mat4(1.0f), renderable->pos)*
-				glm::rotate(glm::mat4(1.0f), renderable->rot.y, glm::vec3(1.0f, 0.0f, 0.0f))*
-				glm::rotate(glm::mat4(1.0f), renderable->rot.x, glm::vec3(0.0f, 1.0f, 0.0f))*
-				glm::scale(glm::mat4(1.0f), renderable->scale);
-			program->Get()->SetShaderUniform("uModel", &matrix);
+			glm::mat4 matrix = glm::translate(glm::mat4(1.0f), parent->transform.mPostion)*
+				glm::rotate(glm::mat4(1.0f), parent->transform.mRotation.y, glm::vec3(1.0f, 0.0f, 0.0f))*
+				glm::rotate(glm::mat4(1.0f), parent->transform.mRotation.x, glm::vec3(0.0f, 1.0f, 0.0f))*
+				glm::scale(glm::mat4(1.0f), parent->transform.mScale);
+			shader->Get()->SetShaderUniform("uModel", &matrix);
 			auto r = reinterpret_cast<Core::ModelRenderer<Core::GraphicsAPIS::OpenGL>*>(renderable.get());
-			r->SetShaderProgram(program);
 			r->Render();
 		}
 		else {
