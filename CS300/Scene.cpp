@@ -50,6 +50,17 @@ void Scene::CreateScene(const char* file) {
 		light->mData.mInner = x.inner;
 		light->mData.mOutter = x.outer;
 		light->mData.mFallOff = x.falloff;
+
+		if (x.type == "POINT") {
+			light->mData.mType = Graphics::Primitives::Light::LightType::Point;
+		}
+		else if (x.type == "DIR") {
+			light->mData.mType = Graphics::Primitives::Light::LightType::Directional;
+		}
+		else {
+			light->mData.mType = Graphics::Primitives::Light::LightType::Spot;
+		}
+	
 		obj->components.emplace_back(std::move(renderer));
 		obj->components.emplace_back(std::move(light));
 

@@ -18,6 +18,7 @@ struct Light {
     float cosIn;
     float cosOut;
     float fallOff;
+    int type;
 };
 
 uniform MaterialParameters uMaterial;
@@ -38,14 +39,21 @@ uniform sampler2D colorsTex;
 void main() {
     vec3 totalLightShine = vec3(0, 0, 0);
     
-    for(int i = 0; i < 1; i++) {
+    for(int i = 0; i < uLightCount; i++) {
         //ambient
         float ambientStrength = 0.1;
         vec3 ambient = uLight[i].amb;
    
         //diffuse
         vec3 norm = normalize(mat3(transpose(inverse(uModel))) * oNormal);
-        vec3 lightDir = normalize(uLight[i].pos - oPosition); 
+        
+        vec3 lightDir;
+        
+       if(uLight[i].type == 2)
+			lightDir = -uLight[i].dir;
+		else
+		     lightDir = normalize(uLight[i].pos - oPosition); 
+
         float diff = max(dot(norm, lightDir), 0.0);
         vec3 diffuse = diff * uLight[i].dif;
     
@@ -56,12 +64,16 @@ void main() {
         vec3 specular = uLight[i].spe * spec;
 
         float dist = length(lightDir);
-        float att = min(1.f / (uLight[i].att.x + uLight[i].att.y * dist + uLight[i].att.z * dist * dist), 1.0f);
+        float att = 1;
+        
+        if(uLight[i].type != 2) {
+			 att = min(1.f / (uLight[i].att.x + uLight[i].att.y * dist + uLight[i].att.z * dist * dist), 1.0f);
+		}
     
        float Spotlight =1;
 		vec3 d = normalize(uLight[i].dir);
-		//if(type[i]==1)
-		//{
+		if(uLight[i].type ==1)
+		{
 			float aplha = dot(-lightDir, d);
 
 			if(aplha < cos(uLight[i].cosOut))
@@ -72,7 +84,7 @@ void main() {
 				Spotlight= pow((aplha-cos(uLight[i].cosOut))/(cos(uLight[i].cosIn)-cos(uLight[i].cosOut)), uLight[i].fallOff);
 
 			Spotlight= clamp(Spotlight,0,1);
-		//}
+		}
 
 
         totalLightShine += att * (ambient + Spotlight * (diffuse + specular));

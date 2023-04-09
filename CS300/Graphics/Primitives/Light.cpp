@@ -27,6 +27,7 @@ namespace Graphics {
 				sLightData[mIndex].mInner = mData.mInner;
 				sLightData[mIndex].mOutter = mData.mOutter;
 				sLightData[mIndex].mFallOff = mData.mFallOff;
+				sLightData[mIndex].mType = mData.mType;
 			}
 		}
 	}

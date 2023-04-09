@@ -10,6 +10,12 @@ namespace Graphics {
 	namespace Primitives {
 		class Light : public Component {
 		public:
+			enum class LightType {
+				Point = 0,
+				Spot = 1,
+				Directional = 2
+			};
+
 			struct BackedLightData {
 				glm::vec3 mPosition;
 				glm::vec3 mDirection;
@@ -20,6 +26,7 @@ namespace Graphics {
 				float mInner;
 				float mOutter;
 				float mFallOff;
+				LightType mType;
 			};
 		
 			Light(std::weak_ptr<Object> parent);

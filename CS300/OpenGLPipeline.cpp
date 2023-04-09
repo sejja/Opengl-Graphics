@@ -122,7 +122,8 @@ void OpenGLPipeline::UploadLightDataToGPU(const AssetReference<Graphics::ShaderP
 		shadptr->SetShaderUniform(("uLight[" + std::to_string(i - 1) + "].cosIn").c_str(), &Graphics::Primitives::Light::sLightData[i - 1].mInner);
 		shadptr->SetShaderUniform(("uLight[" + std::to_string(i - 1) + "].cosOut").c_str(), &Graphics::Primitives::Light::sLightData[i - 1].mOutter);
 		shadptr->SetShaderUniform(("uLight[" + std::to_string(i - 1) + "].fallOff").c_str(), &Graphics::Primitives::Light::sLightData[i - 1].mFallOff);
+		shadptr->SetShaderUniform(("uLight[" + std::to_string(i - 1) + "].type").c_str(), static_cast<int>(Graphics::Primitives::Light::sLightData[i - 1].mType));
 	}
 
-	shadptr->SetShaderUniform("uLightCount", &Graphics::Primitives::Light::sLightReg);
+	shadptr->SetShaderUniform("uLightCount", static_cast<int>(Graphics::Primitives::Light::sLightReg));
 }
