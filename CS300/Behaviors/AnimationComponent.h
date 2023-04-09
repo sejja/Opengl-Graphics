@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _ANIMATION_COMPONENT__H_
+#define _ANIMATION_COMPONENT__H_
+
 #include "Scene.h"
 #include "Animation.h"
 #include "CS300Parser.h"
@@ -55,4 +57,6 @@ namespace Behaviors {
 		glm::vec3 mOriginal;
 
 	};
-} // namespace Behaviors
+}
+
+#endif

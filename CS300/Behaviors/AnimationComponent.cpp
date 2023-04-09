@@ -36,8 +36,7 @@ namespace Behaviors {
 		}
 	}
 
-	void AnimationComponent4
-	::Update() {
+	void AnimationComponent4::Update() {
 		if (!mParent.expired()) {
 			auto parent = mParent.lock();
 

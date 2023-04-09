@@ -176,6 +176,7 @@
     <ClCompile Include="Core\ResourceManager.cpp" />
     <ClCompile Include="CS300Parser.cpp" />
     <ClCompile Include="Graphics\Camera.cpp" />
+    <ClCompile Include="Graphics\Primitives\Light.cpp" />
     <ClCompile Include="Graphics\Primitives\Material.cpp" />
     <ClCompile Include="Graphics\Primitives\Shader.cpp" />
     <ClCompile Include="Graphics\Primitives\ShaderProgram.cpp" />
@@ -245,6 +246,7 @@
     <ClInclude Include="Dependencies\TinyOBJLoader\tinyobjloader.h" />
     <ClInclude Include="Graphics\Camera.h" />
     <ClInclude Include="Graphics\Primitives\Color.h" />
+    <ClInclude Include="Graphics\Primitives\Light.h" />
     <ClInclude Include="Graphics\Primitives\Material.h" />
     <ClInclude Include="Graphics\Primitives\Shader.h" />
     <ClInclude Include="Graphics\Primitives\ShaderProgram.h" />

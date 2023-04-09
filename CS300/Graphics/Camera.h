@@ -9,6 +9,6 @@ public:
 	void Update();
 	glm::mat4 GetViewMatrix();
 	
-private:
+public:
 	glm::vec3 mPosition, targetPos;
 };

@@ -1,4 +1,14 @@
-#pragma once
+//
+//	Scene.h
+//	OpenGL Graphics
+//
+//	Created by Diego Revilla on 20/03/23
+//	Copyright © 2023. All Rights reserved
+//
+
+#ifndef _SCENE__H_
+#define _SCENE__H_
+
 #include <memory>
 #include "CS300Parser.h"
 #include "Renderables.h"
@@ -25,7 +35,8 @@ public:
 	}
 
 public:
-	CS300Parser parser;
+	static CS300Parser parser;
 	std::vector<std::shared_ptr<Object>> objects;
-	std::vector<Object> lights;
 };
+
+#endif

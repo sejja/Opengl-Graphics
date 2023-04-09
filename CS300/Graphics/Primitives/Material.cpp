@@ -1,10 +1,13 @@
 #include "Material.h"
 #include <cassert>
 #include <exception>
+#include <list>
 
 namespace Graphics {
     void Material::SetAmbient(const glm::vec4& ambient) {
         mAmbient = ambient;
+        std::list<int> listi;
+        listi.size();
     }
 
     void Material::SetDiffuse(const glm::vec4& diffuse) {
@@ -13,6 +16,7 @@ namespace Graphics {
 
     void Material::SetSpecular(const glm::vec4& specular) {
         mSpecular = specular;
+        
     }
 
     void Material::SetEmissive(const glm::vec4& emissive) {

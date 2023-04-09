@@ -1,7 +1,18 @@
+//
+//	Scene.cpp
+//	OpenGL Graphics
+//
+//	Created by Diego Revilla on 20/03/23
+//	Copyright © 2023. All Rights reserved
+//
+
 #include "Scene.h"
 #include "Behaviors/AnimationComponent.h"
 #include "Renderables.h"
 #include "Core/Pipeline.h"
+#include "Graphics/Primitives/Light.h"
+
+CS300Parser Scene::parser;
 
 void Scene::CreateScene(const char* file) {
 	parser.LoadDataFromFile(file);
@@ -27,9 +38,20 @@ void Scene::CreateScene(const char* file) {
 		obj->transform.mScale = { 1.f, 1.f, 1.f };
 		obj->transform.mRotation = glm::vec3(0.f, 0.f, 0.f);
 		std::shared_ptr<Core::ModelRenderer<Core::GraphicsAPIS::OpenGL>> renderer = std::make_shared<Core::ModelRenderer<Core::GraphicsAPIS::OpenGL>>(obj);
+		std::shared_ptr<Graphics::Primitives::Light> light = std::make_shared<Graphics::Primitives::Light>(obj);
 		renderer->SetMesh(GContent->GetResource<Model>("Content/Meshes/sphere_20_averaged.obj"));
 		renderer->SetShaderProgram( GContent->GetResource<Graphics::ShaderProgram>("Content/Shaders/White.shader"));
+		light->SetPosition(x.pos);
+		light->mData.mDirection = x.dir;
+		light->mData.mAmbient = glm::vec3(x.amb, x.amb, x.amb);
+		light->mData.mDiffuse = x.col;
+		light->SetSpecular(x.col);
+		light->SetAttenuation(x.att);
+		light->mData.mInner = x.inner;
+		light->mData.mOutter = x.outer;
+		light->mData.mFallOff = x.falloff;
 		obj->components.emplace_back(std::move(renderer));
+		obj->components.emplace_back(std::move(light));
 
 		switch (i % 4) {
 		case 0: {
