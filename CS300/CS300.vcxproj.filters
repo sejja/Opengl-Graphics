@@ -1295,7 +1295,7 @@
     <ClInclude Include="CS300Parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Scene.h">
+    <ClInclude Include="Core\ECSystem\Scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Core\ResourceManager.h">

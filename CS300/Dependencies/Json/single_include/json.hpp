@@ -10103,7 +10103,7 @@ namespace nlohmann
 		This class implements a recursive descent parser.
 		*/
 		template<typename BasicJsonType, typename InputAdapterType>
-		class parser
+		class mParser
 		{
 			using number_integer_t = typename BasicJsonType::number_integer_t;
 			using number_unsigned_t = typename BasicJsonType::number_unsigned_t;
@@ -10114,7 +10114,7 @@ namespace nlohmann
 
 		public:
 			/// a parser reading from an input adapter
-			explicit parser(InputAdapterType&& adapter,
+			explicit mParser(InputAdapterType&& adapter,
 				const parser_callback_t<BasicJsonType> cb = nullptr,
 				const bool allow_exceptions_ = true,
 				const bool skip_comments = false)
@@ -16577,7 +16577,7 @@ namespace nlohmann
 		friend ::nlohmann::json_pointer<basic_json>;
 
 		template<typename BasicJsonType, typename InputType>
-		friend class ::nlohmann::detail::parser;
+		friend class ::nlohmann::detail::mParser;
 		friend ::nlohmann::detail::serializer<basic_json>;
 		template<typename BasicJsonType>
 		friend class ::nlohmann::detail::iter_impl;
@@ -16597,14 +16597,14 @@ namespace nlohmann
 		using lexer = ::nlohmann::detail::lexer_base<basic_json>;
 
 		template<typename InputAdapterType>
-		static ::nlohmann::detail::parser<basic_json, InputAdapterType> parser(
+		static ::nlohmann::detail::mParser<basic_json, InputAdapterType> mParser(
 			InputAdapterType adapter,
 			detail::parser_callback_t<basic_json>cb = nullptr,
 			const bool allow_exceptions = true,
 			const bool ignore_comments = false
 		)
 		{
-			return ::nlohmann::detail::parser<basic_json, InputAdapterType>(std::move(adapter),
+			return ::nlohmann::detail::mParser<basic_json, InputAdapterType>(std::move(adapter),
 				std::move(cb), allow_exceptions, ignore_comments);
 		}
 
@@ -23030,7 +23030,7 @@ namespace nlohmann
 				const bool ignore_comments = false)
 		{
 			basic_json result;
-			parser(detail::input_adapter(std::forward<InputType>(i)), cb, allow_exceptions, ignore_comments).parse(true, result);
+			mParser(detail::input_adapter(std::forward<InputType>(i)), cb, allow_exceptions, ignore_comments).parse(true, result);
 			return result;
 		}
 
@@ -23069,7 +23069,7 @@ namespace nlohmann
 				const bool ignore_comments = false)
 		{
 			basic_json result;
-			parser(detail::input_adapter(std::move(first), std::move(last)), cb, allow_exceptions, ignore_comments).parse(true, result);
+			mParser(detail::input_adapter(std::move(first), std::move(last)), cb, allow_exceptions, ignore_comments).parse(true, result);
 			return result;
 		}
 
@@ -23081,7 +23081,7 @@ namespace nlohmann
 				const bool ignore_comments = false)
 		{
 			basic_json result;
-			parser(i.get(), cb, allow_exceptions, ignore_comments).parse(true, result);
+			mParser(i.get(), cb, allow_exceptions, ignore_comments).parse(true, result);
 			return result;
 		}
 
@@ -23119,14 +23119,14 @@ namespace nlohmann
 		static bool accept(InputType&& i,
 			const bool ignore_comments = false)
 		{
-			return parser(detail::input_adapter(std::forward<InputType>(i)), nullptr, false, ignore_comments).accept(true);
+			return mParser(detail::input_adapter(std::forward<InputType>(i)), nullptr, false, ignore_comments).accept(true);
 		}
 
 		template<typename IteratorType>
 		static bool accept(IteratorType first, IteratorType last,
 			const bool ignore_comments = false)
 		{
-			return parser(detail::input_adapter(std::move(first), std::move(last)), nullptr, false, ignore_comments).accept(true);
+			return mParser(detail::input_adapter(std::move(first), std::move(last)), nullptr, false, ignore_comments).accept(true);
 		}
 
 		JSON_HEDLEY_WARN_UNUSED_RESULT
@@ -23134,7 +23134,7 @@ namespace nlohmann
 			static bool accept(detail::span_input_adapter&& i,
 				const bool ignore_comments = false)
 		{
-			return parser(i.get(), nullptr, false, ignore_comments).accept(true);
+			return mParser(i.get(), nullptr, false, ignore_comments).accept(true);
 		}
 
 		/*!
@@ -23186,7 +23186,7 @@ namespace nlohmann
 		{
 			auto ia = detail::input_adapter(std::forward<InputType>(i));
 			return format == input_format_t::json
-				? parser(std::move(ia), nullptr, true, ignore_comments).sax_parse(sax, strict)
+				? mParser(std::move(ia), nullptr, true, ignore_comments).sax_parse(sax, strict)
 				: detail::binary_reader<basic_json, decltype(ia), SAX>(std::move(ia)).sax_parse(format, sax, strict);
 		}
 
@@ -23199,7 +23199,7 @@ namespace nlohmann
 		{
 			auto ia = detail::input_adapter(std::move(first), std::move(last));
 			return format == input_format_t::json
-				? parser(std::move(ia), nullptr, true, ignore_comments).sax_parse(sax, strict)
+				? mParser(std::move(ia), nullptr, true, ignore_comments).sax_parse(sax, strict)
 				: detail::binary_reader<basic_json, decltype(ia), SAX>(std::move(ia)).sax_parse(format, sax, strict);
 		}
 
@@ -23213,7 +23213,7 @@ namespace nlohmann
 		{
 			auto ia = i.get();
 			return format == input_format_t::json
-				? parser(std::move(ia), nullptr, true, ignore_comments).sax_parse(sax, strict)
+				? mParser(std::move(ia), nullptr, true, ignore_comments).sax_parse(sax, strict)
 				: detail::binary_reader<basic_json, decltype(ia), SAX>(std::move(ia)).sax_parse(format, sax, strict);
 		}
 
@@ -23258,7 +23258,7 @@ namespace nlohmann
 		*/
 		friend std::istream& operator>>(std::istream& i, basic_json& j)
 		{
-			parser(detail::input_adapter(i)).parse(false, j);
+			mParser(detail::input_adapter(i)).parse(false, j);
 			return i;
 		}
 

@@ -6,18 +6,18 @@
 //	Copyright © 2023. All Rights reserved
 //
 
-#include "Scene.h"
+#include "Core/ECSystem/Scene.h"
 #include "Behaviors/AnimationComponent.h"
 #include "Renderables.h"
 #include "Core/Pipeline.h"
 #include "Graphics/Primitives/Light.h"
 
-CS300Parser Scene::parser;
+CS300Parser Scene::mParser;
 
 void Scene::CreateScene(const char* file) {
-	parser.LoadDataFromFile(file);
+	mParser.LoadDataFromFile(file);
 	
-	for (auto& x : parser.objects) {
+	for (auto& x : mParser.mObjects) {
 		//Object obj;
 		std::shared_ptr<Object> obj = std::make_shared<Object>();
 		obj->transform.mPostion = x.pos;
@@ -27,12 +27,12 @@ void Scene::CreateScene(const char* file) {
 		renderer->SetMesh(GContent->GetResource<Model>(x.mesh.c_str()));
 		renderer->SetShaderProgram(GContent->GetResource<Graphics::ShaderProgram>("Content/Shaders/Textured.shader"));
 		obj->components.emplace_back(std::move(renderer));
-		objects.emplace_back(obj);
+		mObjects.emplace_back(obj);
 	}
 
 	int i = 0;
 	
-	for (auto& x : parser.lights) {
+	for (auto& x : mParser.lights) {
 		std::shared_ptr<Object> obj = std::make_shared<Object>();
 		obj->transform.mPostion = x.pos;
 		obj->transform.mScale = { 1.f, 1.f, 1.f };
@@ -92,6 +92,14 @@ void Scene::CreateScene(const char* file) {
 
 		i++;
 		
-		objects.emplace_back(obj);
+		mObjects.emplace_back(obj);
+	}
+}
+
+void Scene::Tick() {
+	for (auto& obj : mObjects) {
+		for (auto& comp : obj->components) {
+			comp->Update();
+		}
 	}
 }

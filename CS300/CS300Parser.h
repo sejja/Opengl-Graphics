@@ -35,7 +35,7 @@ public:
         std::vector<Animations::Anim> anims;
     };
 
-    std::vector<Transform> objects;
+    std::vector<Transform> mObjects;
 
     struct Light
     {

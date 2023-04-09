@@ -2,7 +2,7 @@
 
 #include "Core/ECSystem/Object.h"
 #include "Core/ECSystem/Component.h"
-#include "Scene.h"
+#include "Core/ECSystem/Scene.h"
 #include <glm/glm.hpp>
 #include "Core/Pipeline.h"
 #include <glew.h>

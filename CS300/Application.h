@@ -5,7 +5,7 @@
 #include <type_traits>
 #include "Core/Window.h"
 #include "Core/Pipeline.h"
-#include "Scene.h"
+#include "Core/ECSystem/Scene.h"
 #include "Core/ResourceManager.h"
 #include "Core/InputManager.h"
 

@@ -1,7 +1,7 @@
 #ifndef _ANIMATION_COMPONENT__H_
 #define _ANIMATION_COMPONENT__H_
 
-#include "Scene.h"
+#include "Core/ECSystem/Scene.h"
 #include "Animation.h"
 #include "CS300Parser.h"
 

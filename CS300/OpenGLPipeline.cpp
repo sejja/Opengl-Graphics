@@ -39,7 +39,7 @@ void OpenGLPipeline::Render() {
 		glPolygonMode(GL_FRONT, GL_FILL);
 	}
 
-	if (GInput->IsKeyDown('V')) {
+	if (GInput->IsKeyDown('F')) {
 		uv->Bind();
 	}
 	else {

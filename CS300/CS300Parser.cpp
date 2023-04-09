@@ -29,7 +29,7 @@ void CS300Parser::LoadDataFromFile(const char* filename)
         exit(0);
     }
 
-    objects.clear();
+    mObjects.clear();
 
     std::string str;
 
@@ -91,7 +91,7 @@ void CS300Parser::LoadDataFromFile(const char* filename)
         {
             Transform newObj;
             inFile >> newObj.name;
-            objects.push_back(newObj);
+            mObjects.push_back(newObj);
             last = LastAdded::OBJECT;
         }
         else if (id == "translate")
@@ -100,9 +100,9 @@ void CS300Parser::LoadDataFromFile(const char* filename)
 
             if (last == LastAdded::OBJECT)
             {
-                if (objects.size() > 0)
+                if (mObjects.size() > 0)
                 {
-                    objects.back().pos = pos;
+                    mObjects.back().pos = pos;
                 }
             }
             else if (last == LastAdded::LIGHT)
@@ -117,36 +117,36 @@ void CS300Parser::LoadDataFromFile(const char* filename)
         {
             glm::vec3 rot = ReadVec3(inFile);
 
-            if (objects.size() > 0)
+            if (mObjects.size() > 0)
             {
-                objects.back().rot = rot;
+                mObjects.back().rot = rot;
             }
         }
         else if (id == "scale")
         {
             glm::vec3 sca = ReadVec3(inFile);
 
-            if (objects.size() > 0)
+            if (mObjects.size() > 0)
             {
-                objects.back().sca = sca;
+                mObjects.back().sca = sca;
             }
         }
         else if (id == "mesh")
         {
             std::string mesh;
             inFile >> mesh;
-            if (objects.size() > 0)
+            if (mObjects.size() > 0)
             {
-                objects.back().mesh = mesh;
+                mObjects.back().mesh = mesh;
             }
         }
         else if (id == "shininess")
         {
             float ns = ReadFloat(inFile);
 
-            if (objects.size() > 0)
+            if (mObjects.size() > 0)
             {
-                objects.back().ns = ns;
+                mObjects.back().ns = ns;
             }
         }
         else if (id == "light")
@@ -218,9 +218,9 @@ void CS300Parser::LoadDataFromFile(const char* filename)
 
             if (last == LastAdded::OBJECT)
             {
-                if (objects.size() > 0)
+                if (mObjects.size() > 0)
                 {
-                    objects.back().anims.push_back({ Animations::NameToUpdater.at(id), param });
+                    mObjects.back().anims.push_back({ Animations::NameToUpdater.at(id), param });
                 }
             }
             else if (last == LastAdded::LIGHT)

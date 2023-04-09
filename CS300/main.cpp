@@ -9,7 +9,7 @@
 #include "Application.h"
 #include "Core/Window/SDLWindow.h"
 #include "OpenGLPipeline.h"
-#include "Scene.h"
+#include "Core/ECSystem/Scene.h"
 
 // ------------------------------------------------------------------------
 /*! Main
@@ -26,11 +26,7 @@ int main() {
 	app.mScene.CreateScene("Content/Maps/Scene.level");
     app.mScene.UploadObjectsToPipeline(app.mPipe);
     app.mTick = [&app]() {
-		for (auto& obj : app.mScene.objects) {
-			for (auto& comp : obj->components) {
-				comp->Update();
-			}
-		}
+		app.mScene.Tick();
     };
     app.Run();
 

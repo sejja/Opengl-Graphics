@@ -49,7 +49,7 @@ namespace nlohmann
 		This class implements a recursive descent parser.
 		*/
 		template<typename BasicJsonType, typename InputAdapterType>
-		class parser
+		class mParser
 		{
 			using number_integer_t = typename BasicJsonType::number_integer_t;
 			using number_unsigned_t = typename BasicJsonType::number_unsigned_t;
@@ -60,7 +60,7 @@ namespace nlohmann
 
 		public:
 			/// a parser reading from an input adapter
-			explicit parser(InputAdapterType&& adapter,
+			explicit mParser(InputAdapterType&& adapter,
 				const parser_callback_t<BasicJsonType> cb = nullptr,
 				const bool allow_exceptions_ = true,
 				const bool skip_comments = false)
