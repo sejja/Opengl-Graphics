@@ -6,9 +6,8 @@
 //	Copyright © 2023. All Rights reserved
 //
 
-#include "Core/ECSystem/Scene.h"
+#include "Scene.h"
 #include "Behaviors/AnimationComponent.h"
-#include "Renderables.h"
 #include "Core/Pipeline.h"
 #include "Graphics/Primitives/Light.h"
 

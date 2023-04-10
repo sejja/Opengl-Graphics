@@ -1277,7 +1277,7 @@
     <ClInclude Include="Core\Math\Transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Renderables.h">
+    <ClInclude Include="Graphics\Primitives\Renderables.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Dependencies\TinyOBJLoader\tinyobjloader.h">

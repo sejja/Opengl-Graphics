@@ -2,7 +2,7 @@
 #include <glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "Renderables.h"
+#include "Graphics/Primitives/Renderables.h"
 #include "Graphics/Camera.h"
 #include "Graphics/Primitives/Texture.h"
 #include "Core/InputManager.h"
