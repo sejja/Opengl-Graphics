@@ -7,9 +7,9 @@
 //
 
 #include "Application.h"
-#include "SDLWindow.h"
+#include "Core/Window/SDLWindow.h"
 #include "OpenGLPipeline.h"
-#include "Scene.h"
+#include "Core/ECSystem/Scene.h"
 
 // ------------------------------------------------------------------------
 /*! Main
@@ -18,13 +18,16 @@
 */ //----------------------------------------------------------------------
 int main() {
     struct MyOpenGLApp : public
-        GraphicApplication<SDLWindow, OpenGLPipeline> {
+       GraphicApplication<SDLWindow, OpenGLPipeline> {
        Scene mScene;
     } app;
     
     app.SetDimensions({ 1072, 780 });
 	app.mScene.CreateScene("Content/Maps/Scene.level");
     app.mScene.UploadObjectsToPipeline(app.mPipe);
+    app.mTick = [&app]() {
+		app.mScene.Tick();
+    };
     app.Run();
 
     return 0;

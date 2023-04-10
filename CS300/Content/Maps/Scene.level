@@ -12,14 +12,14 @@ camUp 0 1 0
 object floor
 translate 0 -25 50
 rotation 0 270 0
-scale 150 150 150
-mesh Content/Meshes/plane.obj 
+scale 150 150 1
+mesh Content/Meshes/cube_face.obj 
 
 object plane
 translate -40 0 50
 rotation 0 0 0
-scale 10 10 10
-mesh Content/Meshes/plane.obj 
+scale 10 10 1
+mesh Content/Meshes/cube_face.obj 
 
 object cube
 translate -20 0 50
@@ -51,8 +51,8 @@ mesh Content/Meshes/sphere_20_face.obj
 object plane_mesh
 translate -40 15 50
 rotation 0 0 0
-scale 10 10 10
-mesh Content/Meshes/plane.obj  
+scale 10 10 1
+mesh Content/Meshes/cube_face.obj  
 
 object cube_mesh
 translate -20 15 50
@@ -89,7 +89,7 @@ orbit 0 -15 0
 #light data
 light
 translate -50 0 55
-color 1 1 1
+color 1 0 0
 lightType POINT	
 attenuation 0 0.0 0.01
 #sinusoidal 0 1 20
@@ -97,13 +97,13 @@ ambient 0.2
 
 light
 translate 50 0 55
-color 1 1 1
+color 0 1 0
 lightType DIR	
 direction -1 0 0
 	
 light
 translate 50 30 50
-color 1 1 1
+color 0 0 1
 lightType SPOT
 attenuation 1 0.0 0.0	
 direction 0 -1 0

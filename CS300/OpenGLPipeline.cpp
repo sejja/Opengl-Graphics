@@ -2,14 +2,13 @@
 #include <glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "Graphics/Primitives/ShaderProgram.h"
-#include "Renderables.h"
+#include "Graphics/Primitives/Renderables.h"
 #include "Graphics/Camera.h"
 #include "Graphics/Primitives/Texture.h"
 #include "Core/InputManager.h"
+#include "Graphics/Primitives/Light.h"
 
 static Graphics::Texture texture("Content/Textures/UV.jpg");
-Graphics::ShaderProgram* uv_program;
 
 void OpenGLPipeline::Init() {
 	glEnable(GL_DEPTH_TEST);
@@ -21,8 +20,6 @@ void OpenGLPipeline::Init() {
 	glDisable(GL_STENCIL_TEST);
 	texture.UploadToGPU();
 	mProjectionMatrix = glm::perspective(1.f, 0.75f, 1.f, 100.f);
-	uv_program = new Graphics::ShaderProgram(new Graphics::Shader("Content/Shaders/UV.frag", Graphics::Shader::EType::Fragment),
-																	new Graphics::Shader("Content/Shaders/Transform.vert", Graphics::Shader::EType::Vertex));
 }
 
 void OpenGLPipeline::PreRender() {
@@ -32,9 +29,7 @@ void OpenGLPipeline::PreRender() {
 void OpenGLPipeline::Render() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	static Graphics::ShaderProgram program(new Graphics::Shader("Content/Shaders/Textured.frag", Graphics::Shader::EType::Fragment),
-															  new Graphics::Shader("Content/Shaders/Transform.vert", Graphics::Shader::EType::Vertex));
-						
+	auto uv = GContent->GetResource<Graphics::ShaderProgram>("Content/Shaders/UVs.shader")->Get();
 	static Camera cam;
 					
 	if (GInput->IsKeyDown('Z')) {
@@ -44,13 +39,14 @@ void OpenGLPipeline::Render() {
 		glPolygonMode(GL_FRONT, GL_FILL);
 	}
 
-	if (GInput->IsKeyDown('V')) {
-		uv_program->Bind();
+	if (GInput->IsKeyDown('F')) {
+		uv->Bind();
 	}
 	else {
-		program.Bind();
 		texture.Bind();
 	}
+
+	auto shader  = GContent->GetResource<Graphics::ShaderProgram>("Content/Shaders/UVs.shader")->Get();
 
 	glm::mat4 view = glm::mat4(1.0f);
 	// note that we're translating the scene in the reverse direction of where we want to move
@@ -63,22 +59,29 @@ void OpenGLPipeline::Render() {
 	for (auto it = renderables.begin(); it != renderables.end(); ++it) {
 		if (auto renderable = it->lock()) {
 			glm::mat4 view = glm::mat4(1.0f);
-			auto pos = renderable->pos;
+
+			auto parent = renderable->mParent.lock();
+			
+			auto pos = parent->transform.mPostion;
 			// note that we're translating the scene in the reverse direction of where we want to move
 			view = cam.GetViewMatrix();
 			glm::mat4 projection;
 			projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 10000.0f);
-			program.SetShaderUniform("uTransform", &projection);
-			program.SetShaderUniform("uView", &view);
-
-			glm::mat4 matrix = glm::translate(glm::mat4(1.0f), renderable->pos)*
-				glm::rotate(glm::mat4(1.0f), renderable->rot.y, glm::vec3(1.0f, 0.0f, 0.0f))*
-				glm::rotate(glm::mat4(1.0f), renderable->rot.x, glm::vec3(0.0f, 1.0f, 0.0f))*
-				glm::scale(glm::mat4(1.0f), renderable->scale);
-
-			program.SetShaderUniform("uModel", &matrix);
+			Asset<Graphics::ShaderProgram> shader = std::dynamic_pointer_cast<Core::ModelRenderer<Core::GraphicsAPIS::OpenGL>>(renderable)->GetShaderProgram().lock();
+			shader->Get()->Bind();
+			shader->Get()->SetShaderUniform("uTransform", &projection);
+			shader->Get()->SetShaderUniform("uView", &view);
+			glm::mat4 matrix = glm::translate(glm::mat4(1.0f), parent->transform.mPostion)*
+				glm::rotate(glm::mat4(1.0f), parent->transform.mRotation.y, glm::vec3(1.0f, 0.0f, 0.0f))*
+				glm::rotate(glm::mat4(1.0f), parent->transform.mRotation.x, glm::vec3(0.0f, 1.0f, 0.0f))*
+				glm::scale(glm::mat4(1.0f), parent->transform.mScale);
+			shader->Get()->SetShaderUniform("uModel", &matrix);		
+			shader->Get()->SetShaderUniform("uCameraPos", &cam.mPosition);
+		
+			UploadLightDataToGPU(shader);
+			
+			
 			auto r = reinterpret_cast<Core::ModelRenderer<Core::GraphicsAPIS::OpenGL>*>(renderable.get());
-			//r->SetShaderProgram(program);
 			r->Render();
 		}
 		else {
@@ -103,4 +106,24 @@ void OpenGLPipeline::SetDimensions(const glm::lowp_u16vec2& dim) {
 
 void OpenGLPipeline::AddRenderable(std::weak_ptr<Core::Renderable> renderer) {
 	renderables.push_back(renderer);
+}
+
+void OpenGLPipeline::UploadLightDataToGPU(const AssetReference<Graphics::ShaderProgram>& shader) {
+	auto shadptr = shader.lock()->Get();
+	
+	for (size_t i = 1; i <= Graphics::Primitives::Light::sLightReg; i++) {
+		auto pos = Graphics::Primitives::Light::sLightData[i - 1].mPosition;
+		shadptr->SetShaderUniform(("uLight[" + std::to_string(i - 1) + "].pos").c_str(), &pos);
+		shadptr->SetShaderUniform(("uLight[" + std::to_string(i - 1) + "].dir").c_str(), &Graphics::Primitives::Light::sLightData[i - 1].mDirection);
+		shadptr->SetShaderUniform(("uLight[" + std::to_string(i - 1) + "].amb").c_str(), &Graphics::Primitives::Light::sLightData[i - 1].mAmbient);
+		shadptr->SetShaderUniform(("uLight[" + std::to_string(i - 1) + "].dif").c_str(), &Graphics::Primitives::Light::sLightData[i - 1].mDiffuse);
+		shadptr->SetShaderUniform(("uLight[" + std::to_string(i - 1) + "].spe").c_str(), &Graphics::Primitives::Light::sLightData[i - 1].mSpecular);
+		shadptr->SetShaderUniform(("uLight[" + std::to_string(i - 1) + "].att").c_str(), &Graphics::Primitives::Light::sLightData[i - 1].mAttenuation);
+		shadptr->SetShaderUniform(("uLight[" + std::to_string(i - 1) + "].cosIn").c_str(), &Graphics::Primitives::Light::sLightData[i - 1].mInner);
+		shadptr->SetShaderUniform(("uLight[" + std::to_string(i - 1) + "].cosOut").c_str(), &Graphics::Primitives::Light::sLightData[i - 1].mOutter);
+		shadptr->SetShaderUniform(("uLight[" + std::to_string(i - 1) + "].fallOff").c_str(), &Graphics::Primitives::Light::sLightData[i - 1].mFallOff);
+		shadptr->SetShaderUniform(("uLight[" + std::to_string(i - 1) + "].type").c_str(), static_cast<int>(Graphics::Primitives::Light::sLightData[i - 1].mType));
+	}
+
+	shadptr->SetShaderUniform("uLightCount", static_cast<int>(Graphics::Primitives::Light::sLightReg));
 }

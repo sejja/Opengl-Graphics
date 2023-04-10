@@ -29,9 +29,17 @@ void CS300Parser::LoadDataFromFile(const char* filename)
         exit(0);
     }
 
-    objects.clear();
+    mObjects.clear();
 
     std::string str;
+
+    enum class LastAdded
+    {
+        NONE,
+        OBJECT,
+        LIGHT
+    };
+    LastAdded last = LastAdded::NONE;
 
     while (!inFile.eof())
     {
@@ -83,42 +91,144 @@ void CS300Parser::LoadDataFromFile(const char* filename)
         {
             Transform newObj;
             inFile >> newObj.name;
-            objects.push_back(newObj);
+            mObjects.push_back(newObj);
+            last = LastAdded::OBJECT;
         }
         else if (id == "translate")
         {
             glm::vec3 pos = ReadVec3(inFile);
 
-            if (objects.size() > 0)
+            if (last == LastAdded::OBJECT)
             {
-                objects.back().pos = pos;
+                if (mObjects.size() > 0)
+                {
+                    mObjects.back().pos = pos;
+                }
+            }
+            else if (last == LastAdded::LIGHT)
+            {
+                if (lights.size() > 0)
+                {
+                    lights.back().pos = pos;
+                }
             }
         }
         else if (id == "rotation")
         {
             glm::vec3 rot = ReadVec3(inFile);
 
-            if (objects.size() > 0)
+            if (mObjects.size() > 0)
             {
-                objects.back().rot = rot;
+                mObjects.back().rot = rot;
             }
         }
         else if (id == "scale")
         {
             glm::vec3 sca = ReadVec3(inFile);
 
-            if (objects.size() > 0)
+            if (mObjects.size() > 0)
             {
-                objects.back().sca = sca;
+                mObjects.back().sca = sca;
             }
         }
         else if (id == "mesh")
         {
             std::string mesh;
             inFile >> mesh;
-            if (objects.size() > 0)
+            if (mObjects.size() > 0)
             {
-                objects.back().mesh = mesh;
+                mObjects.back().mesh = mesh;
+            }
+        }
+        else if (id == "shininess")
+        {
+            float ns = ReadFloat(inFile);
+
+            if (mObjects.size() > 0)
+            {
+                mObjects.back().ns = ns;
+            }
+        }
+        else if (id == "light")
+        {
+            Light newLight;
+
+            lights.push_back(newLight);
+            last = LastAdded::LIGHT;
+        }
+        else if (id == "color")
+        {
+            glm::vec3 col = ReadVec3(inFile);
+
+            if (lights.size() > 0)
+            {
+                lights.back().col = col;
+            }
+        }
+        else if (id == "ambient")
+        {
+            float ambient = ReadFloat(inFile);
+
+            if (lights.size() > 0)
+            {
+                lights.back().amb = ambient;
+            }
+        }
+        else if (id == "lightType")
+        {
+            std::string type;
+            inFile >> type;
+            if (lights.size() > 0)
+            {
+                lights.back().type = type;
+            }
+        }
+        else if (id == "attenuation")
+        {
+            glm::vec3 att = ReadVec3(inFile);
+
+            if (lights.size() > 0)
+            {
+                lights.back().att = att;
+            }
+        }
+        else if (id == "direction")
+        {
+            glm::vec3 dir = ReadVec3(inFile);
+
+            if (lights.size() > 0)
+            {
+                lights.back().dir = dir;
+            }
+        }
+        else if (id == "spotAttenuation")
+        {
+            glm::vec3 spotAtt = ReadVec3(inFile);
+
+            if (lights.size() > 0)
+            {
+                lights.back().inner = spotAtt.x;
+                lights.back().outer = spotAtt.y;
+                lights.back().falloff = spotAtt.z;
+            }
+        }
+        else if (Animations::NameToUpdater.find(id) != Animations::NameToUpdater.end())
+        {
+            glm::vec3 param = ReadVec3(inFile);
+
+            if (last == LastAdded::OBJECT)
+            {
+                if (mObjects.size() > 0)
+                {
+                    mObjects.back().anims.push_back({ Animations::NameToUpdater.at(id), param });
+                }
+            }
+            else if (last == LastAdded::LIGHT)
+            {
+                if (lights.size() > 0)
+                {
+                    lights.back().anims.push_back({ Animations::NameToUpdater.at(id), param });
+                }
             }
         }
     }

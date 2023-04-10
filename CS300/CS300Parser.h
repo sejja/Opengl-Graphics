@@ -5,16 +5,18 @@
 #include <string>
 #include <vector>
 
+#include "Animation.h"
+
 class CS300Parser
 {
 public:
     void LoadDataFromFile(const char* filename);
 
-    float     fovy;
-    float     width;
-    float     height;
-    float     nearPlane;
-    float     farPlane;
+    float     fovy = 60.0f;
+    float     width = 16.0f;
+    float     height = 9.0f;
+    float     nearPlane = 1.0f;
+    float     farPlane = 500.0f;
     glm::vec3 camPos;
     glm::vec3 camTarget;
     glm::vec3 camUp;
@@ -28,8 +30,29 @@ public:
         glm::vec3 pos;
         glm::vec3 rot;
         glm::vec3 sca;
+        float     ns = 10.0f;
+
+        std::vector<Animations::Anim> anims;
     };
-    std::vector<Transform> objects;
+
+    std::vector<Transform> mObjects;
+
+    struct Light
+    {
+        glm::vec3 pos;
+        glm::vec3 dir;
+        glm::vec3 col;
+        glm::vec3 att;
+        float     amb = 0.0f;
+        float     inner = 0.0f;
+        float     outer = 30.0f;
+        float     falloff = 1.0f;
+
+        std::string type = "POINT";
+
+        std::vector<Animations::Anim> anims;
+    };
+    std::vector<Light> lights;
 
 private:
     static float     ReadFloat(std::ifstream& f);

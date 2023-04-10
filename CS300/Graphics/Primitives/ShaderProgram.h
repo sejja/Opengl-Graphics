@@ -14,18 +14,18 @@
 #include "Color.h"
 #include "CommonDefines.h"
 #include <string>
+#include "Core/ResourceManager.h"
 
 namespace Graphics {
 	class ShaderProgram {
 	public:
 		ShaderProgram();
-		ShaderProgram(Shader* vertexShader, Shader* fragmentShader);
-		~ShaderProgram();
+		ShaderProgram(AssetReference<Shader> vertexShader, AssetReference<Shader> fragmentShader);
 		void Bind();
 		void Unbind();
 		void Load();
-		Shader* GetShader(Shader::EType shaderType);
-		void SetShader(Shader* pShader, bool link = false);
+		AssetReference<Shader> GetShader(Shader::EType shaderType);
+		void SetShader(AssetReference<Shader> pShader, bool link = false);
 		void SetShaderUniform(const char* name, int value);
 		void SetShaderUniform(const char* name, bool value);
 		void SetShaderUniform(const char* name, int* value, int count = 1);
@@ -44,7 +44,7 @@ namespace Graphics {
 		void DetachShader(const Shader::EType which);
 
 		unsigned int Handle = NULL;
-		Shader* Shaders[2] = { nullptr, nullptr };
+		Asset<Shader> Shaders[2];
 	};
 }
 

@@ -5,7 +5,7 @@
 #include <type_traits>
 #include "Core/Window.h"
 #include "Core/Pipeline.h"
-#include "Scene.h"
+#include "Core/ECSystem/Scene.h"
 #include "Core/ResourceManager.h"
 #include "Core/InputManager.h"
 
@@ -40,7 +40,6 @@ GraphicApplication<WINDOW, PIPELINE>::GraphicApplication() {
 template<class WINDOW, class PIPELINE>
 GraphicApplication<WINDOW, PIPELINE>::~GraphicApplication() {
 	mPipe.Shutdown();
-	mWindow.Destroy();
 }
 
 template<class WINDOW, class PIPELINE>
