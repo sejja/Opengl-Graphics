@@ -183,7 +183,7 @@
     <ClCompile Include="Graphics\Primitives\Model.cpp" />
     <ClCompile Include="Graphics\Primitives\Texture.cpp" />
     <ClCompile Include="Renderables.cpp" />
-    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Core\ECSystem\Scene.cpp" />
     <ClCompile Include="Core\Window\SDLWindow.cpp" />
     <ClCompile Include="Dependencies\GLM\detail\glm.cpp" />
     <ClCompile Include="Dependencies\STB\stb_vorbis.c" />

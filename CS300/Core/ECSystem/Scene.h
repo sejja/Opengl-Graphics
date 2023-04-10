@@ -22,7 +22,7 @@ namespace Core {
 class Scene {
 #pragma region //Functions
 public:
-	void CreateScene(const char*);
+	void CreateScene(const std::string_view& file);
 
 	template<typename PIPE>
 	void UploadObjectsToPipeline(PIPE& pipe);
@@ -40,7 +40,7 @@ private:
 /*! Get Resource
 *
 *   Gets a resource given the name
-*/ // --------------------------------------------------------------------
+*/ // ---------------------------------------------------------------------
 template<typename PIPE>
 void Scene::UploadObjectsToPipeline(PIPE& pipe) {
 	using namespace Core;

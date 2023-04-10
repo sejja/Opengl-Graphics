@@ -45,7 +45,7 @@
     <ClCompile Include="CS300Parser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Scene.cpp">
+    <ClCompile Include="Core\ECSystem\Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Core\ResourceManager.cpp">
