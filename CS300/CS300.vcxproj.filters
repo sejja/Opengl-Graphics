@@ -1271,9 +1271,6 @@
     <ClInclude Include="Graphics\OpenGLPipeline.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Object.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Math\Transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>

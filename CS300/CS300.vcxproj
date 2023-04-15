@@ -252,7 +252,6 @@
     <ClInclude Include="Graphics\Primitives\ShaderProgram.h" />
     <ClInclude Include="Graphics\Primitives\Model.h" />
     <ClInclude Include="Graphics\Primitives\Texture.h" />
-    <ClInclude Include="Object.h" />
     <ClInclude Include="Graphics\Primitives\Renderables.h" />
     <ClInclude Include="Core\ECSystem\Scene.h" />
     <ClInclude Include="Core\Window\SDLWindow.h" />
