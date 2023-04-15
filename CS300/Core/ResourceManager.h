@@ -34,8 +34,7 @@ public:
 		rawData(data){
 		
 	}
-	~TResource() {
-	}
+	~TResource() {}
 	
 	// ------------------------------------------------------------------------
 	/*! Get
@@ -49,7 +48,7 @@ public:
 	std::unique_ptr<Ty_> rawData = nullptr;
 };
 
-class ResourceManager : public Singleton<ResourceManager> {
+class ResourceManager : public Global<ResourceManager> {
 public:
 	using raw_text = const char*;
 	// ------------------------------------------------------------------------
@@ -75,8 +74,6 @@ protected:
 	std::unordered_map<std::string, std::shared_ptr<IResource>> resources;
 	std::unordered_map<std::string, IResourceImporter*> importers;
 };
-
-#define GContent (&ResourceManager::Instance())
 
 template<typename T>
 using Asset = std::shared_ptr<TResource<T>>;

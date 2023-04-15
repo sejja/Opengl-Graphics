@@ -90,5 +90,5 @@ void main() {
         totalLightShine += att * (ambient + Spotlight * (diffuse + specular));
    }
   
-    FragColor = vec4(totalLightShine, 1.0);
+    FragColor = texture(colorsTex, oUVs) + vec4(totalLightShine, 1.0);
 }

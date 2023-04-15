@@ -11,6 +11,7 @@
 #include "Graphics/Primitives/Model.h"
 #include "Graphics/Primitives/Texture.h"
 #include "Dependencies/Json/single_include/json.hpp"
+#include "Global.h"
 
 namespace Assets {
 	// ------------------------------------------------------------------------
@@ -43,14 +44,19 @@ namespace Assets {
 		PageAllocator<TResource<Texture>> resalloc;
 		PageAllocator<Texture> texalloc;
 
-		std::shared_ptr<TResource<Texture>> const rawResource(resalloc.New(), [](TResource<Texture>* p) {
+		std::shared_ptr<TResource<Texture>> rawResource(resalloc.New(), [](TResource<Texture>* p) {
 			PageAllocator<TResource<Texture>> resalloc_;
+			PageAllocator<Texture> texalloc;
+			auto ptr = p->rawData.release();
+			texalloc.destroy(ptr);
+			texalloc.deallocate(ptr);
 			resalloc_.destroy(p);
 			resalloc_.deallocate(p);
 			});
 
 		Graphics::Texture* const _tex = texalloc.New();
 		_tex->LoadFromFile(filename.data());
+		_tex->UploadToGPU();
 		rawResource->rawData.reset(_tex);
 
 		return rawResource;
@@ -73,8 +79,8 @@ namespace Assets {
 		json j = json::parse(file);
 
 		ShaderProgram* _shad = shadalloc.allocate();
-		AssetReference<Shader> vertex = std::move(GContent->GetResource<Shader>(j["Vertex"].get<std::string>().c_str()));
-		AssetReference<Shader> fragment = std::move(GContent->GetResource<Shader>(j["Fragment"].get<std::string>().c_str()));
+		AssetReference<Shader> vertex = std::move(Singleton<ResourceManager>::Instance().GetResource<Shader>(j["Vertex"].get<std::string>().c_str()));
+		AssetReference<Shader> fragment = std::move(Singleton<ResourceManager>::Instance().GetResource<Shader>(j["Fragment"].get<std::string>().c_str()));
 
 		shadalloc.construct(_shad, vertex, fragment);
 		std::shared_ptr<TResource<ShaderProgram>> const rawResource(resalloc.New(1, std::move(_shad)), [](TResource<ShaderProgram>* p) {

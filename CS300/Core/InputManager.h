@@ -69,5 +69,4 @@ namespace Engine {
     }
 }
 
-#define GInput (&Engine::InputManager::Instance())
 #endif

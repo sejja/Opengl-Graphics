@@ -10,6 +10,7 @@
 #include "Behaviors/AnimationComponent.h"
 #include "Core/Pipeline.h"
 #include "Graphics/Primitives/Light.h"
+#include "Global.h"
 
 CS300Parser Scene::mParser;
 
@@ -27,8 +28,8 @@ void Scene::CreateScene(const std::string_view& file) {
 		obj->transform.mRotation = glm::radians(x.rot);
 		obj->transform.mScale = x.sca;
 		std::unique_ptr<Core::ModelRenderer<Core::GraphicsAPIS::OpenGL>> renderer = std::move(std::make_unique<Core::ModelRenderer<Core::GraphicsAPIS::OpenGL>>(obj));
-		renderer->SetMesh(GContent->GetResource<Model>(x.mesh.c_str()));
-		renderer->SetShaderProgram(GContent->GetResource<Graphics::ShaderProgram>("Content/Shaders/Textured.shader"));
+		renderer->SetMesh(Singleton<ResourceManager>::Instance().GetResource<Model>(x.mesh.c_str()));
+		renderer->SetShaderProgram(Singleton<ResourceManager>::Instance().GetResource<Graphics::ShaderProgram>("Content/Shaders/Textured.shader"));
 		obj->components.emplace_back(std::move(renderer));
 		mObjects.emplace_back(std::move(obj));
 	});
@@ -42,8 +43,8 @@ void Scene::CreateScene(const std::string_view& file) {
 		obj->transform.mRotation = glm::vec3(0.f, 0.f, 0.f);
 		std::shared_ptr<Core::ModelRenderer<Core::GraphicsAPIS::OpenGL>> renderer = std::move(std::make_shared<Core::ModelRenderer<Core::GraphicsAPIS::OpenGL>>(obj));
 		std::shared_ptr<Graphics::Primitives::Light> light = std::move(std::make_shared<Graphics::Primitives::Light>(obj));
-		renderer->SetMesh(GContent->GetResource<Model>("Content/Meshes/sphere_20_averaged.obj"));
-		renderer->SetShaderProgram(GContent->GetResource<Graphics::ShaderProgram>("Content/Shaders/White.shader"));
+		renderer->SetMesh(Singleton<ResourceManager>::Instance().GetResource<Model>("Content/Meshes/sphere_20_averaged.obj"));
+		renderer->SetShaderProgram(Singleton<ResourceManager>::Instance().GetResource<Graphics::ShaderProgram>("Content/Shaders/White.shader"));
 		light->SetPosition(x.pos);
 		light->mData.mDirection = x.dir;
 		light->mData.mAmbient = glm::vec3(x.amb, x.amb, x.amb);

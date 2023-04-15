@@ -10,19 +10,19 @@
 #define _SINGLETON__H_
 
 template<typename T>
-class Singleton {
+class Global {
 public:
 	static T& Instance();
 
-	Singleton(const Singleton&) = delete;
-	Singleton& operator= (const Singleton) = delete;
+	Global(const Global&) = delete;
+	Global& operator= (const Global) = delete;
 
 protected:
-	Singleton() {}
+	Global() {}
 };
 
 template<typename T>
-T& Singleton<T>::Instance() {
+T& Global<T>::Instance() {
 	static T instance;
 	return instance;
 }

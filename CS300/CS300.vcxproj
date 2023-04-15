@@ -649,8 +649,9 @@
     <ClInclude Include="Dependencies\STB\stretchy_buffer.h" />
     <ClInclude Include="Core\Pipeline.h" />
     <ClInclude Include="Core\Window.h" />
-    <ClInclude Include="OpenGLPipeline.h" />
+    <ClInclude Include="Graphics\OpenGLPipeline.h" />
     <ClInclude Include="Core\Math\Transform.h" />
+    <ClInclude Include="Global.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\Maps\Scene.level" />

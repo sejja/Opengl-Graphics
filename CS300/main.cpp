@@ -8,7 +8,7 @@
 
 #include "Application.h"
 #include "Core/Window/SDLWindow.h"
-#include "OpenGLPipeline.h"
+#include "Graphics/OpenGLPipeline.h"
 #include "Core/ECSystem/Scene.h"
 
 // ------------------------------------------------------------------------
@@ -18,7 +18,7 @@
 */ //----------------------------------------------------------------------
 int main() {
     struct MyOpenGLApp : public
-       GraphicApplication<SDLWindow, OpenGLPipeline> {
+       GraphicApplication<SDLWindow, Core::Graphics::OpenGLPipeline> {
        Scene mScene;
     } app;
     

@@ -47,15 +47,15 @@ namespace Core {
 
 #pragma region //Functions
 		inline void SetMesh(const AssetReference<Model>& model);
-		inline void SetShaderProgram(const AssetReference<Graphics::ShaderProgram>& s);
-		DONTDISCARD inline AssetReference<Graphics::ShaderProgram> GetShaderProgram();
+		inline void SetShaderProgram(const AssetReference<::Graphics::ShaderProgram>& s);
+		DONTDISCARD inline AssetReference<::Graphics::ShaderProgram> GetShaderProgram();
 		void Render() override;
 #pragma endregion
 
 #pragma region //Variables
 	private:
 		Asset<Model> mModel;
-		Asset<Graphics::ShaderProgram> mShaderProgram;
+		Asset<::Graphics::ShaderProgram> mShaderProgram;
 #pragma endregion
 	};
 	
@@ -73,7 +73,7 @@ namespace Core {
 	*
 	*   Sets the Shader Program associated with this renderer
 	*/ // ---------------------------------------------------------------------
-	void ModelRenderer<GraphicsAPIS::OpenGL>::SetShaderProgram(const AssetReference<Graphics::ShaderProgram>& s) {
+	void ModelRenderer<GraphicsAPIS::OpenGL>::SetShaderProgram(const AssetReference<::Graphics::ShaderProgram>& s) {
 		mShaderProgram = s.lock();
 	}
 
@@ -82,7 +82,7 @@ namespace Core {
 	*
 	*   Gets the Shader Program associated with this renderer
 	*/ // ---------------------------------------------------------------------
-	AssetReference<Graphics::ShaderProgram> ModelRenderer<GraphicsAPIS::OpenGL>::GetShaderProgram() {
+	AssetReference<::Graphics::ShaderProgram> ModelRenderer<GraphicsAPIS::OpenGL>::GetShaderProgram() {
 		return mShaderProgram;
 	}
 }

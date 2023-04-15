@@ -2,21 +2,22 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "SDL.h"
 #include "../Core/InputManager.h"
+#include "Global.h"
 
 void Camera::Update() {
-	if (GInput->IsKeyDown('A')) {
+	if (Singleton<Engine::InputManager>::Instance().IsKeyDown('A')) {
 		mPosition.x += 1;
 	}
 
-	if (GInput->IsKeyDown('D')) {
+	if (Singleton<Engine::InputManager>::Instance().IsKeyDown('D')) {
 		mPosition.x -= 1;
 	}
 
-	if (GInput->IsKeyDown('W')) {
+	if (Singleton<Engine::InputManager>::Instance().IsKeyDown('W')) {
 		mPosition.z += 1;
 	}
 
-	if (GInput->IsKeyDown('S')) {
+	if (Singleton<Engine::InputManager>::Instance().IsKeyDown('S')) {
 		mPosition.z -= 1;
 	}
 }

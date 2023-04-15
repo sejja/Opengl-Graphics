@@ -8,6 +8,7 @@
 #include "Core/ECSystem/Scene.h"
 #include "Core/ResourceManager.h"
 #include "Core/InputManager.h"
+#include "Global.h"
 
 class Application {
 public:
@@ -34,7 +35,7 @@ GraphicApplication<WINDOW, PIPELINE>::GraphicApplication() {
 	static_assert(std::is_base_of<Core::Pipeline, PIPELINE>::value);
 	mWindow.Create();
 	mPipe.Init();
-	GContent->Initialize();
+	Singleton<ResourceManager>::Instance().Initialize();
 }
 
 template<class WINDOW, class PIPELINE>
@@ -45,14 +46,14 @@ GraphicApplication<WINDOW, PIPELINE>::~GraphicApplication() {
 template<class WINDOW, class PIPELINE>
 void GraphicApplication<WINDOW, PIPELINE>::Run() {
 	while(mWindow.Present()) {
-		GInput->ProcessInput();
+		Singleton<Engine::InputManager>::Instance().ProcessInput();
 		if(mTick) mTick();
 		mPipe.PreRender();
 		mPipe.Render();
 		mPipe.PostRender();
 	}
 
-	GContent->ShutDown();
+	Singleton<ResourceManager>::Instance().ShutDown();
 }
 
 template<class WINDOW, class PIPELINE>
