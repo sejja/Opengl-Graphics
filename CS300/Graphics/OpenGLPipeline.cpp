@@ -19,7 +19,6 @@ void OpenGLPipeline::Init() {
 	glDisable(GL_BLEND);
 	glDisable(GL_STENCIL_TEST);
 	texture.UploadToGPU();
-	mProjectionMatrix = glm::perspective(1.f, 0.75f, 1.f, 100.f);
 }
 
 void OpenGLPipeline::PreRender() {
@@ -104,7 +103,7 @@ void OpenGLPipeline::SetDimensions(const glm::lowp_u16vec2& dim) {
 	glViewport(0, 0, dim.x, dim.y);
 }
 
-void OpenGLPipeline::AddRenderable(std::weak_ptr<Core::Renderable> renderer) {
+void OpenGLPipeline::AddRenderable(const std::weak_ptr<Core::Renderable>& renderer) {
 	renderables.push_back(renderer);
 }
 

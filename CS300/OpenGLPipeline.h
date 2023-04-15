@@ -1,3 +1,11 @@
+//
+//	OpenGLPp.h
+//	OpenGL Graphics
+//
+//	Created by Diego Revilla on 14/01/23
+//	Copyright © 2023. All Rights reserved
+//
+
 #ifndef _OPEN_GL_PIPELINE__H_
 #define _OPEN_GL_PIPELINE__H_
 
@@ -14,12 +22,11 @@ public:
 	void PostRender() override;
 	void Shutdown() override;
 	virtual void SetDimensions(const glm::lowp_u16vec2& dim) override;
-	void AddRenderable(std::weak_ptr<Core::Renderable> renderer);
+	void AddRenderable(const std::weak_ptr<Core::Renderable>& renderer);
 	void UploadLightDataToGPU(const AssetReference<Graphics::ShaderProgram>& shader);
 
 private:
 	std::vector<std::weak_ptr<Core::Renderable>> renderables;
-	glm::mat4x4 mProjectionMatrix;
 };
 
 #endif

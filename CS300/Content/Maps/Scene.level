@@ -52,31 +52,31 @@ object plane_mesh
 translate -40 15 50
 rotation 0 0 0
 scale 10 10 1
-mesh Content/Meshes/cube_face.obj  
+mesh Content/Meshes/cube_averaged.obj  
 
 object cube_mesh
 translate -20 15 50
 rotation 0 0 0
 scale 10 10 10
-mesh Content/Meshes/cube_face.obj    
+mesh Content/Meshes/cube_averaged.obj    
 
 object cone_mesh
 translate 0 15 50
 rotation 0 0 0
 scale 10 10 10
-mesh Content/Meshes/cone_20_face.obj 
+mesh Content/Meshes/cone_20_averaged.obj 
 
 object cylinder_mesh
 translate 20 15 50
 rotation 0 0 0
 scale 10 10 10
-mesh Content/Meshes/cylinder_20_face.obj    
+mesh Content/Meshes/cylinder_20_averaged.obj    
 
 object sphere_mesh
 translate 40 15 50
 rotation 0 0 0
 scale 10 10 10
-mesh Content/Meshes/sphere_20_face.obj    
+mesh Content/Meshes/sphere_20_averaged.obj    
 
 object suzanne_mesh
 translate 0 -15 50

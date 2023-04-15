@@ -182,13 +182,13 @@
     <ClCompile Include="Graphics\Primitives\ShaderProgram.cpp" />
     <ClCompile Include="Graphics\Primitives\Model.cpp" />
     <ClCompile Include="Graphics\Primitives\Texture.cpp" />
-    <ClCompile Include="Renderables.cpp" />
+    <ClCompile Include="Graphics\Primitives\Renderables.cpp" />
     <ClCompile Include="Core\ECSystem\Scene.cpp" />
     <ClCompile Include="Core\Window\SDLWindow.cpp" />
     <ClCompile Include="Dependencies\GLM\detail\glm.cpp" />
     <ClCompile Include="Dependencies\STB\stb_vorbis.c" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="OpenGLPipeline.cpp" />
+    <ClCompile Include="Graphics\OpenGLPipeline.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
