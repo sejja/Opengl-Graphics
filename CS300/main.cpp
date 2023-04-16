@@ -17,6 +17,8 @@
 *   Program Entry point
 */ //----------------------------------------------------------------------
 int main() {
+    Singleton<ResourceManager>::Instance().Initialize();
+
     struct MyOpenGLApp : public
        GraphicApplication<SDLWindow, Core::Graphics::OpenGLPipeline> {
        Scene mScene;
@@ -24,11 +26,14 @@ int main() {
     
     app.SetDimensions({ 1072, 780 });
 	app.mScene.CreateScene("Content/Maps/Scene.level");
-    app.mScene.UploadObjectsToPipeline(app.mPipe);
-    app.mTick = [&app]() {
+	app.mScene.UploadObjectsToPipeline(app.GetPipelineRef());
+    app.SetTickFunction([&app]() {
+        Singleton<Engine::InputManager>::Instance().ProcessInput();
 		app.mScene.Tick();
-    };
+    });
+    
     app.Run();
+    Singleton<ResourceManager>::Instance().ShutDown();
 
     return 0;
 }
