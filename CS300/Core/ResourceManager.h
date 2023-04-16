@@ -3,7 +3,7 @@
 //  Good Neighbours
 //
 //  Created by Diego Revilla on 4/11/20.
-//  Copyright � 2020 Digipen. All rights reserved.
+//  Copyright � 2020 . All rights reserved.
 //
 
 #ifndef _RESOURCE_MANAGER__H_

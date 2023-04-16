@@ -3,10 +3,10 @@
 //	CS300
 //
 //	Created by Diego Revilla on 10/05/22
-//	Copyright © 2022 Digipen. All Rights reserved
+//	Copyright © 2022. All Rights reserved
 //
 
-#include "Application.h"
+#include "Core/Application.h"
 #include "Core/Window/SDLWindow.h"
 #include "Graphics/OpenGLPipeline.h"
 #include "Core/ECSystem/Scene.h"

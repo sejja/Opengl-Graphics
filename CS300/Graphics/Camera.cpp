@@ -30,7 +30,3 @@ glm::mat4 Camera::GetViewMatrix() {
 Camera::Camera() :
 	mPosition(0, 0, 100) {
 }
-
-Camera::~Camera()
-{
-}

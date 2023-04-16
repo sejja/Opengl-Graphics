@@ -29,7 +29,7 @@ public:
 	GraphicApplication();
 	~GraphicApplication();
 	void Run() override;
-	inline void SetTickFunction(const std::function<void()>& const tick);
+	inline void SetTickFunction(const std::function<void()>& tick);
 	void SetDimensions(const glm::lowp_u16vec2& dim);
 	inline PIPELINE& GetPipelineRef();
 	
@@ -78,7 +78,7 @@ void GraphicApplication<WINDOW, PIPELINE>::Run() {
 *   Sets the function to be run every single frame
 */ //----------------------------------------------------------------------
 template<class WINDOW, class PIPELINE>
-void GraphicApplication<WINDOW, PIPELINE>::SetTickFunction(const std::function<void()>& const tick) {
+void GraphicApplication<WINDOW, PIPELINE>::SetTickFunction(const std::function<void()>& tick) {
 	mTick = tick;
 }
 

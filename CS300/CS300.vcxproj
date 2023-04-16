@@ -167,7 +167,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
-    <ClCompile Include="Application.cpp" />
     <ClCompile Include="Behaviors\AnimationComponent.cpp" />
     <ClCompile Include="Core\Assets\Importers.cpp" />
     <ClCompile Include="Core\InputManager.cpp" />
@@ -192,7 +191,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
-    <ClInclude Include="Application.h" />
+    <ClInclude Include="Core\Application.h" />
     <ClInclude Include="Behaviors\AnimationComponent.h" />
     <ClInclude Include="Core\Allocator.h" />
     <ClInclude Include="CommonDefines.h" />

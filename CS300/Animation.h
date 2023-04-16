@@ -1,20 +1,18 @@
-#pragma once
+//
+//	Animation.h
+//	CS300
+//
+//	Created by Diego Revilla on 16/04/23
+//	Copyright © 2023. All Rights reserved
+//
+
+#ifndef _ANIMATION__H_
+#define _ANIMATION__H_
 
 #include <glm/glm.hpp>
 #include <functional>
 #include <map>
 #include <string>
-
-/*
-Code snippet to apply animations to an object:
-
-    object.currPos = object.pos;
-    for (size_t u = 0; u < object.animations.size(); u++)
-    {
-        object.currPos  = object.animations[u].Update(object.currPos, time);
-    }
-
-*/
 
 namespace Animations
 {
@@ -41,4 +39,6 @@ namespace Animations
         { "orbit", Orbit }
     };
 
-} // namespace Animations
+}
+
+#endif

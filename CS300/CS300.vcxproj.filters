@@ -30,9 +30,6 @@
     <ClCompile Include="Graphics\OpenGLPipeline.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Application.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\Primitives\ShaderProgram.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -1265,7 +1262,7 @@
     <ClInclude Include="Core\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Application.h">
+    <ClInclude Include="Core\Application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\OpenGLPipeline.h">
