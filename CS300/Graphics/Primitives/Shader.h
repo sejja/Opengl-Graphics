@@ -26,7 +26,7 @@ namespace Graphics {
 
 	private:
 		friend class ShaderProgram;
-		unsigned int Handle;
+		unsigned int mHandle;
 		char* Source;
 		EType ShaderType;
 	};

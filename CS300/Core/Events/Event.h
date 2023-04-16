@@ -26,7 +26,7 @@ namespace Core {
         class HandlerFunction {
         public:
 #pragma region //Functions
-            void Handle(const Event& concrete_event);
+            void mHandle(const Event& concrete_event);
             virtual void Call(const Event& concrete_event) = 0;
 #pragma endregion
         };
@@ -54,7 +54,7 @@ namespace Core {
             template <typename T, typename EVENT>
             inline void RegisterHandler(T& who, void (T::* function)(const EVENT&));
 
-            void Handle(const Event& event);
+            void mHandle(const Event& event);
 #pragma endregion
         private:
 #pragma region //Variables

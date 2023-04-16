@@ -22,11 +22,11 @@ namespace Core {
 		*
 		*   Handles an event, which subsecuntly will call the required object
 		*/ // ---------------------------------------------------------------------
-		void EventHandler::Handle(const Event& event) {
+		void EventHandler::mHandle(const Event& event) {
 			auto it = mHandlerCollection.find(typeid(event).name());
 
 			if (it != mHandlerCollection.end())
-				it->second->Handle(event);
+				it->second->mHandle(event);
 		}
 
 		// ------------------------------------------------------------------------
@@ -34,7 +34,7 @@ namespace Core {
 		*
 		*	Calls the event' subscribed function
 		*/ // ---------------------------------------------------------------------
-		void HandlerFunction::Handle(const Event& concrete_event) {
+		void HandlerFunction::mHandle(const Event& concrete_event) {
 			Call(concrete_event);
 		}
 	}

@@ -19,7 +19,7 @@ namespace Graphics {
 	*   Constructs a Shader
 	*/ // --------------------------------------------------------------------
 	Shader::Shader() :
-		Handle(NULL), ShaderType(EType::Vertex), Source(nullptr) {
+		mHandle(NULL), ShaderType(EType::Vertex), Source(nullptr) {
 	}
 
 	// ------------------------------------------------------------------------
@@ -39,7 +39,7 @@ namespace Graphics {
 	*   Constructs a Shader given a file
 	*/ // --------------------------------------------------------------------
 	Shader::Shader(const char* filename, EType type) :
-		ShaderType(type), Handle(NULL), Source(nullptr) {
+		ShaderType(type), mHandle(NULL), Source(nullptr) {
 #ifdef _DEBUG
 		if (LoadSource(filename))
 #else
@@ -77,13 +77,13 @@ namespace Graphics {
 	bool Shader::Compile(const char* filename) {
 		//If there is a valid source file
 		if (Source && strlen(Source)) {
-			SetShaderType(ShaderType, !Handle);
-			glShaderSource(static_cast<GLuint>(Handle), 1, &Source, NULL);
-			glCompileShader(static_cast<GLuint>(Handle));
+			SetShaderType(ShaderType, !mHandle);
+			glShaderSource(static_cast<GLuint>(mHandle), 1, &Source, NULL);
+			glCompileShader(static_cast<GLuint>(mHandle));
 
 			// sanity check
 			GLint result;
-			glGetShaderiv(static_cast<GLuint>(Handle), GL_COMPILE_STATUS, &result);
+			glGetShaderiv(static_cast<GLuint>(mHandle), GL_COMPILE_STATUS, &result);
 
 #ifdef _DEBUG
 			//If there has been errors during compilation
@@ -124,10 +124,10 @@ namespace Graphics {
 		GLenum err = glewInit();
 
 		//If we have a valid Handler
-		if (Handle)
-			glDeleteShader(static_cast<GLuint>(Handle));
+		if (mHandle)
+			glDeleteShader(static_cast<GLuint>(mHandle));
 
-		Handle = glCreateShader(ShaderType == EType::Vertex ?
+		mHandle = glCreateShader(ShaderType == EType::Vertex ?
 			GL_VERTEX_SHADER : GL_FRAGMENT_SHADER);
 
 		return true;

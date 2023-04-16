@@ -19,7 +19,7 @@ namespace Graphics {
 	*   Constructs a Shader Program Class
 	*/ // --------------------------------------------------------------------
 	ShaderProgram::ShaderProgram() :
-		Handle(glCreateProgram()) {}
+		mHandle(glCreateProgram()) {}
 
 	// ------------------------------------------------------------------------
 	/*! Custom Constructor
@@ -45,16 +45,16 @@ namespace Graphics {
 	void ShaderProgram::Link() {
 		//If we have a Vertex Shader
 		if (Shaders[0])
-			glAttachShader(Handle, Shaders[0]->Get()->Handle);
+			glAttachShader(mHandle, Shaders[0]->Get()->mHandle);
 
 		//If we have a Fragment Shader
 		if (Shaders[1])
-			glAttachShader(Handle, Shaders[1]->Get()->Handle);
+			glAttachShader(mHandle, Shaders[1]->Get()->mHandle);
 
 		GLint status;
 
-		glLinkProgram(Handle);
-		glGetProgramiv(Handle, GL_LINK_STATUS, &status);
+		glLinkProgram(mHandle);
+		glGetProgramiv(mHandle, GL_LINK_STATUS, &status);
 
 #ifdef _DEBUG
 		if (status == GL_FALSE) {
@@ -81,7 +81,7 @@ namespace Graphics {
 	*   Binds the Shader Program
 	*/ // --------------------------------------------------------------------
 	void ShaderProgram::Bind() {
-		glUseProgram(Handle);
+		glUseProgram(mHandle);
 	}
 
 	// ------------------------------------------------------------------------
@@ -144,7 +144,7 @@ namespace Graphics {
 	}
 
 	void ShaderProgram::SetShaderUniform(const char* name, int value) {
-		int loc = glGetUniformLocation(Handle, name);
+		int loc = glGetUniformLocation(mHandle, name);
 
 		if (loc >= 0) {
 			glUniform1i(loc, value);
@@ -152,7 +152,7 @@ namespace Graphics {
 	}
 
 	void ShaderProgram::SetShaderUniform(const char* name, bool value) {
-		int loc = glGetUniformLocation(Handle, name);
+		int loc = glGetUniformLocation(mHandle, name);
 
 		if (loc >= 0) {
 			glUniform1i(loc, value);
@@ -167,8 +167,8 @@ namespace Graphics {
 	void ShaderProgram::AttachShader(Shader::EType shaderType) {
 		//If we have a valid shader
 		if (Shaders[static_cast<unsigned char>(shaderType)])
-			glAttachShader(Handle, Shaders[
-				static_cast<unsigned char>(shaderType)]->Get()->Handle);
+			glAttachShader(mHandle, Shaders[
+				static_cast<unsigned char>(shaderType)]->Get()->mHandle);
 	}
 
 	// ------------------------------------------------------------------------
@@ -180,14 +180,14 @@ namespace Graphics {
 		// specific shadertype ->set if necessary
 		if (static_cast<unsigned char>(shaderType) != 2)
 			if (Shaders[static_cast<unsigned char>(shaderType)]) {
-				glDetachShader(Handle, Shaders[static_cast<unsigned char>(shaderType)]->Get()->Handle);
+				glDetachShader(mHandle, Shaders[static_cast<unsigned char>(shaderType)]->Get()->mHandle);
 			}
 			else {
 				if (Shaders[0])
-					glDetachShader(Handle, Shaders[0]->Get()->Handle);
+					glDetachShader(mHandle, Shaders[0]->Get()->mHandle);
 
 				if (Shaders[1])
-					glDetachShader(Handle, Shaders[1]->Get()->Handle);
+					glDetachShader(mHandle, Shaders[1]->Get()->mHandle);
 			}
 	}
 
@@ -197,7 +197,7 @@ namespace Graphics {
 	*   Gets the OpenGL Handle of this program
 	*/ // --------------------------------------------------------------------
 	unsigned int ShaderProgram::GetOpenGLHandle() {
-		return Handle;
+		return mHandle;
 	}
 
 	// ------------------------------------------------------------------------
@@ -206,7 +206,7 @@ namespace Graphics {
 	*   Sets uniform values in form of integers
 	*/ // --------------------------------------------------------------------
 	void ShaderProgram::SetShaderUniform(const char* name, int* value, int count) {
-		glUniform1iv(glGetUniformLocation(Handle, name), count, value);
+		glUniform1iv(glGetUniformLocation(mHandle, name), count, value);
 	}
 
 	// ------------------------------------------------------------------------
@@ -215,7 +215,7 @@ namespace Graphics {
 	*   Sets uniform values in form of floats
 	*/ // --------------------------------------------------------------------
 	void ShaderProgram::SetShaderUniform(const char* name, float* value, int count) {
-		glUniform1fv(glGetUniformLocation(Handle, name), count, value);
+		glUniform1fv(glGetUniformLocation(mHandle, name), count, value);
 	}
 
 	// ------------------------------------------------------------------------
@@ -231,7 +231,7 @@ namespace Graphics {
 		if (loc != -1)
 			glUniformMatrix4fv(loc, count, GL_FALSE, reinterpret_cast<float*>(value));
 #else
-		glUniformMatrix4fv(glGetUniformLocation(Handle, name), count, GL_FALSE,
+		glUniformMatrix4fv(glGetUniformLocation(mHandle, name), count, GL_FALSE,
 			reinterpret_cast<float*>(value));
 #endif
 	}
@@ -242,7 +242,7 @@ namespace Graphics {
 	*   Sets uniform values in form of matrices 3x3
 	*/ // --------------------------------------------------------------------
 	void ShaderProgram::SetShaderUniform(const char* name, glm::mat3* value, int count) {
-		glUniformMatrix4fv(glGetUniformLocation(Handle, name), count, GL_FALSE,
+		glUniformMatrix4fv(glGetUniformLocation(mHandle, name), count, GL_FALSE,
 			reinterpret_cast<float*>(value));
 	}
 
@@ -252,7 +252,7 @@ namespace Graphics {
 	*   Sets uniform values in form of Vectors of size 2
 	*/ // --------------------------------------------------------------------
 	void ShaderProgram::SetShaderUniform(const char* name, glm::vec2* value, int count) {
-		glUniform2fv(glGetUniformLocation(Handle, name), count,
+		glUniform2fv(glGetUniformLocation(mHandle, name), count,
 			reinterpret_cast<float*>(value));
 	}
 
@@ -262,7 +262,7 @@ namespace Graphics {
 	*   Sets uniform values in form of Vectors of size 3
 	*/ // --------------------------------------------------------------------
 	void ShaderProgram::SetShaderUniform(const char* name, glm::vec3* value, int count) {
-		glUniform3fv(glGetUniformLocation(Handle, name), count,
+		glUniform3fv(glGetUniformLocation(mHandle, name), count,
 			reinterpret_cast<float*>(value));
 	}
 
@@ -272,7 +272,7 @@ namespace Graphics {
 	*   Sets uniform values in form of Vectors of size 4
 	*/ // --------------------------------------------------------------------
 	void ShaderProgram::SetShaderUniform(const char* name, glm::vec4* value, int count) {
-		int loc = glGetUniformLocation(Handle, name);
+		int loc = glGetUniformLocation(mHandle, name);
 		glUniform4fv(loc, count,
 			reinterpret_cast<float*>(value));
 	}
@@ -283,7 +283,7 @@ namespace Graphics {
 	*   Sets uniform values in form of a Color
 	*/ // --------------------------------------------------------------------
 	void ShaderProgram::SetShaderUniform(const char* name, Color* value, int count) {
-		glUniform4fv(glGetUniformLocation(Handle, name), count,
+		glUniform4fv(glGetUniformLocation(mHandle, name), count,
 			reinterpret_cast<float*>(value));
 	}
 }

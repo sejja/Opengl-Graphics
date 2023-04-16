@@ -27,11 +27,11 @@ namespace Graphics {
 		~Texture();
 		void LoadFromFile(const std::string_view& filename);
 		void Bind() const;
+		
 	private:
-		size_t Width;
-		size_t Height;
-		GLuint Handle;
-		unsigned char* mPixels;
+		size_t mWidth;
+		size_t mHeight;
+		GLuint mHandle;
 		TextureType mType;
 	};
 }

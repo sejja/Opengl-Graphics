@@ -21,7 +21,7 @@ namespace Graphics {
 	*   Constructs a Texture Class
 	*/ // --------------------------------------------------------------------
 	Texture::Texture()
-		: Width(0), Height(0), mPixels(nullptr), Handle(NULL) {}
+		: mWidth(0), mHeight(0), mHandle(NULL), mType(TextureType::eDiffuse){}
 
 	// ------------------------------------------------------------------------
 	/*! Custom Constructor
@@ -29,7 +29,7 @@ namespace Graphics {
 	*   Constructs a Texture Class given a texture filename
 	*/ // --------------------------------------------------------------------
 	Texture::Texture(const std::string_view& filename)
-		: Width(0), Height(0), mPixels(nullptr), Handle(NULL) {
+		: mWidth(0), mHeight(0), mHandle(NULL) {
 		LoadFromFile(filename);
 	}
 
@@ -40,9 +40,9 @@ namespace Graphics {
 	*/ // --------------------------------------------------------------------
 	Texture::~Texture() {
 		//If we have had a valid handle
-		if (Handle) {
-			glBindTexture(GL_TEXTURE_2D, Handle);
-			glDeleteTextures(1, &Handle);
+		if (mHandle) {
+			glBindTexture(GL_TEXTURE_2D, mHandle);
+			glDeleteTextures(1, &mHandle);
 			glBindTexture(GL_TEXTURE_2D, NULL);
 		}
 	}
@@ -58,30 +58,25 @@ namespace Graphics {
 			stbi_set_flip_vertically_on_load(true);
 
 			int x_, y_, n_, reqComp_ = 4;
-			unsigned char* tempPixels_ = stbi_load(filename.data(), &x_, &y_, &n_,
-				reqComp_);
+			unsigned char* const tempPixels_ = stbi_load(filename.data(), &x_, &y_, &n_, reqComp_);
 
 			//If we could load the image
 			if (tempPixels_) {
-				Width = static_cast<size_t>(x_);
-				Height = static_cast<size_t>(y_);
-				n_ = static_cast<int>(Width * Height * reqComp_);
-				mPixels = Allocator<unsigned char>::allocate(n_);
-				memcpy(mPixels, tempPixels_, n_);
-				stbi_image_free(tempPixels_);
-				glGenTextures(1, &Handle);
-				glBindTexture(GL_TEXTURE_2D, Handle);
-				Bind();
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
-					static_cast<GLsizei>(Width),
-					static_cast<GLsizei>(Height), 0,
-					GL_RGBA, GL_UNSIGNED_BYTE, reinterpret_cast<void*>(mPixels));
-				glGenerateMipmap(GL_TEXTURE_2D);
+				mWidth = static_cast<size_t>(x_);
+				mHeight = static_cast<size_t>(y_);
+				n_ = static_cast<int>(mWidth * mHeight * reqComp_);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-				Allocator<unsigned char>::deallocate(mPixels);
+				glGenTextures(1, &mHandle);
+				glBindTexture(GL_TEXTURE_2D, mHandle);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+					static_cast<GLsizei>(mWidth),
+					static_cast<GLsizei>(mHeight), 0,
+					GL_RGBA, GL_UNSIGNED_BYTE, reinterpret_cast<const void*>(tempPixels_));
+				glGenerateMipmap(GL_TEXTURE_2D);
+				stbi_image_free(tempPixels_);
 			}
 		}
 	}
@@ -96,6 +91,6 @@ namespace Graphics {
 		//If we have a valid handle
 		if (Handle)
 #endif
-			glBindTexture(GL_TEXTURE_2D, Handle);
+			glBindTexture(GL_TEXTURE_2D, mHandle);
 	}
 }

@@ -70,6 +70,7 @@ namespace Core {
 					shader = Singleton<ResourceManager>::Instance().GetResource<::Graphics::ShaderProgram>("Content/Shaders/UVs.shader")->Get();
 					shader->Bind();
 				} else {
+					auto tex = Singleton<ResourceManager>::Instance().GetResource<::Graphics::Texture>("Content/Textures/UV.jpg")->Get();
 					shader->Bind();
 					shader->SetShaderUniform("uCameraPos", &cam.mPosition);
 					UploadLightDataToGPU(it.first);

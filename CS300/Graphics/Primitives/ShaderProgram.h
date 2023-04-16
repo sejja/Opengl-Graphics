@@ -43,7 +43,7 @@ namespace Graphics {
 		void AttachShader(const Shader::EType which);
 		void DetachShader(const Shader::EType which);
 
-		unsigned int Handle = NULL;
+		unsigned int mHandle = NULL;
 		Asset<Shader> Shaders[2];
 	};
 }
