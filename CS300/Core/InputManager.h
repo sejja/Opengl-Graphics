@@ -12,11 +12,19 @@
 #include <Windows.h>
 #include "../CommonDefines.h"
 #include <glm/vec2.hpp>
+#include "Core/Events/EventDispatcher.h"
 
-namespace Engine {
+namespace Core {
     class InputManager {
     public:
         using KeyCode = decltype(VK_ACCEPT);
+
+        EVENT_DECL(V_Down);
+        EVENT_DECL(Z_Down);
+        EVENT_DECL(W_Down);
+        EVENT_DECL(A_Down);
+        EVENT_DECL(S_Down);
+        EVENT_DECL(D_Down);
 
         DONTDISCARD bool IsKeyPressed(const KeyCode key) noexcept;
         DONTDISCARD bool IsKeyReleased(const KeyCode key) noexcept;

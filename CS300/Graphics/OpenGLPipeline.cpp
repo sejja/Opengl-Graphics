@@ -50,15 +50,14 @@ namespace Core {
 		*   Renders every object in the scene
 		*/ //----------------------------------------------------------------------
 		void OpenGLPipeline::Render() {
-			static Camera cam;
+			static Primitives::Camera cam;
 
 			//If we want to see the Wireframe
-			if (Singleton<Engine::InputManager>::Instance().IsKeyDown('Z'))
+			if (Singleton<InputManager>::Instance().IsKeyDown('Z'))
 				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			else
 				glPolygonMode(GL_FRONT, GL_FILL);
 
-			cam.Update();
 			glm::mat4 view = cam.GetViewMatrix();
 			glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 10000.0f);
 			std::unordered_multimap<Asset<::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Core::Renderable>>::const_iterator> obsoletes;
@@ -67,7 +66,7 @@ namespace Core {
 				::Graphics::ShaderProgram* shader = it.first->Get();
 
 				//If we want to see the UV Channels, toogle to them
-				if (Singleton<Engine::InputManager>::Instance().IsKeyDown('V')) {
+				if (Singleton<InputManager>::Instance().IsKeyDown('V')) {
 					shader = Singleton<ResourceManager>::Instance().GetResource<::Graphics::ShaderProgram>("Content/Shaders/UVs.shader")->Get();
 					shader->Bind();
 				} else {

@@ -20,7 +20,7 @@ int main() {
     Singleton<ResourceManager>::Instance().Initialize();
 
     struct MyOpenGLApp : public
-       GraphicApplication<SDLWindow, Core::Graphics::OpenGLPipeline> {
+       Core::GraphicApplication<SDLWindow, Core::Graphics::OpenGLPipeline> {
        Scene mScene;
     } app;
     
@@ -28,7 +28,7 @@ int main() {
 	app.mScene.CreateScene("Content/Maps/Scene.level");
 	app.mScene.UploadObjectsToPipeline(app.GetPipelineRef());
     app.SetTickFunction([&app]() {
-        Singleton<Engine::InputManager>::Instance().ProcessInput();
+        Singleton<Core::InputManager>::Instance().ProcessInput();
 		app.mScene.Tick();
     });
     
