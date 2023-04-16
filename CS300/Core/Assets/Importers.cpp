@@ -56,7 +56,6 @@ namespace Assets {
 
 		Graphics::Texture* const _tex = texalloc.New();
 		_tex->LoadFromFile(filename.data());
-		_tex->UploadToGPU();
 		rawResource->rawData.reset(_tex);
 
 		return rawResource;
