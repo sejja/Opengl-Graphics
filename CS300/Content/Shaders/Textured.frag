@@ -1,4 +1,4 @@
-#version 460 core
+#version 450 core
 
 struct MaterialParameters {
 	vec4 emission;
@@ -34,7 +34,8 @@ in vec2 oUVs;
 in vec3 oNormal;
 in vec3 oPosition;
 
-uniform sampler2D colorsTex;
+layout(binding = 0) uniform sampler2D uDiffuseTex;
+layout(binding = 1) uniform sampler2D uNormalTex;
 
 void main() {
     vec3 totalLightShine = vec3(0, 0, 0);
@@ -44,6 +45,8 @@ void main() {
         float ambientStrength = 0.1;
         vec3 ambient = uLight[i].amb;
    
+        vec3 texturenormal = texture(uNormalTex, oUVs).rgb;
+        texturenormal = normalize(texturenormal * 2.0 - 1.0);
         //diffuse
         vec3 norm = normalize(mat3(transpose(inverse(uModel))) * oNormal);
         
@@ -90,5 +93,5 @@ void main() {
         totalLightShine += att * (ambient + Spotlight * (diffuse + specular));
    }
   
-    FragColor = texture(colorsTex, oUVs) + vec4(totalLightShine, 1.0);
+    FragColor = texture(uDiffuseTex, oUVs) * vec4(totalLightShine, 1.0);
 }

@@ -60,20 +60,25 @@ namespace Core {
 
 			glm::mat4 view = cam.GetViewMatrix();
 			glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 10000.0f);
-			std::unordered_multimap<Asset<::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Core::Renderable>>::const_iterator> obsoletes;
+			std::unordered_multimap<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Core::Renderable>>::const_iterator> obsoletes;
 
-			std::for_each(std::execution::unseq, mRenderables.begin(), mRenderables.end(), [this, &obsoletes, &projection, &view](const std::pair<Asset<::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Core::Renderable>>>& it) {
-				::Graphics::ShaderProgram* shader = it.first->Get();
+			std::for_each(std::execution::unseq, mRenderables.begin(), mRenderables.end(), [this, &obsoletes, &projection, &view](const std::pair<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Core::Renderable>>>& it) {
+				Core::Graphics::ShaderProgram* shader = it.first->Get();
 
 				//If we want to see the UV Channels, toogle to them
 				if (Singleton<InputManager>::Instance().IsKeyDown('V')) {
-					shader = Singleton<ResourceManager>::Instance().GetResource<::Graphics::ShaderProgram>("Content/Shaders/UVs.shader")->Get();
+					shader = Singleton<ResourceManager>::Instance().GetResource<Core::Graphics::ShaderProgram>("Content/Shaders/UVs.shader")->Get();
 					shader->Bind();
 				} else {
-					auto tex = Singleton<ResourceManager>::Instance().GetResource<::Graphics::Texture>("Content/Textures/UV.jpg")->Get();
 					shader->Bind();
 					shader->SetShaderUniform("uCameraPos", &cam.mPosition);
 					UploadLightDataToGPU(it.first);
+					auto tex = Singleton<ResourceManager>::Instance().GetResource<::Graphics::Texture>("Content/Textures/UV.jpg")->Get();
+					tex->SetTextureType(::Graphics::Texture::TextureType::eDiffuse);
+					tex->Bind();
+					auto normals = Singleton<ResourceManager>::Instance().GetResource<::Graphics::Texture>("Content/Textures/BrickNormal.png")->Get();
+					normals->SetTextureType(::Graphics::Texture::TextureType::eNormal);
+					normals->Bind();
 				}
 
 				shader->SetShaderUniform("uTransform", &projection);
@@ -96,7 +101,7 @@ namespace Core {
 				}
 			});
 			
-			std::for_each(std::execution::par, obsoletes.begin(), obsoletes.end(), [this](std::pair<const Asset<::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Core::Renderable>>::const_iterator> x) {
+			std::for_each(std::execution::par, obsoletes.begin(), obsoletes.end(), [this](std::pair<const Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Core::Renderable>>::const_iterator> x) {
 				std::vector<std::weak_ptr<Core::Renderable>>& it = mRenderables.find(x.first)->second;
 				it.erase(x.second);
 			
@@ -110,8 +115,8 @@ namespace Core {
 		*
 		*   Uploads the light data to the shader
 		*/ //----------------------------------------------------------------------
-		void OpenGLPipeline::UploadLightDataToGPU(const AssetReference<::Graphics::ShaderProgram>& shader) {
-			::Graphics::ShaderProgram* shadptr = shader.lock()->Get();
+		void OpenGLPipeline::UploadLightDataToGPU(const AssetReference<Core::Graphics::ShaderProgram>& shader) {
+			Core::Graphics::ShaderProgram* shadptr = shader.lock()->Get();
 
 			for (size_t i = 0; i < ::Graphics::Primitives::Light::sLightReg; i++) {
 				const std::string id = "uLight[" + std::to_string(i);

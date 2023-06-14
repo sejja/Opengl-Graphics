@@ -12,138 +12,140 @@
 #include <glew.h>
 #include "Shader.h"
 
-namespace Graphics {
-	// ------------------------------------------------------------------------
-	/*! Default Constructor
-	*
-	*   Constructs a Shader
-	*/ // --------------------------------------------------------------------
-	Shader::Shader() :
-		mHandle(NULL), ShaderType(EType::Vertex), Source(nullptr) {
-	}
+namespace Core {
+	namespace Graphics {
+		// ------------------------------------------------------------------------
+		/*! Default Constructor
+		*
+		*   Constructs a Shader
+		*/ // --------------------------------------------------------------------
+		Shader::Shader() :
+			mHandle(NULL), ShaderType(EType::Vertex), Source(nullptr) {
+		}
 
-	// ------------------------------------------------------------------------
-	/*! Destrutor
-	*
-	*   Frees a Shader
-	*/ // --------------------------------------------------------------------
-	Shader::~Shader() {
-		//If we have a valid Source
-		if (Source)
-			free(Source);
-	}
+		// ------------------------------------------------------------------------
+		/*! Destrutor
+		*
+		*   Frees a Shader
+		*/ // --------------------------------------------------------------------
+		Shader::~Shader() {
+			//If we have a valid Source
+			if (Source)
+				free(Source);
+		}
 
-	// ------------------------------------------------------------------------
-	/*! Custom Constructor
-	*
-	*   Constructs a Shader given a file
-	*/ // --------------------------------------------------------------------
-	Shader::Shader(const char* filename, EType type) :
-		ShaderType(type), mHandle(NULL), Source(nullptr) {
+		// ------------------------------------------------------------------------
+		/*! Custom Constructor
+		*
+		*   Constructs a Shader given a file
+		*/ // --------------------------------------------------------------------
+		Shader::Shader(const std::string_view& filename, const EType type) :
+			ShaderType(type), mHandle(NULL), Source(nullptr) {
 #ifdef _DEBUG
-		if (LoadSource(filename))
+			if (LoadSource(filename))
 #else
-		LoadSource(filename);
+			LoadSource(filename);
 #endif
-		Compile(filename);
-	}
+			Compile(filename);
+		}
 
-	// ------------------------------------------------------------------------
-	/*! Load Source
-	*
-	*   Loads a Source for our Shader
-	*/ // --------------------------------------------------------------------
-	bool Shader::LoadSource(const char* filename) {
-		std::fstream shaderFile(filename);
-		std::stringstream shaderSource;
+		// ------------------------------------------------------------------------
+		/*! Load Source
+		*
+		*   Loads a Source for our Shader
+		*/ // --------------------------------------------------------------------
+		bool Shader::LoadSource(const std::string_view& filename) {
+			std::fstream shaderFile(filename.data());
+			std::stringstream shaderSource;
 
-		shaderSource << shaderFile.rdbuf();
+			shaderSource << shaderFile.rdbuf();
 
-		//If we could allocate the string
-		if (Source = reinterpret_cast<char*>(malloc(strlen(shaderSource.str().c_str()) + 1)))
+			//If we could allocate the string
+			if (Source = reinterpret_cast<char*>(malloc(strlen(shaderSource.str().c_str()) + 1)))
 
-			strcpy(Source, shaderSource.str().c_str());
-		else
-			return false;
-
-		return true;
-	}
-
-	// ------------------------------------------------------------------------
-	/*! Compile
-	*
-	*   Compiles the Shader
-	*/ // --------------------------------------------------------------------
-	bool Shader::Compile(const char* filename) {
-		//If there is a valid source file
-		if (Source && strlen(Source)) {
-			SetShaderType(ShaderType, !mHandle);
-			glShaderSource(static_cast<GLuint>(mHandle), 1, &Source, NULL);
-			glCompileShader(static_cast<GLuint>(mHandle));
-
-			// sanity check
-			GLint result;
-			glGetShaderiv(static_cast<GLuint>(mHandle), GL_COMPILE_STATUS, &result);
-
-#ifdef _DEBUG
-			//If there has been errors during compilation
-			if (!result) {
-				GLint logLen;
-				glGetShaderiv(static_cast<GLuint>(Handle), GL_INFO_LOG_LENGTH, &logLen);
-
-				//If there are multiple error's
-				if (logLen > 0) {
-					char* log = (char*)malloc(logLen);
-					GLsizei written;
-
-					glGetShaderInfoLog(static_cast<GLuint>(Handle), logLen, &written, log);
-
-					char str[100];
-
-					//sprintf_s(str, "Shader Compilation Error: %s", filename);
-					MessageBoxA(NULL, log, str, MB_TASKMODAL | MB_SETFOREGROUND | MB_ICONERROR);
-					free(log);
-				}
-
+				strcpy(Source, shaderSource.str().c_str());
+			else
 				return false;
-			}
-#endif
 
 			return true;
 		}
 
-		return false;
-	}
+		// ------------------------------------------------------------------------
+		/*! Compile
+		*
+		*   Compiles the Shader
+		*/ // --------------------------------------------------------------------
+		bool Shader::Compile(const std::string_view& filename) {
+			//If there is a valid source file
+			if (Source && strlen(Source)) {
+				SetShaderType(ShaderType, !mHandle);
+				glShaderSource(static_cast<GLuint>(mHandle), 1, &Source, NULL);
+				glCompileShader(static_cast<GLuint>(mHandle));
 
-	// ------------------------------------------------------------------------
-	/*! Create Device Shader
-	*
-	*   Creates a Device for the Shader
-	*/ // --------------------------------------------------------------------
-	bool Shader::CreateDeviceShader() {
-		GLenum err = glewInit();
+				// sanity check
+				GLint result;
+				glGetShaderiv(static_cast<GLuint>(mHandle), GL_COMPILE_STATUS, &result);
 
-		//If we have a valid Handler
-		if (mHandle)
-			glDeleteShader(static_cast<GLuint>(mHandle));
+#ifdef _DEBUG
+				//If there has been errors during compilation
+				if (!result) {
+					GLint logLen;
+					glGetShaderiv(static_cast<GLuint>(mHandle), GL_INFO_LOG_LENGTH, &logLen);
 
-		mHandle = glCreateShader(ShaderType == EType::Vertex ?
-			GL_VERTEX_SHADER : GL_FRAGMENT_SHADER);
+					//If there are multiple error's
+					if (logLen > 0) {
+						char* log = (char*)malloc(logLen);
+						GLsizei written;
 
-		return true;
-	}
+						glGetShaderInfoLog(static_cast<GLuint>(mHandle), logLen, &written, log);
 
-	// ------------------------------------------------------------------------
-	/*! Set Shader Type
-	*
-	*   Sets the type of the shader
-	*/ // --------------------------------------------------------------------
-	void Shader::SetShaderType(Shader::EType shaderType,
-		bool createDeviceShader) {
-		ShaderType = shaderType;
+						char str[100];
 
-		//If we need to create a device
-		if (createDeviceShader)
-			CreateDeviceShader();
+						//sprintf_s(str, "Shader Compilation Error: %s", filename);
+						MessageBoxA(NULL, log, str, MB_TASKMODAL | MB_SETFOREGROUND | MB_ICONERROR);
+						free(log);
+					}
+
+					return false;
+				}
+#endif
+
+				return true;
+			}
+
+			return false;
+		}
+
+		// ------------------------------------------------------------------------
+		/*! Create Device Shader
+		*
+		*   Creates a Device for the Shader
+		*/ // --------------------------------------------------------------------
+		bool Shader::CreateDeviceShader() {
+			GLenum err = glewInit();
+
+			//If we have a valid Handler
+			if (mHandle)
+				glDeleteShader(static_cast<GLuint>(mHandle));
+
+			mHandle = glCreateShader(ShaderType == EType::Vertex ?
+				GL_VERTEX_SHADER : GL_FRAGMENT_SHADER);
+
+			return true;
+		}
+
+		// ------------------------------------------------------------------------
+		/*! Set Shader Type
+		*
+		*   Sets the type of the shader
+		*/ // --------------------------------------------------------------------
+		void Shader::SetShaderType(Shader::EType shaderType,
+			bool createDeviceShader) {
+			ShaderType = shaderType;
+
+			//If we need to create a device
+			if (createDeviceShader)
+				CreateDeviceShader();
+		}
 	}
 }

@@ -204,7 +204,6 @@
     <ClInclude Include="Core\Events\Event.h" />
     <ClInclude Include="Core\Events\EventDispatcher.h" />
     <ClInclude Include="Core\RTTI.h" />
-    <ClInclude Include="PatternMatching.h" />
     <ClInclude Include="Core\Events\TypeInfo.h" />
     <ClInclude Include="Core\InputManager.h" />
     <ClInclude Include="Core\ObjectAllocator.h" />
@@ -813,6 +812,7 @@
     <Text Include="Dependencies\GLM\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Content\Textures\BrickNormal.png" />
     <Image Include="Content\Textures\UV.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

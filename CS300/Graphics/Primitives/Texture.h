@@ -26,6 +26,7 @@ namespace Graphics {
 		Texture(const std::string_view& filename);
 		~Texture();
 		void LoadFromFile(const std::string_view& filename);
+		inline void SetTextureType(const TextureType type);
 		void Bind() const;
 		
 	private:
@@ -34,6 +35,15 @@ namespace Graphics {
 		GLuint mHandle;
 		TextureType mType;
 	};
+
+	// ------------------------------------------------------------------------
+	/*! Set Texture Type
+	*
+	*   Sets the Type of a certain texture
+	*/ // --------------------------------------------------------------------
+	void Texture::SetTextureType(const TextureType type) {
+		mType = type;
+	}
 }
 
 #endif

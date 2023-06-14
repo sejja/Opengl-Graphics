@@ -27,10 +27,10 @@ namespace Core {
 			inline void Shutdown() override;
 			virtual inline void SetDimensions(const glm::lowp_u16vec2& dim) override;
 			inline void AddRenderable(const std::weak_ptr<Core::Renderable>& renderer);
-			void UploadLightDataToGPU(const AssetReference<::Graphics::ShaderProgram>& shader);
+			void UploadLightDataToGPU(const AssetReference<Core::Graphics::ShaderProgram>& shader);
 
 		private:
-			std::unordered_map<Asset<::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Core::Renderable>>> mRenderables;
+			std::unordered_map<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Core::Renderable>>> mRenderables;
 		};
 
 		// ------------------------------------------------------------------------

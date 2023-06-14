@@ -1,51 +1,50 @@
 //
 //	ShaderProgram.h
-//	Good Neighbours
+//	OpenGL Graphics
 //
 //	Created by Diego Revilla on 06/05/21
-//	Copyright © 2021 . All Rights reserved
+//	Copyright © 2021. All Rights reserved
 //
 
 #ifndef _SHADER_PROGRAM__H_
 #define _SHADER_PROGRAM__H_
 
-#include "Shader.h"
+#include <string>
 #include <glm/glm.hpp>
+#include "Shader.h"
 #include "Color.h"
 #include "CommonDefines.h"
-#include <string>
 #include "Core/ResourceManager.h"
 
-namespace Graphics {
-	class ShaderProgram {
-	public:
-		ShaderProgram();
-		ShaderProgram(AssetReference<Shader> vertexShader, AssetReference<Shader> fragmentShader);
-		void Bind();
-		void Unbind();
-		void Load();
-		AssetReference<Shader> GetShader(Shader::EType shaderType);
-		void SetShader(AssetReference<Shader> pShader, bool link = false);
-		void SetShaderUniform(const char* name, int value);
-		void SetShaderUniform(const char* name, bool value);
-		void SetShaderUniform(const char* name, int* value, int count = 1);
-		void SetShaderUniform(const char* name, float* value, int count = 1);
-		void SetShaderUniform(const char* name, glm::mat4* value, int count = 1);
-		void SetShaderUniform(const char* name, glm::mat3* value, int count = 1);
-		void SetShaderUniform(const char* name, glm::vec2* value, int count = 1);
-		void SetShaderUniform(const char* name, glm::vec3* value, int count = 1);
-		void SetShaderUniform(const char* name, glm::vec4* value, int count = 1);
-		void SetShaderUniform(const char* name, Color* value, int count = 1);
-		DONTDISCARD unsigned int GetOpenGLHandle();
+namespace Core {
+	namespace Graphics {
+		class ShaderProgram {
+		public:
+			ShaderProgram();
+			ShaderProgram(const AssetReference<Shader>& vertexShader, const AssetReference<Shader>& fragmentShader);
+			void Bind();
+			AssetReference<Shader> GetShader(const Shader::EType shaderType) const;
+			void SetShader(const AssetReference<Shader>& pShader, const bool link = false);
+			void SetShaderUniform(const std::string_view& name, const int value);
+			void SetShaderUniform(const std::string_view& name, const bool value);
+			void SetShaderUniform(const std::string_view& name, int* value, const int count = 1);
+			void SetShaderUniform(const std::string_view& name, float* value, const int count = 1);
+			void SetShaderUniform(const std::string_view& name, glm::mat4* value, const int count = 1);
+			void SetShaderUniform(const std::string_view& name, glm::mat3* value, const int count = 1);
+			void SetShaderUniform(const std::string_view& name, glm::vec2* value, const int count = 1);
+			void SetShaderUniform(const std::string_view& name, glm::vec3* value, const int count = 1);
+			void SetShaderUniform(const std::string_view& name, glm::vec4* value, const int count = 1);
+			void SetShaderUniform(const std::string_view& name, Color* value, const int count = 1);
+		private:
+			void Link();
+			void AttachShader(const Shader::EType which);
+			GLuint getUniformLocatiion(const std::string_view& id);
 
-	private:
-		void Link();
-		void AttachShader(const Shader::EType which);
-		void DetachShader(const Shader::EType which);
-
-		unsigned int mHandle = NULL;
-		Asset<Shader> Shaders[2];
-	};
+			std::unordered_map<std::string_view, GLuint> mUniformLocations;
+			unsigned int mHandle = NULL;
+			Asset<Shader> Shaders[2];
+		};
+	}
 }
 
 #endif

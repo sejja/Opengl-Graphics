@@ -1481,9 +1481,6 @@
     <ClInclude Include="Core\Events\EventDispatcher.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PatternMatching.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Core\RTTI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1915,6 +1912,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Content\Textures\UV.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Content\Textures\BrickNormal.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

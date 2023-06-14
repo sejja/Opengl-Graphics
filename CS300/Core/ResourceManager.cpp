@@ -23,8 +23,8 @@ void ResourceManager::Initialize() {
 	importers.insert({ "png", new Assets::TextureImporter });
 	importers.insert({ "jpg", new Assets::TextureImporter });
 	importers.insert({ "shader", new Assets::ShaderProgramImporter });
-	importers.insert({ "vert", new Assets::ShaderImporter<Graphics::Shader::EType::Vertex> });
-	importers.insert({ "frag", new Assets::ShaderImporter<Graphics::Shader::EType::Fragment> });
+	importers.insert({ "vert", new Assets::ShaderImporter<Core::Graphics::Shader::EType::Vertex> });
+	importers.insert({ "frag", new Assets::ShaderImporter<Core::Graphics::Shader::EType::Fragment> });
 }
 
 // ------------------------------------------------------------------------

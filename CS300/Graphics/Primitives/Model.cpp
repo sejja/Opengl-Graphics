@@ -23,6 +23,7 @@ void Model::LoadFromFile(const std::string& inputfile) {
 	std::vector<tinyobj::real_t> vertices;
 	std::vector<tinyobj::real_t> normals;
 	std::vector<tinyobj::real_t> tangents;
+	std::vector<tinyobj::real_t> bitangents;
 	std::vector<int> indexes;
 
 	std::string warn;
@@ -50,6 +51,7 @@ void Model::LoadFromFile(const std::string& inputfile) {
 				// access to vertex
 				tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
 
+				
 				vertices.push_back(attrib.vertices[3 * size_t(idx.vertex_index) + 0]);
 				vertices.push_back(attrib.vertices[3 * size_t(idx.vertex_index) + 1]);
 				vertices.push_back(attrib.vertices[3 * size_t(idx.vertex_index) + 2]);
@@ -113,7 +115,7 @@ void Model::LoadFromFile(const std::string& inputfile) {
 	UploadToGPU(vertices, indexes);
 }
 
-void Model::set_uniforms(Graphics::ShaderProgram& s) const {
+void Model::set_uniforms(Core::Graphics::ShaderProgram& s) const {
 	float _shininess = mMaterial.GetShininess();
 	glm::vec4 buffer[] = {
 		mMaterial.GetEmissive(),

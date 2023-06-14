@@ -30,17 +30,17 @@ namespace Assets {
 		DONTDISCARD std::shared_ptr<IResource> ImportFromFile(const std::string_view& filename) const override;
 	};
 
-	template<Graphics::Shader::EType TYPE>
+	template<Core::Graphics::Shader::EType TYPE>
 	class ShaderImporter : public IResourceImporter {};
 
 	template<>
-	class ShaderImporter<Graphics::Shader::EType::Vertex> : public IResourceImporter {
+	class ShaderImporter<Core::Graphics::Shader::EType::Vertex> : public IResourceImporter {
 	public:
 		DONTDISCARD std::shared_ptr<IResource> ImportFromFile(const std::string_view& filename) const override;
 	};
 
 	template<>
-	class ShaderImporter<Graphics::Shader::EType::Fragment> : public IResourceImporter {
+	class ShaderImporter<Core::Graphics::Shader::EType::Fragment> : public IResourceImporter {
 	public:
 		DONTDISCARD std::shared_ptr<IResource> ImportFromFile(const std::string_view& filename) const override;
 	};

@@ -67,8 +67,8 @@ namespace Assets {
 	*   Imports a Shader from File
 	*/ //----------------------------------------------------------------------
 	std::shared_ptr<IResource> ShaderProgramImporter::ImportFromFile(const std::string_view& filename) const {
-		using Graphics::ShaderProgram;
-		using Graphics::Shader;
+		using Core::Graphics::ShaderProgram;
+		using Core::Graphics::Shader;
 		using nlohmann::json;
 
 		PageAllocator<TResource<ShaderProgram>> resalloc;
@@ -95,8 +95,8 @@ namespace Assets {
 		return  rawResource;
 	}
 
-	std::shared_ptr<IResource> process_shader(const std::string_view& filename, Graphics::Shader::EType type) {
-		using Graphics::Shader;
+	std::shared_ptr<IResource> process_shader(const std::string_view& filename, Core::Graphics::Shader::EType type) {
+		using Core::Graphics::Shader;
 
 		PageAllocator<TResource<Shader>> resalloc;
 		PageAllocator<Shader> shadalloc;
@@ -122,8 +122,8 @@ namespace Assets {
 	*
 	*   Imports a Vertex Shader from File
 	*/ //----------------------------------------------------------------------
-	std::shared_ptr<IResource> ShaderImporter<Graphics::Shader::EType::Vertex>::ImportFromFile(const std::string_view& filename) const {
-		return process_shader(filename, Graphics::Shader::EType::Vertex);
+	std::shared_ptr<IResource> ShaderImporter<Core::Graphics::Shader::EType::Vertex>::ImportFromFile(const std::string_view& filename) const {
+		return process_shader(filename, Core::Graphics::Shader::EType::Vertex);
 	}
 
 	// ------------------------------------------------------------------------
@@ -131,7 +131,7 @@ namespace Assets {
 	*
 	*   Imports a Vertex Shader from File
 	*/ //----------------------------------------------------------------------
-	std::shared_ptr<IResource> ShaderImporter<Graphics::Shader::EType::Fragment>::ImportFromFile(const std::string_view& filename) const {
-		return process_shader(filename, Graphics::Shader::EType::Fragment);
+	std::shared_ptr<IResource> ShaderImporter<Core::Graphics::Shader::EType::Fragment>::ImportFromFile(const std::string_view& filename) const {
+		return process_shader(filename, Core::Graphics::Shader::EType::Fragment);
 	}
 }

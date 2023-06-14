@@ -10,6 +10,7 @@
 #include <cstdlib>
 #include "stb.h"
 #include "../../Core/Allocator.h"
+#include <iostream>
 
 #define STB_IMAGE_IMPLEMENTATION 
 #include "stb_image.h"
@@ -77,6 +78,7 @@ namespace Graphics {
 					GL_RGBA, GL_UNSIGNED_BYTE, reinterpret_cast<const void*>(tempPixels_));
 				glGenerateMipmap(GL_TEXTURE_2D);
 				stbi_image_free(tempPixels_);
+				glBindTexture(GL_TEXTURE_2D, 0);
 			}
 		}
 	}
@@ -87,10 +89,17 @@ namespace Graphics {
 	*   Binds the Texture to the OpenGL render pipeline
 	*/ // --------------------------------------------------------------------
 	void Texture::Bind() const {
-#ifdef _DEBUG
-		//If we have a valid handle
-		if (Handle)
-#endif
-			glBindTexture(GL_TEXTURE_2D, mHandle);
+		switch(mType) {
+		default:
+			glActiveTexture(GL_TEXTURE0);
+			break;
+			
+		case TextureType::eNormal:
+			glActiveTexture(GL_TEXTURE1);
+			break;
+		}
+	
+		glBindTexture(GL_TEXTURE_2D, mHandle);
+		std::cout << mHandle << " texture has been binded" << std::endl;
 	}
 }
