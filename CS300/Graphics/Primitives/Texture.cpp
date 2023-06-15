@@ -100,6 +100,5 @@ namespace Graphics {
 		}
 	
 		glBindTexture(GL_TEXTURE_2D, mHandle);
-		std::cout << mHandle << " texture has been binded" << std::endl;
 	}
 }

@@ -1,5 +1,11 @@
 #version 450 core
 
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec3 aNormal;
+layout(location = 2) in vec2 aUVs;
+layout(location = 3) in vec3 aTangent;
+layout(location = 4) in vec2 aBitangent;
+
 struct MaterialParameters {
 	vec4 emission;
 	vec4 ambient;
@@ -33,20 +39,26 @@ out vec4 FragColor;
 in vec2 oUVs;
 in vec3 oNormal;
 in vec3 oPosition;
+in vec3 oTangent;
+in vec3 oBitangent;
 
 layout(binding = 0) uniform sampler2D uDiffuseTex;
 layout(binding = 1) uniform sampler2D uNormalTex;
 
 void main() {
+    mat4 VM = uView * uModel;
+    mat3 VM3 = mat3(VM);
+    mat3 iVM3 = inverse(transpose(VM3));
+    mat3 V_M_TBN = iVM3 * mat3(oTangent, oBitangent, oNormal);
+    vec3 N = normalize(V_M_TBN * /*(texture(uNormalTex, oUVs).rgb*/ (vec3(1, 1, 1) * 2.0f - 1.0f));
+
     vec3 totalLightShine = vec3(0, 0, 0);
     
     for(int i = 0; i < uLightCount; i++) {
         //ambient
         float ambientStrength = 0.1;
         vec3 ambient = uLight[i].amb;
-   
-        vec3 texturenormal = texture(uNormalTex, oUVs).rgb;
-        texturenormal = normalize(texturenormal * 2.0 - 1.0);
+  
         //diffuse
         vec3 norm = normalize(mat3(transpose(inverse(uModel))) * oNormal);
         
@@ -94,4 +106,5 @@ void main() {
    }
   
     FragColor = texture(uDiffuseTex, oUVs) * vec4(totalLightShine, 1.0);
+    FragColor = vec4(N, 1);
 }

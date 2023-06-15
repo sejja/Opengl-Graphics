@@ -46,6 +46,58 @@ void Model::LoadFromFile(const std::string& inputfile) {
 		for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
 			size_t fv = size_t(shapes[s].mesh.num_face_vertices[f]);
 
+			glm::vec3 tangent;
+			glm::vec3 bitangent;
+
+			if (fv == 3) {
+				tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + 0];
+
+				glm::vec3 pos1 = { attrib.vertices[3 * size_t(idx.vertex_index) + 0] ,
+					attrib.vertices[3 * size_t(idx.vertex_index) + 1] , attrib.vertices[3 * size_t(idx.vertex_index) + 2] };
+				
+				glm::vec2 uv1 = {
+					attrib.texcoords[2 * size_t(idx.texcoord_index) + 0],
+					attrib.texcoords[2 * size_t(idx.texcoord_index) + 1]
+				};
+
+				idx = shapes[s].mesh.indices[index_offset + 1];
+
+				glm::vec3 pos2 = { attrib.vertices[3 * size_t(idx.vertex_index) + 0] ,
+					attrib.vertices[3 * size_t(idx.vertex_index) + 1] , attrib.vertices[3 * size_t(idx.vertex_index) + 2] };
+
+				glm::vec2 uv2 = {
+					attrib.texcoords[2 * size_t(idx.texcoord_index) + 0],
+					attrib.texcoords[2 * size_t(idx.texcoord_index) + 1]
+				};
+
+				 idx = shapes[s].mesh.indices[index_offset + 2];
+
+				glm::vec3 pos3 = { attrib.vertices[3 * size_t(idx.vertex_index) + 0] ,
+					attrib.vertices[3 * size_t(idx.vertex_index) + 1] , attrib.vertices[3 * size_t(idx.vertex_index) + 2] };
+
+				glm::vec2 uv3 = {
+					attrib.texcoords[2 * size_t(idx.texcoord_index) + 0],
+					attrib.texcoords[2 * size_t(idx.texcoord_index) + 1]
+				};
+
+				// Find T and B
+				const glm::vec3 v10 = pos2 - pos1;
+				const glm::vec2 uv10 = uv2 - uv1;
+				const glm::vec3 v20 = pos3 - pos1;
+				const glm::vec2 uv20 = uv2 - uv1;
+				const float div = (uv10.y * uv20.x - uv20.y * uv10.x);
+				const float mul = div ? 1.0f / div : 0;
+				const glm::vec3 t = (uv10.y * v20 - uv20.y * v10) * mul;
+				const glm::vec3 b = (uv20.x * v10 - uv10.x * v20) * mul;
+
+				tangent = t;
+				bitangent = b;
+			}
+			else {
+				tangent = {0, 0, 0};
+				bitangent = {0, 0, 0};
+			}
+
 			// Loop over vertices in the face.
 			for (size_t v = 0; v < fv; v++) {
 				// access to vertex
@@ -56,34 +108,25 @@ void Model::LoadFromFile(const std::string& inputfile) {
 				vertices.push_back(attrib.vertices[3 * size_t(idx.vertex_index) + 1]);
 				vertices.push_back(attrib.vertices[3 * size_t(idx.vertex_index) + 2]);
 
-				//tinyobj::real_t vx = attrib.vertices[3 * size_t(idx.vertex_index) + 0];
-				//tinyobj::real_t vy = attrib.vertices[3 * size_t(idx.vertex_index) + 1];
-				//tinyobj::real_t vz = attrib.vertices[3 * size_t(idx.vertex_index) + 2];
-
 				// Check if `normal_index` is zero or positive. negative = no normal data
 				if (idx.normal_index >= 0) {
 					vertices.push_back(attrib.normals[3 * size_t(idx.normal_index) + 0]);
 					vertices.push_back(attrib.normals[3 * size_t(idx.normal_index) + 1]);
 					vertices.push_back(attrib.normals[3 * size_t(idx.normal_index) + 2]);
-
-					//tinyobj::real_t nx = attrib.normals[3 * size_t(idx.normal_index) + 0];
-					//tinyobj::real_t ny = attrib.normals[3 * size_t(idx.normal_index) + 1];
-					//tinyobj::real_t nz = attrib.normals[3 * size_t(idx.normal_index) + 2];
 				}
 
 				// Check if `texcoord_index` is zero or positive. negative = no texcoord data
 				if (idx.texcoord_index >= 0) {
 					vertices.push_back(attrib.texcoords[2 * size_t(idx.texcoord_index) + 0]);
 					vertices.push_back(attrib.texcoords[2 * size_t(idx.texcoord_index) + 1]);
-
-					//tinyobj::real_t tx = attrib.texcoords[2 * size_t(idx.texcoord_index) + 0];
-					//tinyobj::real_t ty = attrib.texcoords[2 * size_t(idx.texcoord_index) + 1];
 				}
 
-				// Optional: vertex colors
-				// tinyobj::real_t red   = attrib.colors[3*size_t(idx.vertex_index)+0];
-				// tinyobj::real_t green = attrib.colors[3*size_t(idx.vertex_index)+1];
-				// tinyobj::real_t blue  = attrib.colors[3*size_t(idx.vertex_index)+2];
+				vertices.push_back(tangent.x);
+				vertices.push_back(tangent.y);
+				vertices.push_back(tangent.z);
+				vertices.push_back(bitangent.x);
+				vertices.push_back(bitangent.y);
+				vertices.push_back(bitangent.z);
 			}
 			index_offset += fv;
 
@@ -146,15 +189,24 @@ void Model::UploadToGPU(std::vector<float>& vertices, std::vector<int>& indexes)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexes.size() * sizeof(tinyobj::index_t), indexes.data(), GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, (3 + 3 + 2) * sizeof(GLfloat), (void*)(0));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, ModelVertex::pos));
 	glEnableVertexAttribArray(0);
 
 	// Normals
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, (3 + 3 + 2) * sizeof(GLfloat), (void*)3);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, ModelVertex::normal));
+	
 	// UVs
 	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, (3 + 3 + 2) * sizeof(GLfloat), (void*)6);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, ModelVertex::uv));
+
+	// UVs
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, ModelVertex::tangent));
+
+	// UVs
+	glEnableVertexAttribArray(4);
+	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, ModelVertex::bitangent));
 
 	glBindVertexArray(0);
 }

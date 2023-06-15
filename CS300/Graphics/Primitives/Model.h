@@ -8,6 +8,14 @@
 
 class Model {
 public:
+	struct ModelVertex {
+		tinyobj::real_t pos[3];
+		tinyobj::real_t normal[3];
+		tinyobj::real_t uv[2];
+		tinyobj::real_t tangent[3];
+		tinyobj::real_t bitangent[3];
+	};
+
 	~Model();
 	void Clear();
 	void LoadFromFile(const std::string& inputfile);
