@@ -14,6 +14,25 @@ void Model::Clear() {
 	glDeleteBuffers(1, &mIBO);
 }
 
+void GramSchmidt(glm::vec3& n, glm::vec3& t, glm::vec3& b)
+{
+	n = normalize(n);
+	// Gram-Schmidt orthogonalization
+	glm::vec3 orthoT = t - dot(t, n) * n;
+
+	// Set tangent to (1,0,0) when lenght is 0
+	t = glm::length(orthoT) > 0.0f ?
+		glm::normalize(orthoT) :
+		glm::vec3(1.0f, 0.0f, 0.0f);
+
+	// Compute the new perpendicular bitangent
+	glm::vec3 orthoB = cross(n, t);
+
+	b = glm::dot(orthoB, b) > 0.0f ?
+		glm::normalize(orthoB) :
+		-glm::normalize(orthoB);
+}
+
 void Model::LoadFromFile(const std::string& inputfile) {
 	Clear();
 	
@@ -121,12 +140,22 @@ void Model::LoadFromFile(const std::string& inputfile) {
 					vertices.push_back(attrib.texcoords[2 * size_t(idx.texcoord_index) + 1]);
 				}
 
-				vertices.push_back(tangent.x);
-				vertices.push_back(tangent.y);
-				vertices.push_back(tangent.z);
-				vertices.push_back(bitangent.x);
-				vertices.push_back(bitangent.y);
-				vertices.push_back(bitangent.z);
+				glm::vec3 tnormal = {
+					attrib.normals[3 * size_t(idx.normal_index) + 0],
+					attrib.normals[3 * size_t(idx.normal_index) + 1],
+					attrib.normals[3 * size_t(idx.normal_index) + 2]
+				};
+				glm::vec3 ttangent = tangent;
+				glm::vec3 tbitangent = bitangent;
+
+				GramSchmidt(tnormal, ttangent, tbitangent);
+
+				vertices.push_back(ttangent.x);
+				vertices.push_back(ttangent.y);
+				vertices.push_back(ttangent.z);
+				vertices.push_back(tbitangent.x);
+				vertices.push_back(tbitangent.y);
+				vertices.push_back(tbitangent.z);
 			}
 			index_offset += fv;
 

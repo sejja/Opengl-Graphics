@@ -50,7 +50,7 @@ void main() {
     mat3 VM3 = mat3(VM);
     mat3 iVM3 = inverse(transpose(VM3));
     mat3 V_M_TBN = iVM3 * mat3(oTangent, oBitangent, oNormal);
-    vec3 N = normalize(V_M_TBN * /*(texture(uNormalTex, oUVs).rgb*/ (vec3(1, 1, 1) * 2.0f - 1.0f));
+    vec3 N = normalize(V_M_TBN * (texture(uNormalTex, oUVs).rgb * 2.0f - 1.0f));
 
     vec3 totalLightShine = vec3(0, 0, 0);
     
@@ -60,7 +60,7 @@ void main() {
         vec3 ambient = uLight[i].amb;
   
         //diffuse
-        vec3 norm = normalize(mat3(transpose(inverse(uModel))) * oNormal);
+        vec3 norm = normalize(mat3(transpose(inverse(uModel))) * N);
         
         vec3 lightDir;
         
@@ -106,5 +106,6 @@ void main() {
    }
   
     FragColor = texture(uDiffuseTex, oUVs) * vec4(totalLightShine, 1.0);
-    FragColor = vec4(N, 1);
+    //FragColor = vec4(N, 1);
+    //FragColor = vec4(normalize(VM3 * oTangent), 1);
 }

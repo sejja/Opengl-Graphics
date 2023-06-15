@@ -22,7 +22,7 @@ namespace Core {
 class Scene {
 #pragma region //Functions
 public:
-	void CreateScene(const std::string_view& file);
+	void CreateScene(const std::string_view& file, std::function<void(const std::shared_ptr<Object>& obj)>);
 
 	template<typename PIPE>
 	void UploadObjectsToPipeline(PIPE& pipe);

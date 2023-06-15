@@ -19,10 +19,10 @@ CS300Parser Scene::mParser;
 *
 *   Creates a scene from a level file
 */ // ---------------------------------------------------------------------
-void Scene::CreateScene(const std::string_view& file) {
+void Scene::CreateScene(const std::string_view& file, std::function<void(const std::shared_ptr<Object>& obj)> upload) {
 	mParser.LoadDataFromFile(file.data());
 	
-	std::for_each(std::execution::unseq, mParser.mObjects.begin(), mParser.mObjects.end(), [this](const CS300Parser::Transform& x) {
+	std::for_each(std::execution::unseq, mParser.mObjects.begin(), mParser.mObjects.end(), [this, &upload](const CS300Parser::Transform& x) {
 		std::shared_ptr<Object> obj = std::move(std::make_shared<Object>());
 		obj->transform.mPostion = x.pos;
 		obj->transform.mRotation = glm::radians(x.rot);
@@ -31,12 +31,13 @@ void Scene::CreateScene(const std::string_view& file) {
 		renderer->SetMesh(Singleton<ResourceManager>::Instance().GetResource<Model>(x.mesh.c_str()));
 		renderer->SetShaderProgram(Singleton<ResourceManager>::Instance().GetResource<Core::Graphics::ShaderProgram>("Content/Shaders/Textured.shader"));
 		obj->components.emplace_back(std::move(renderer));
+		upload(obj);
 		mObjects.emplace_back(std::move(obj));
 	});
 
 	int i = 0;
 	
-	std::for_each(std::execution::seq, mParser.lights.begin(), mParser.lights.end(), [this, &i](const CS300Parser::Light& x) {
+	std::for_each(std::execution::seq, mParser.lights.begin(), mParser.lights.end(), [this, &i, &upload](const CS300Parser::Light& x) {
 		std::shared_ptr<Object> obj = std::move(std::make_shared<Object>());
 		obj->transform.mPostion = x.pos;
 		obj->transform.mScale = { 1.f, 1.f, 1.f };
@@ -88,6 +89,7 @@ void Scene::CreateScene(const std::string_view& file) {
 		}
 
 		i++;
+		upload(obj);
 		mObjects.emplace_back(std::move(obj));
 	});
 }
