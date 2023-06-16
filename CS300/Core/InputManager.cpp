@@ -79,6 +79,8 @@ namespace Core {
 		if (IsKeyDown('V')) Singleton<Events::EventDispatcher>::Instance().TriggerEvent(V_Down());
 		if (IsKeyDown('S')) Singleton<Events::EventDispatcher>::Instance().TriggerEvent(S_Down());
 		if (IsKeyDown('D')) Singleton<Events::EventDispatcher>::Instance().TriggerEvent(D_Down());
+		if (IsKeyDown('Q')) Singleton<Events::EventDispatcher>::Instance().TriggerEvent(Space_Down());
+		if (IsKeyDown('R')) Singleton<Events::EventDispatcher>::Instance().TriggerEvent(Shift_Down());
 	}
 
 	// ------------------------------------------------------------------------

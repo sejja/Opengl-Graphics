@@ -25,6 +25,8 @@ namespace Core {
         EVENT_DECL(A_Down);
         EVENT_DECL(S_Down);
         EVENT_DECL(D_Down);
+        EVENT_DECL(Space_Down);
+        EVENT_DECL(Shift_Down);
 
         DONTDISCARD bool IsKeyPressed(const KeyCode key) noexcept;
         DONTDISCARD bool IsKeyReleased(const KeyCode key) noexcept;

@@ -10,6 +10,13 @@ float CS300Parser::ReadFloat(std::ifstream& f)
     return static_cast<float>(std::atof(str.c_str()));
 }
 
+int CS300Parser::ReadInt(std::ifstream& f)
+{
+    std::string str;
+    f >> str;
+    return std::atoi(str.c_str());
+}
+
 glm::vec3 CS300Parser::ReadVec3(std::ifstream& f)
 {
     float x = ReadFloat(f);
@@ -29,7 +36,7 @@ void CS300Parser::LoadDataFromFile(const char* filename)
         exit(0);
     }
 
-    mObjects.clear();
+    objects.clear();
 
     std::string str;
 
@@ -91,7 +98,7 @@ void CS300Parser::LoadDataFromFile(const char* filename)
         {
             Transform newObj;
             inFile >> newObj.name;
-            mObjects.push_back(newObj);
+            objects.push_back(newObj);
             last = LastAdded::OBJECT;
         }
         else if (id == "translate")
@@ -100,9 +107,9 @@ void CS300Parser::LoadDataFromFile(const char* filename)
 
             if (last == LastAdded::OBJECT)
             {
-                if (mObjects.size() > 0)
+                if (objects.size() > 0)
                 {
-                    mObjects.back().pos = pos;
+                    objects.back().pos = pos;
                 }
             }
             else if (last == LastAdded::LIGHT)
@@ -117,36 +124,45 @@ void CS300Parser::LoadDataFromFile(const char* filename)
         {
             glm::vec3 rot = ReadVec3(inFile);
 
-            if (mObjects.size() > 0)
+            if (objects.size() > 0)
             {
-                mObjects.back().rot = rot;
+                objects.back().rot = rot;
             }
         }
         else if (id == "scale")
         {
             glm::vec3 sca = ReadVec3(inFile);
 
-            if (mObjects.size() > 0)
+            if (objects.size() > 0)
             {
-                mObjects.back().sca = sca;
+                objects.back().sca = sca;
             }
         }
         else if (id == "mesh")
         {
             std::string mesh;
             inFile >> mesh;
-            if (mObjects.size() > 0)
+            if (objects.size() > 0)
             {
-                mObjects.back().mesh = mesh;
+                objects.back().mesh = mesh;
+            }
+        }
+        else if (id == "normalMap")
+        {
+            std::string normalMap;
+            inFile >> normalMap;
+            if (objects.size() > 0)
+            {
+                objects.back().normalMap = normalMap;
             }
         }
         else if (id == "shininess")
         {
             float ns = ReadFloat(inFile);
 
-            if (mObjects.size() > 0)
+            if (objects.size() > 0)
             {
-                mObjects.back().ns = ns;
+                objects.back().ns = ns;
             }
         }
         else if (id == "light")
@@ -212,23 +228,22 @@ void CS300Parser::LoadDataFromFile(const char* filename)
                 lights.back().falloff = spotAtt.z;
             }
         }
-        else if (Animations::NameToUpdater.find(id) != Animations::NameToUpdater.end())
+        else if (id == "bias")
         {
-            glm::vec3 param = ReadVec3(inFile);
+            float bias = ReadFloat(inFile);
 
-            if (last == LastAdded::OBJECT)
+            if (lights.size() > 0)
             {
-                if (mObjects.size() > 0)
-                {
-                    mObjects.back().anims.push_back({ Animations::NameToUpdater.at(id), param });
-                }
+                lights.back().bias = bias;
             }
-            else if (last == LastAdded::LIGHT)
+        }
+        else if (id == "pcf")
+        {
+            int pcf = ReadInt(inFile);
+
+            if (lights.size() > 0)
             {
-                if (lights.size() > 0)
-                {
-                    lights.back().anims.push_back({ Animations::NameToUpdater.at(id), param });
-                }
+                lights.back().pcf = pcf;
             }
         }
     }

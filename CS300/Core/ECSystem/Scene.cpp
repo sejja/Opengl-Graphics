@@ -22,7 +22,7 @@ CS300Parser Scene::mParser;
 void Scene::CreateScene(const std::string_view& file, std::function<void(const std::shared_ptr<Object>& obj)> upload) {
 	mParser.LoadDataFromFile(file.data());
 	
-	std::for_each(std::execution::unseq, mParser.mObjects.begin(), mParser.mObjects.end(), [this, &upload](const CS300Parser::Transform& x) {
+	std::for_each(std::execution::unseq, mParser.objects.begin(), mParser.objects.end(), [this, &upload](const CS300Parser::Transform& x) {
 		std::shared_ptr<Object> obj = std::move(std::make_shared<Object>());
 		obj->transform.mPostion = x.pos;
 		obj->transform.mRotation = glm::radians(x.rot);

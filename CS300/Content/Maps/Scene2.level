@@ -1,0 +1,109 @@
+
+#camera data
+fovy 60.0
+width 1280.0
+height 720.0
+near 1
+far 500
+camPosition 40 20 0
+camTarget 0 0 50
+camUp 0 1 0
+    
+#scene data
+object floor
+translate 0 -50 50
+rotation -90 0 0
+scale 100 1 100
+shininess 20
+mesh Content/Meshes/cube_face.obj 
+normalMap data/textures/brick_normal_map.png
+
+object leftWall
+translate -50 0 50
+rotation 0 90 0
+scale 1 100 100
+shininess 20
+mesh Content/Meshes/cube_face.obj 
+normalMap data/textures/brick_normal_map.png
+
+object rightWall
+translate 50 0 50
+rotation 0 -90 0
+scale 1 100 100
+shininess 20
+mesh Content/Meshes/cube_face.obj 
+normalMap data/textures/brick_normal_map.png
+
+object frontWall
+translate 0 0 0
+rotation 0 0 0
+scale 100 100 1
+shininess 20
+mesh Content/Meshes/cube_face.obj 
+normalMap data/textures/brick_normal_map.png
+
+object backWall
+translate 0 0 100
+rotation 0 180 0
+scale 100 100 1
+shininess 20
+mesh Content/Meshes/cube_face.obj 
+normalMap data/textures/brick_normal_map.png
+
+object ceil
+translate 0 50 50
+rotation 90 0 0
+scale 100 1 100
+shininess 20
+mesh Content/Meshes/cube_face.obj 
+normalMap data/textures/brick_normal_map.png
+
+object sphere1
+translate 0 0 50
+rotation 0 0 0
+scale 20 20 20
+mesh Content/Meshes/sphere_20_face.obj 
+
+object sphere2
+translate 0 -30 50
+rotation 0 0 0
+scale 10 10 10
+mesh Content/Meshes/sphere_20_face.obj 
+
+object cone1
+translate 30 -30 50
+rotation 0 0 0
+scale 30 30 30
+mesh Content/Meshes/cone_20_face.obj 
+
+object cylinder
+translate -30 -35 50
+rotation 0 0 0
+scale 5 30 5
+mesh Content/Meshes/cylinder_20_face.obj
+
+object cube1
+translate 30 -45 80
+rotation 0 0 0
+scale 10 10 10
+mesh Content/Meshes/cube_face.obj
+
+object cube2
+translate -30 -45 80
+rotation 0 0 0
+scale 10 10 10
+mesh Content/Meshes/cube_face.obj
+
+#light data
+light
+translate -40 20 10
+color 1 1 1
+lightType SPOT	
+attenuation 0 0.0 0.0	
+direction 0.577 -0.577 0.577
+spotAttenuation 10 40 1
+sinusoidal 0 0.5 30
+ambient 0.1
+bias 0.00001
+pcf 3
+

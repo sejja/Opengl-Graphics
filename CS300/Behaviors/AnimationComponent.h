@@ -2,7 +2,6 @@
 #define _ANIMATION_COMPONENT__H_
 
 #include "Core/ECSystem/Scene.h"
-#include "Animation.h"
 #include "CS300Parser.h"
 
 namespace Behaviors {

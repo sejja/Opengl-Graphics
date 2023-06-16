@@ -26,6 +26,8 @@ namespace Core {
 			ed.Subscribe(*this, Core::InputManager::W_Down());
 			ed.Subscribe(*this, Core::InputManager::D_Down());
 			ed.Subscribe(*this, Core::InputManager::S_Down());
+			ed.Subscribe(*this, Core::InputManager::Shift_Down());
+			ed.Subscribe(*this, Core::InputManager::Space_Down());
 		}
 
 		// ------------------------------------------------------------------------
@@ -39,6 +41,8 @@ namespace Core {
 			ed.Unsubscribe(*this, Core::InputManager::W_Down());
 			ed.Unsubscribe(*this, Core::InputManager::D_Down());
 			ed.Unsubscribe(*this, Core::InputManager::S_Down());
+			ed.Unsubscribe(*this, Core::InputManager::Shift_Down());
+			ed.Unsubscribe(*this, Core::InputManager::Space_Down());
 		}
 
 		// ------------------------------------------------------------------------
@@ -58,6 +62,12 @@ namespace Core {
 			}
 			else if (RTTI::IsA<const InputManager::S_Down>(&event)) {
 				mPosition.z -= 1;
+			}
+			else if (RTTI::IsA<const InputManager::Shift_Down>(&event)) {
+				mPosition.y -= 1;
+			}
+			else if (RTTI::IsA<const InputManager::Space_Down>(&event)) {
+				mPosition.y += 1;
 			}
 		}
 	}

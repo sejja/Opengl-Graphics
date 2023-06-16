@@ -166,7 +166,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Behaviors\AnimationComponent.cpp" />
     <ClCompile Include="Core\Assets\Importers.cpp" />
     <ClCompile Include="Core\Events\Event.cpp" />
@@ -193,7 +192,6 @@
     <ClCompile Include="Graphics\OpenGLPipeline.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Animation.h" />
     <ClInclude Include="Core\Application.h" />
     <ClInclude Include="Behaviors\AnimationComponent.h" />
     <ClInclude Include="Core\Allocator.h" />
@@ -660,6 +658,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\Maps\Scene.level" />
+    <None Include="Content\Maps\Scene2.level" />
     <None Include="Content\Shaders\SolidColor.vert" />
     <None Include="Content\Shaders\Textured.frag" />
     <None Include="Content\Shaders\Textured.shader" />
