@@ -10,7 +10,7 @@
 #include "Behaviors/AnimationComponent.h"
 #include "Core/Pipeline.h"
 #include "Graphics/Primitives/Light.h"
-#include "Global.h"
+#include "Core/Singleton.h"
 
 CS300Parser Scene::mParser;
 

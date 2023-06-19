@@ -11,7 +11,6 @@
 #include "Graphics/Primitives/Model.h"
 #include "Graphics/Primitives/Texture.h"
 #include "Dependencies/Json/single_include/json.hpp"
-#include "Global.h"
 
 namespace Assets {
 	// ------------------------------------------------------------------------

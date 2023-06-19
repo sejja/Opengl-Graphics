@@ -48,7 +48,7 @@ public:
 	std::unique_ptr<Ty_> rawData = nullptr;
 };
 
-class ResourceManager : public Global<ResourceManager> {
+class ResourceManager {
 public:
 	using raw_text = const char*;
 	// ------------------------------------------------------------------------

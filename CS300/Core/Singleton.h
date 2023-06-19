@@ -1,30 +1,38 @@
 //
-//	Singleton.h
-//	Good Neighbours
+//	Global.h
+//	OpenGL Graphics
 //
-//	Created by Diego Revilla 06/05/21
-//	Copyright © 2021 . All Rights reserved
+//	Created by Diego Revilla on 15/04/23
+//	Copyright © 2023. All Rights reserved
 //
 
-#ifndef _SINGLETON__H_
-#define _SINGLETON__H_
+#ifndef _GLOBAL__H_
+#define _GLOBAL__H_
 
-template<typename T>
-class Global {
+template <typename T>
+class Singleton {
 public:
-	static T& Instance();
-
-	Global(const Global&) = delete;
-	Global& operator= (const Global) = delete;
-
+    static T& Instance();
+    
 protected:
-	Global() {}
+    Singleton() {}
+    ~Singleton() {}
+   
+public:
+    Singleton(Singleton const&) = delete;
+    Singleton& operator=(Singleton const&) = delete;
 };
 
+// ------------------------------------------------------------------------
+/*! Instance
+*
+*   Returns THE instance of the global object
+*/ //----------------------------------------------------------------------
 template<typename T>
-T& Global<T>::Instance() {
-	static T instance;
-	return instance;
+T& Singleton<T>::Instance() {
+    static T instance;
+
+    return instance;
 }
 
 #endif

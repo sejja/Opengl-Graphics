@@ -16,7 +16,7 @@
 #include "Core/ECSystem/Scene.h"
 #include "Core/ResourceManager.h"
 #include "Core/InputManager.h"
-#include "Global.h"
+#include "Core/Singleton.h"
 
 namespace Core {
 	class Application {
@@ -44,6 +44,8 @@ namespace Core {
 	GraphicApplication<WINDOW, PIPELINE>::GraphicApplication() {
 		static_assert(std::is_base_of<Core::Window, WINDOW>::value);
 		static_assert(std::is_base_of<Core::Pipeline, PIPELINE>::value);
+		Singleton<ResourceManager>::Instance().Initialize();
+		SetDimensions({ 1072, 780 });
 		mWindow.Create();
 		mPipe.Init();
 	}
@@ -56,6 +58,7 @@ namespace Core {
 	template<class WINDOW, class PIPELINE>
 	GraphicApplication<WINDOW, PIPELINE>::~GraphicApplication() {
 		mPipe.Shutdown();
+		Singleton<ResourceManager>::Instance().ShutDown();
 	}
 
 	// ------------------------------------------------------------------------
@@ -66,6 +69,7 @@ namespace Core {
 	template<class WINDOW, class PIPELINE>
 	void GraphicApplication<WINDOW, PIPELINE>::Run() {
 		while (mWindow.Present()) {
+			Singleton<Core::InputManager>::Instance().ProcessInput();
 			if (mTick) mTick();
 			mPipe.PreRender();
 			mPipe.Render();

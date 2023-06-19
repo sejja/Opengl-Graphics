@@ -7,7 +7,8 @@
 //
 
 #include "InputManager.h"
-#include "Global.h"
+#include "Singleton.h"
+
 constexpr int c_sensibility = 5000;
 
 namespace Core {

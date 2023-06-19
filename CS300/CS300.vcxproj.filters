@@ -1307,9 +1307,6 @@
     <ClInclude Include="CommonDefines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Singleton.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Assets\Importers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1463,7 +1460,7 @@
     <ClInclude Include="Graphics\Primitives\Light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Global.h">
+    <ClInclude Include="Core\Singleton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Core\Events\Event.h">

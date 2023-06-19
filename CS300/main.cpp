@@ -17,30 +17,25 @@
 *   Program Entry point
 */ //----------------------------------------------------------------------
 int main() {
-    Singleton<ResourceManager>::Instance().Initialize();
-
     struct MyOpenGLApp : public
        Core::GraphicApplication<SDLWindow, Core::Graphics::OpenGLPipeline> {
        Scene mScene;
     } app;
     
-    app.SetDimensions({ 1072, 780 });
-	app.mScene.CreateScene("Content/Maps/Scene2.level", [&app](const std::shared_ptr<Object>& obj) {
+	app.mScene.CreateScene("Content/Maps/Scene.level", [&app](const std::shared_ptr<Object>& obj) {
         std::for_each(std::execution::unseq, obj->components.begin(), obj->components.end(), [&app](const std::shared_ptr<Component>& comp) {
             std::shared_ptr<Core::Renderable> renderable = std::dynamic_pointer_cast<Core::Renderable>(comp);
 
             //If the object is a renderable
-            if (renderable) app.GetPipelineRef().AddRenderable(std::dynamic_pointer_cast<Core::Renderable>(comp));
+            if (renderable) app.GetPipelineRef().AddRenderable(renderable);
             });
         });
 
     app.SetTickFunction([&app]() {
-        Singleton<Core::InputManager>::Instance().ProcessInput();
 		app.mScene.Tick();
     });
     
     app.Run();
-    Singleton<ResourceManager>::Instance().ShutDown();
 
     return 0;
 }

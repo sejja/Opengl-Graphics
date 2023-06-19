@@ -14,7 +14,7 @@
 #include "Graphics/Primitives/Texture.h"
 #include "Core/InputManager.h"
 #include "Graphics/Primitives/Light.h"
-#include "Global.h"
+#include "Core/Singleton.h"
 #include "Graphics/Primitives/Texture.h"
 
 namespace Core {

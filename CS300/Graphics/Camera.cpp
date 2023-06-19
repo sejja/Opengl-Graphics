@@ -9,7 +9,7 @@
 #include "Camera.h"
 #include "SDL.h"
 #include "../Core/InputManager.h"
-#include "Global.h"
+#include "Core/Singleton.h"
 #include "Core/RTTI.h"
 
 namespace Core {
