@@ -1898,6 +1898,9 @@
     <None Include="Content\Shaders\SolidColor.vert" />
     <None Include="Content\Shaders\White.shader" />
     <None Include="Content\Maps\Scene2.level" />
+    <None Include="Content\Shaders\Shadow.frag" />
+    <None Include="Content\Shaders\Shadow.shader" />
+    <None Include="Content\Shaders\Shadow.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Dependencies\GLM\CMakeLists.txt" />

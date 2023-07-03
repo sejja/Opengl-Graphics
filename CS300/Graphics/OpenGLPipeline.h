@@ -31,6 +31,10 @@ namespace Core {
 
 		private:
 			std::unordered_map<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Core::Renderable>>> mRenderables;
+			GLuint mDepthBuffer;
+			glm::lowp_u16vec2 mDimensions;
+			unsigned int depthMap;
+			const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 		};
 
 		// ------------------------------------------------------------------------
@@ -54,6 +58,7 @@ namespace Core {
 		*/ //----------------------------------------------------------------------
 		void OpenGLPipeline::SetDimensions(const glm::lowp_u16vec2& dim) {
 			glViewport(0, 0, dim.x, dim.y);
+			mDimensions = dim;
 		}
 		
 		// ------------------------------------------------------------------------

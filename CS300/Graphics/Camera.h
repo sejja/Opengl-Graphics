@@ -17,18 +17,50 @@
 namespace Core {
 	namespace Primitives {
 		class Camera : Events::Listener {
+		#pragma region //Constructor & Destructor
 		public:
 			Camera();
 			~Camera();
-			DONTDISCARD inline glm::mat4&& GetViewMatrix() const;
+		#pragma endregion
+
+		#pragma region //Functions
+			DONTDISCARD inline glm::mat4 GetViewMatrix() const;
 			void HandleEvent(const Events::Event& event) override;
-			
-		public:
+			DONTDISCARD glm::vec3 inline GetPosition() const;
+			DONTDISCARD inline glm::vec3& GetPositionRef();
+		#pragma endregion
+
+		#pragma region //Members
+		private:
 			glm::vec3 mPosition, mTargetPosition;
+		#pragma endregion
 		};
 
-		glm::mat4&& Camera::GetViewMatrix() const {
+		// ------------------------------------------------------------------------
+		/*! Get View Matrix
+		*
+		*   Returns the Camera's View Matrix
+		*/ //----------------------------------------------------------------------
+		glm::mat4 Camera::GetViewMatrix() const {
 			return std::move(glm::lookAt(mPosition, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0)));
+		}
+
+		// ------------------------------------------------------------------------
+		/*! Get Position
+		*
+		*   Returns the Camera's Position
+		*/ //----------------------------------------------------------------------
+		glm::vec3 inline Camera::GetPosition() const {
+			return mPosition;
+		}
+
+		// ------------------------------------------------------------------------
+		/*! Get Position Reference
+		*
+		*   Returns the Camera's Position, as a Reference
+		*/ //----------------------------------------------------------------------
+		inline glm::vec3& Camera::GetPositionRef() {
+			return mPosition;
 		}
 	}
 }

@@ -41,9 +41,11 @@ in vec3 oNormal;
 in vec3 oPosition;
 in vec3 oTangent;
 in vec3 oBitangent;
+in vec4 oShadowCoord;
 
 layout(binding = 0) uniform sampler2D uDiffuseTex;
 layout(binding = 1) uniform sampler2D uNormalTex;
+layout(binding = 2) uniform sampler2DShadow depth_texture;
 
 void main() {
     mat4 VM = uView * uModel;
@@ -51,6 +53,8 @@ void main() {
     mat3 iVM3 = inverse(transpose(VM3));
     mat3 V_M_TBN = iVM3 * mat3(oTangent, oBitangent, oNormal);
     vec3 N = normalize(V_M_TBN * (texture(uNormalTex, oUVs).rgb * 2.0f - 1.0f));
+    float bias = 0.005;
+    float f = textureProj(depth_texture, oShadowCoord);
 
     vec3 totalLightShine = vec3(0, 0, 0);
     
@@ -105,7 +109,5 @@ void main() {
         totalLightShine += att * (ambient + Spotlight * (diffuse + specular));
    }
   
-    FragColor = texture(uDiffuseTex, oUVs) *  vec4(totalLightShine, 1.0);
-    //FragColor = vec4(N, 1);
-    //FragColor = vec4(normalize(VM3 * oTangent), 1);
+    FragColor = texture(uDiffuseTex, oUVs) *  vec4(totalLightShine, 1.0) ;
 }
