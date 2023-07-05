@@ -33,7 +33,7 @@ namespace Core {
 		virtual void SetDimensions(const glm::lowp_u16vec2& dim) = 0;
 		void AddRenderable(std::weak_ptr<Renderable> x);
 	protected:
-		std::priority_queue<std::shared_ptr<Renderable>> mRenderables;
+		std::priority_queue<std::shared_ptr<Renderable>> mGroupedRenderables;
 	};
 }
 

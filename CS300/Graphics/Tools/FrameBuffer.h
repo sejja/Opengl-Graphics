@@ -32,7 +32,7 @@ namespace Core {
 			void CreateRenderTexture(glm::lowp_u16vec2 dimensions, bool readable = true);
 			void Bind();
 			void Unbind();
-			void BindTexture();
+			void BindTexture(unsigned i = 0);
 			void Clear(bool depthOnly = false);
 		#pragma endregion
 
@@ -40,6 +40,7 @@ namespace Core {
 		private:
 			GLuint mHandle;
 			GLuint mTexture;
+			glm::lowp_u16vec2 mDimensions;
 		#pragma endregion
 		};
 	}

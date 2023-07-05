@@ -10,6 +10,7 @@
 #define _SHADER_PROGRAM__H_
 
 #include <string>
+#include <glew.h>
 #include <glm/glm.hpp>
 #include "Shader.h"
 #include "Color.h"

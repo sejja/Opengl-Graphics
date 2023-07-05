@@ -9,9 +9,6 @@
 #ifndef _OPEN_GL_PIPELINE__H_
 #define _OPEN_GL_PIPELINE__H_
 
-#include <vector>
-#include <memory>
-#include <glew.h>
 #include "Core/Pipeline.h"
 #include "Graphics/Primitives/ShaderProgram.h"
 #include "Graphics/Primitives/Renderables.h"
@@ -32,7 +29,7 @@ namespace Core {
 		private:
 			void UploadLightDataToGPU(const AssetReference<Core::Graphics::ShaderProgram>& shader);
 
-			std::unordered_map<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Core::Renderable>>> mRenderables;
+			std::unordered_map<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Core::Renderable>>> mGroupedRenderables;
 			glm::lowp_u16vec2 mDimensions;
 			FrameBuffer mShadowBuffer;
 		};
@@ -57,7 +54,7 @@ namespace Core {
 		*   Adds a Renderable into the pipeline
 		*/ //----------------------------------------------------------------------
 		void OpenGLPipeline::AddRenderable(const std::weak_ptr<Core::Renderable>& renderer) {
-			mRenderables[(std::dynamic_pointer_cast<Core::ModelRenderer<Core::GraphicsAPIS::OpenGL>>(renderer.lock()))->GetShaderProgram().lock()].push_back(renderer);
+			mGroupedRenderables[(std::dynamic_pointer_cast<Core::ModelRenderer<Core::GraphicsAPIS::OpenGL>>(renderer.lock()))->GetShaderProgram().lock()].push_back(renderer);
 		}
 	}
 }

@@ -58,6 +58,7 @@ namespace Core {
 			}
 
 			Unbind();
+			mDimensions = dimensions;
 
 			if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 				throw FrameBufferException("FrameBuffer is Incomplete");
@@ -70,6 +71,9 @@ namespace Core {
 		*/ //----------------------------------------------------------------------
 		void FrameBuffer::Bind() {
 			glBindFramebuffer(GL_FRAMEBUFFER, mHandle);
+
+			if(mTexture)
+				glViewport(0, 0, mDimensions.x, mDimensions.y);
 		}
 
 		// ------------------------------------------------------------------------
@@ -86,7 +90,8 @@ namespace Core {
 		*
 		*   Binds the framebuffer render texture
 		*/ //----------------------------------------------------------------------
-		void FrameBuffer::BindTexture() {
+		void FrameBuffer::BindTexture(unsigned i) {
+			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, mTexture);
 		}
 		
