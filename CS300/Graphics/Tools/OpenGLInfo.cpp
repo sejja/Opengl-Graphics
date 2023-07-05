@@ -10,6 +10,11 @@
 
 namespace Core {
 	namespace Graphics {
+		// ------------------------------------------------------------------------
+		/*! Constructor
+		*
+		*   Initializes every field
+		*/ //----------------------------------------------------------------------		
 		OpenGLInfo::OpenGLInfo() :
 			mBindedBuffer(0) {
 		}
