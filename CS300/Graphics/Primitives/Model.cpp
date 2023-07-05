@@ -196,11 +196,11 @@ void Model::set_uniforms(Core::Graphics::ShaderProgram& s) const {
 		mMaterial.GetSpecular(),
 	};
 
-	s.SetShaderUniform("uMaterial.emission", buffer);
-	s.SetShaderUniform("uMaterial.ambient", buffer + 1);
-	s.SetShaderUniform("uMaterial.diffuse", buffer + 2);
-	s.SetShaderUniform("uMaterial.specular", buffer + 3);
-	s.SetShaderUniform("uMaterial.shininess", &_shininess);
+	//s.SetShaderUniform("uMaterial.emission", buffer);
+	//s.SetShaderUniform("uMaterial.ambient", buffer + 1);
+	//s.SetShaderUniform("uMaterial.diffuse", buffer + 2);
+	//s.SetShaderUniform("uMaterial.specular", buffer + 3);
+	//s.SetShaderUniform("uMaterial.shininess", &_shininess);
 }
 
 void Model::UploadToGPU(std::vector<float>& vertices, std::vector<int>& indexes) {

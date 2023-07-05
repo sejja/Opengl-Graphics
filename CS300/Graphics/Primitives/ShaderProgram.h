@@ -20,31 +20,127 @@
 namespace Core {
 	namespace Graphics {
 		class ShaderProgram {
+		#pragma region //Declarations
 		public:
-			ShaderProgram();
-			ShaderProgram(const AssetReference<Shader>& vertexShader, const AssetReference<Shader>& fragmentShader);
-			void Bind();
-			AssetReference<Shader> GetShader(const Shader::EType shaderType) const;
-			void SetShader(const AssetReference<Shader>& pShader, const bool link = false);
-			void SetShaderUniform(const std::string_view& name, const int value);
-			void SetShaderUniform(const std::string_view& name, const bool value);
-			void SetShaderUniform(const std::string_view& name, int* value, const int count = 1);
-			void SetShaderUniform(const std::string_view& name, float* value, const int count = 1);
-			void SetShaderUniform(const std::string_view& name, glm::mat4* value, const int count = 1);
-			void SetShaderUniform(const std::string_view& name, glm::mat3* value, const int count = 1);
-			void SetShaderUniform(const std::string_view& name, glm::vec2* value, const int count = 1);
-			void SetShaderUniform(const std::string_view& name, glm::vec3* value, const int count = 1);
-			void SetShaderUniform(const std::string_view& name, glm::vec4* value, const int count = 1);
-			void SetShaderUniform(const std::string_view& name, Color* value, const int count = 1);
-		private:
-			void Link();
-			void AttachShader(const Shader::EType which);
-			GLuint getUniformLocatiion(const std::string_view& id);
+			CLASS_EXCEPTION(ShaderProgram)
+		#pragma endregion
 
+		#pragma region //Constructors
+			ShaderProgram() noexcept;
+			ShaderProgram(const AssetReference<Shader>& vertexShader, const AssetReference<Shader>& fragmentShader);
+		#pragma endregion
+
+		#pragma region //Methods
+			void Bind() const noexcept;
+			void inline SetShaderUniform(const std::string_view& name, const int value);
+			void inline SetShaderUniform(const std::string_view& name, const bool value);
+			void inline SetShaderUniform(const std::string_view& name, int* value, const int count = 1);
+			void inline SetShaderUniform(const std::string_view& name, float* value, const int count = 1);
+			void inline SetShaderUniform(const std::string_view& name, glm::mat4* value, const int count = 1);
+			void inline SetShaderUniform(const std::string_view& name, glm::mat3* value, const int count = 1);
+			void inline SetShaderUniform(const std::string_view& name, glm::vec2* value, const int count = 1);
+			void inline SetShaderUniform(const std::string_view& name, glm::vec3* value, const int count = 1);
+			void inline SetShaderUniform(const std::string_view& name, glm::vec4* value, const int count = 1);
+			void inline SetShaderUniform(const std::string_view& name, Color* value, const int count = 1);
+		private:
+			GLuint getUniformLocation(const std::string_view& id);
+		#pragma endregion
+
+		#pragma region //Members
 			std::unordered_map<std::string_view, GLuint> mUniformLocations;
-			unsigned int mHandle = NULL;
-			Asset<Shader> Shaders[2];
+			unsigned int mHandle;
+		#pragma endregion
 		};
+
+		// ------------------------------------------------------------------------
+		/*! Set Shader Uniform
+		*
+		*   Sets uniform values in form of an integer
+		*/ // --------------------------------------------------------------------
+		void ShaderProgram::SetShaderUniform(const std::string_view& name, const int value) {
+			glUniform1i(getUniformLocation(name), value);
+		}
+
+		// ------------------------------------------------------------------------
+		/*! Set Shader Uniform
+		*
+		*   Sets uniform values in form of a boolean
+		*/ // --------------------------------------------------------------------
+		void ShaderProgram::SetShaderUniform(const std::string_view& name, const bool value) {
+			glUniform1i(getUniformLocation(name), value);
+		}
+
+		// ------------------------------------------------------------------------
+		/*! Set Shader Uniform
+		*
+		*   Sets uniform values in form of integers
+		*/ // --------------------------------------------------------------------
+		void ShaderProgram::SetShaderUniform(const std::string_view& name, int* value, const int count) {
+			glUniform1iv(getUniformLocation(name), count, value);
+		}
+
+		// ------------------------------------------------------------------------
+		/*! Set Shader Uniform
+		*
+		*   Sets uniform values in form of floats
+		*/ // --------------------------------------------------------------------
+		void ShaderProgram::SetShaderUniform(const std::string_view& name, float* value, const int count) {
+			glUniform1fv(getUniformLocation(name), count, value);
+		}
+
+		// ------------------------------------------------------------------------
+		/*! Set Shader Uniform
+		*
+		*   Sets uniform values in form of Matrices 4x4
+		*/ // --------------------------------------------------------------------
+		void ShaderProgram::SetShaderUniform(const std::string_view& name, glm::mat4* value, const int count) {
+			glUniformMatrix4fv(getUniformLocation(name), count, GL_FALSE, reinterpret_cast<float*>(value));
+		}
+
+		// ------------------------------------------------------------------------
+		/*! Set Shader Uniform
+		*
+		*   Sets uniform values in form of matrices 3x3
+		*/ // --------------------------------------------------------------------
+		void ShaderProgram::SetShaderUniform(const std::string_view& name, glm::mat3* value, const int count) {
+			glUniformMatrix4fv(getUniformLocation(name), count, GL_FALSE, reinterpret_cast<float*>(value));
+		}
+
+		// ------------------------------------------------------------------------
+		/*! Set Shader Uniform
+		*
+		*   Sets uniform values in form of Vectors of size 2
+		*/ // --------------------------------------------------------------------
+		void ShaderProgram::SetShaderUniform(const std::string_view& name, glm::vec2* value, const int count) {
+			glUniform2fv(getUniformLocation(name), count, reinterpret_cast<float*>(value));
+		}
+
+		// ------------------------------------------------------------------------
+		/*! Set Shader Uniform
+		*
+		*   Sets uniform values in form of Vectors of size 3
+		*/ // --------------------------------------------------------------------
+		void ShaderProgram::SetShaderUniform(const std::string_view& name, glm::vec3* value, const int count) {
+			glUniform3fv(getUniformLocation(name), count, reinterpret_cast<float*>(value));
+		}
+
+		// ------------------------------------------------------------------------
+		/*! Set Shader Uniform
+		*
+		*   Sets uniform values in form of Vectors of size 4
+		*/ // --------------------------------------------------------------------
+		void ShaderProgram::SetShaderUniform(const std::string_view& name, glm::vec4* value, const int count) {
+			glUniform4fv(getUniformLocation(name), count, reinterpret_cast<float*>(value));
+		}
+
+		// ------------------------------------------------------------------------
+		/*! Set Shader Uniform
+		*
+		*   Sets uniform values in form of a Color
+		*/ // --------------------------------------------------------------------
+		void ShaderProgram::SetShaderUniform(const std::string_view& name, Color* value, const int count) {
+			glUniform4fv(getUniformLocation(name), count, reinterpret_cast<float*>(value));
+		}
 	}
 }
 
