@@ -195,20 +195,6 @@
     <ClCompile Include="Graphics\OpenGLPipeline.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\Downloads\patterns.hpp" />
-    <ClInclude Include="..\..\..\..\Downloads\patterns\anyof.hpp" />
-    <ClInclude Include="..\..\..\..\Downloads\patterns\as.hpp" />
-    <ClInclude Include="..\..\..\..\Downloads\patterns\config.hpp" />
-    <ClInclude Include="..\..\..\..\Downloads\patterns\detail\as_tuple.hpp" />
-    <ClInclude Include="..\..\..\..\Downloads\patterns\detail\forwarder.hpp" />
-    <ClInclude Include="..\..\..\..\Downloads\patterns\detail\qualify_as.hpp" />
-    <ClInclude Include="..\..\..\..\Downloads\patterns\let.hpp" />
-    <ClInclude Include="..\..\..\..\Downloads\patterns\lib.hpp" />
-    <ClInclude Include="..\..\..\..\Downloads\patterns\match.hpp" />
-    <ClInclude Include="..\..\..\..\Downloads\patterns\optional.hpp" />
-    <ClInclude Include="..\..\..\..\Downloads\patterns\regex.hpp" />
-    <ClInclude Include="..\..\..\..\Downloads\patterns\vis.hpp" />
-    <ClInclude Include="..\..\..\..\Downloads\patterns\when.hpp" />
     <ClInclude Include="Core\Application.h" />
     <ClInclude Include="Behaviors\AnimationComponent.h" />
     <ClInclude Include="Core\Allocator.h" />

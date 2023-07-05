@@ -39,7 +39,7 @@ namespace Assets {
 	*   Imports Textures from File
 	*/ //----------------------------------------------------------------------
 	std::shared_ptr<IResource> Assets::TextureImporter::ImportFromFile(const std::string_view& filename) const {
-		using Graphics::Texture;
+		using Core::Graphics::Texture;
 		PageAllocator<TResource<Texture>> resalloc;
 		PageAllocator<Texture> texalloc;
 
@@ -53,7 +53,7 @@ namespace Assets {
 			resalloc_.deallocate(p);
 			});
 
-		Graphics::Texture* const _tex = texalloc.New();
+		Texture* const _tex = texalloc.New();
 		_tex->LoadFromFile(filename.data());
 		rawResource->rawData.reset(_tex);
 

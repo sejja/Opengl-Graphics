@@ -122,11 +122,11 @@ namespace Core {
 					shader->SetShaderUniform("uView", &view);
 					shader->SetShaderUniform("uShadowMatrix", &shadow_matrix);
 					UploadLightDataToGPU(it.first);
-					auto tex = Singleton<ResourceManager>::Instance().GetResource<::Graphics::Texture>("Content/Textures/UV.jpg")->Get();
-					tex->SetTextureType(::Graphics::Texture::TextureType::eDiffuse);
+					auto tex = Singleton<ResourceManager>::Instance().GetResource<Texture>("Content/Textures/UV.jpg")->Get();
+					tex->SetTextureType(Texture::TextureType::eDiffuse);
 					tex->Bind();
-					auto normals = Singleton<ResourceManager>::Instance().GetResource<::Graphics::Texture>("Content/Textures/BrickNormal.png")->Get();
-					normals->SetTextureType(::Graphics::Texture::TextureType::eNormal);
+					auto normals = Singleton<ResourceManager>::Instance().GetResource<Texture>("Content/Textures/BrickNormal.png")->Get();
+					normals->SetTextureType(Texture::TextureType::eNormal);
 					normals->Bind();
 					f_grouprender(it, shader);
 

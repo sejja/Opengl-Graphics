@@ -15,7 +15,7 @@ namespace Core {
 	namespace Graphics {
 		struct OpenGLInfo {
 		#pragma region //Constructor
-			OpenGLInfo();
+			OpenGLInfo() noexcept;
 		#pragma endregion
 
 		#pragma region //Data

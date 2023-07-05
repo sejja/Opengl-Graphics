@@ -15,7 +15,7 @@ namespace Core {
 		*
 		*   Initializes every field
 		*/ //----------------------------------------------------------------------		
-		OpenGLInfo::OpenGLInfo() :
+		OpenGLInfo::OpenGLInfo() noexcept :
 			mBindedBuffer(0) {
 		}
 	}
