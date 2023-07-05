@@ -28,6 +28,7 @@ namespace Core {
 		#pragma region //Constructors
 			ShaderProgram() noexcept;
 			ShaderProgram(const AssetReference<Shader>& vertexShader, const AssetReference<Shader>& fragmentShader);
+			~ShaderProgram() noexcept;
 		#pragma endregion
 
 		#pragma region //Methods

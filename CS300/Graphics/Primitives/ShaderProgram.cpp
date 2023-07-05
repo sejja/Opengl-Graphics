@@ -21,16 +21,25 @@ namespace Core {
 			mHandle(glCreateProgram()) {}
 
 		// ------------------------------------------------------------------------
+		/*! Destructor
+		*
+		*   Deallocates a program from the GPU
+		*/ // --------------------------------------------------------------------
+		ShaderProgram::~ShaderProgram() noexcept {
+			glDeleteProgram(mHandle);
+		}
+
+		// ------------------------------------------------------------------------
 		/*! Custom Constructor
 		*
 		*   Constructs a Shader Program class given a Vertex and Fragment Shader
-		*/ // --------------------------------------------------------------------
+		*/ // ---------------------------------------------------------------------
 		ShaderProgram::ShaderProgram(const AssetReference<Shader>& vertexShader, const AssetReference<Shader>& fragmentShader)
 			: ShaderProgram() {
-
+			//If both of the assets contain valid data
 			if (!vertexShader.expired() && !fragmentShader.expired()) {
-				glAttachShader(mHandle, vertexShader.lock()->Get()->mHandle);
-				glAttachShader(mHandle, fragmentShader.lock()->Get()->mHandle);
+				glAttachShader(mHandle, vertexShader.lock()->Get()->GetGLHandle());
+				glAttachShader(mHandle, fragmentShader.lock()->Get()->GetGLHandle());
 				glLinkProgram(mHandle);
 
 				GLint status;

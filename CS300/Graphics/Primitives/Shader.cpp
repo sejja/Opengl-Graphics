@@ -19,8 +19,8 @@ namespace Core {
 		*
 		*   Constructs a Shader
 		*/ // --------------------------------------------------------------------
-		Shader::Shader() :
-			mHandle(NULL), ShaderType(EType::Vertex), Source(nullptr) {
+		Shader::Shader() noexcept :
+			mHandle(NULL), ShaderType(EType::Vertex) {
 		}
 
 		// ------------------------------------------------------------------------
@@ -28,10 +28,8 @@ namespace Core {
 		*
 		*   Frees a Shader
 		*/ // --------------------------------------------------------------------
-		Shader::~Shader() {
-			//If we have a valid Source
-			if (Source)
-				free(Source);
+		Shader::~Shader() noexcept {
+			if(mHandle) glDeleteShader(mHandle);
 		}
 
 		// ------------------------------------------------------------------------
@@ -40,13 +38,8 @@ namespace Core {
 		*   Constructs a Shader given a file
 		*/ // --------------------------------------------------------------------
 		Shader::Shader(const std::string_view& filename, const EType type) :
-			ShaderType(type), mHandle(NULL), Source(nullptr) {
-#ifdef _DEBUG
-			if (LoadSource(filename))
-#else
-			LoadSource(filename);
-#endif
-			Compile(filename);
+			ShaderType(type), mHandle(NULL) {
+			Compile(LoadSource(filename));
 		}
 
 		// ------------------------------------------------------------------------
@@ -54,20 +47,19 @@ namespace Core {
 		*
 		*   Loads a Source for our Shader
 		*/ // --------------------------------------------------------------------
-		bool Shader::LoadSource(const std::string_view& filename) {
+		char* Shader::LoadSource(const std::string_view& filename) const noexcept {
 			std::fstream shaderFile(filename.data());
 			std::stringstream shaderSource;
+			char* source;
 
 			shaderSource << shaderFile.rdbuf();
 
 			//If we could allocate the string
-			if (Source = reinterpret_cast<char*>(malloc(strlen(shaderSource.str().c_str()) + 1)))
-
-				strcpy(Source, shaderSource.str().c_str());
+			if (source = reinterpret_cast<char*>(malloc(strlen(shaderSource.str().c_str()) + 1)))
+				strcpy(source, shaderSource.str().c_str());
 			else
-				return false;
-
-			return true;
+				return nullptr;
+			return source;
 		}
 
 		// ------------------------------------------------------------------------
@@ -75,63 +67,24 @@ namespace Core {
 		*
 		*   Compiles the Shader
 		*/ // --------------------------------------------------------------------
-		bool Shader::Compile(const std::string_view& filename) {
+		void Shader::Compile(char* source) {
 			//If there is a valid source file
-			if (Source && strlen(Source)) {
-				SetShaderType(ShaderType, !mHandle);
-				glShaderSource(static_cast<GLuint>(mHandle), 1, &Source, NULL);
+			if (source && strlen(source)) {
+				CreateDeviceShader();
+				glShaderSource(static_cast<GLuint>(mHandle), 1, &source, NULL);
 				glCompileShader(static_cast<GLuint>(mHandle));
 
+				free(source);
 				// sanity check
 				GLint result;
 				glGetShaderiv(static_cast<GLuint>(mHandle), GL_COMPILE_STATUS, &result);
 
 #ifdef _DEBUG
 				//If there has been errors during compilation
-				if (!result) {
-					GLint logLen;
-					glGetShaderiv(static_cast<GLuint>(mHandle), GL_INFO_LOG_LENGTH, &logLen);
-
-					//If there are multiple error's
-					if (logLen > 0) {
-						char* log = (char*)malloc(logLen);
-						GLsizei written;
-
-						glGetShaderInfoLog(static_cast<GLuint>(mHandle), logLen, &written, log);
-
-						char str[100];
-
-						//sprintf_s(str, "Shader Compilation Error: %s", filename);
-						MessageBoxA(NULL, log, str, MB_TASKMODAL | MB_SETFOREGROUND | MB_ICONERROR);
-						free(log);
-					}
-
-					return false;
-				}
+				if (!result) throw ShaderException("Couldn't compile shader");
 #endif
-
-				return true;
-			}
-
-			return false;
-		}
-
-		// ------------------------------------------------------------------------
-		/*! Create Device Shader
-		*
-		*   Creates a Device for the Shader
-		*/ // --------------------------------------------------------------------
-		bool Shader::CreateDeviceShader() {
-			GLenum err = glewInit();
-
-			//If we have a valid Handler
-			if (mHandle)
-				glDeleteShader(static_cast<GLuint>(mHandle));
-
-			mHandle = glCreateShader(ShaderType == EType::Vertex ?
-				GL_VERTEX_SHADER : GL_FRAGMENT_SHADER);
-
-			return true;
+			} else 
+				throw ShaderException("Can't compile empty shader");
 		}
 
 		// ------------------------------------------------------------------------
@@ -139,8 +92,7 @@ namespace Core {
 		*
 		*   Sets the type of the shader
 		*/ // --------------------------------------------------------------------
-		void Shader::SetShaderType(Shader::EType shaderType,
-			bool createDeviceShader) {
+		void Shader::SetShaderType(Shader::EType shaderType, bool createDeviceShader) {
 			ShaderType = shaderType;
 
 			//If we need to create a device

@@ -11,7 +11,6 @@
 
 #include <glm/glm.hpp>
 #include "Core/ECSystem/Component.h"
-#include "Core/Pipeline.h"
 #include "Graphics/Primitives/Model.h"
 #include "Core/ResourceManager.h"
 #include "Graphics/Primitives/ShaderProgram.h"
@@ -27,7 +26,7 @@ namespace Core {
 	class Renderable : public Component {
 #pragma region //Constructor
 	public:
-		Renderable(const std::weak_ptr<Object>& parent) : Component(parent) {}
+		Renderable(const std::weak_ptr<Object>& parent);
 #pragma endregion
 
 #pragma region //Function

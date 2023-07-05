@@ -25,4 +25,7 @@ namespace Core {
 		glBindVertexArray(model->GetVao());
 		glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(model->GetVertexCount()));
 	}
+
+	Renderable::Renderable(const std::weak_ptr<Object>& parent) :
+		Component(parent) {}
 }
