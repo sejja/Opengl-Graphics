@@ -10,6 +10,7 @@
 #define _OPENGL_INFO__H_
 
 #include <glew.h>
+#include <unordered_map>
 
 namespace Core {
 	namespace Graphics {
@@ -20,6 +21,7 @@ namespace Core {
 
 		#pragma region //Data
 			GLuint mBindedBuffer;
+			std::unordered_map<unsigned, GLuint> mBindedTextures;
 		#pragma endregion
 		};
 	}

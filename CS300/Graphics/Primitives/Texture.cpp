@@ -7,13 +7,13 @@
 //
 
 #include "Texture.h"
-#include <cstdlib>
 #include "stb.h"
 #include "../../Core/Allocator.h"
-#include <iostream>
 
 #define STB_IMAGE_IMPLEMENTATION 
 #include "stb_image.h"
+#include "Core/Singleton.h"
+#include "../Tools/OpenGLInfo.h"
 
 namespace Core {
 	namespace Graphics {
@@ -41,12 +41,7 @@ namespace Core {
 		*   Destroys a Texture Class
 		*/ // --------------------------------------------------------------------
 		Texture::~Texture() noexcept {
-			//If we have had a valid handle
-			if (mHandle) {
-				glBindTexture(GL_TEXTURE_2D, mHandle);
-				glDeleteTextures(1, &mHandle);
-				glBindTexture(GL_TEXTURE_2D, NULL);
-			}
+			if (mHandle) glDeleteTextures(1, &mHandle);
 		}
 
 		// ------------------------------------------------------------------------
@@ -89,17 +84,23 @@ namespace Core {
 		*   Binds the Texture to the OpenGL render pipeline
 		*/ // --------------------------------------------------------------------
 		void Texture::Bind() const noexcept {
-			switch (mType) {
-			default:
-				glActiveTexture(GL_TEXTURE0);
-				break;
+			GLuint& binded = Singleton<OpenGLInfo>::Instance().mBindedTextures[static_cast<int>(mType)];
 
-			case TextureType::eNormal:
-				glActiveTexture(GL_TEXTURE1);
-				break;
+			//If the texture was already binded, don't repeat
+			if (binded != mHandle) {
+				switch (mType) {
+				default:
+					glActiveTexture(GL_TEXTURE0);
+					break;
+
+				case TextureType::eNormal:
+					glActiveTexture(GL_TEXTURE1);
+					break;
+				}
+
+				glBindTexture(GL_TEXTURE_2D, mHandle);
+				binded = mHandle;
 			}
-
-			glBindTexture(GL_TEXTURE_2D, mHandle);
 		}
 	}
 }
