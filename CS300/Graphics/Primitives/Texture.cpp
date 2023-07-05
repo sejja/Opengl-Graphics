@@ -22,7 +22,7 @@ namespace Graphics {
 	*   Constructs a Texture Class
 	*/ // --------------------------------------------------------------------
 	Texture::Texture()
-		: mWidth(0), mHeight(0), mHandle(NULL), mType(TextureType::eDiffuse){}
+		: mWidth(0), mHeight(0), mHandle(NULL), mType(TextureType::eDiffuse) {}
 
 	// ------------------------------------------------------------------------
 	/*! Custom Constructor
@@ -66,16 +66,19 @@ namespace Graphics {
 				mWidth = static_cast<size_t>(x_);
 				mHeight = static_cast<size_t>(y_);
 				n_ = static_cast<int>(mWidth * mHeight * reqComp_);
-
+				glGenTextures(1, &mHandle);
+				glBindTexture(GL_TEXTURE_2D, mHandle);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-				glBindTexture(GL_TEXTURE_2D, mHandle);
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, static_cast<GLsizei>(mWidth), static_cast<GLsizei>(mHeight), 0, GL_RGBA, GL_UNSIGNED_BYTE, reinterpret_cast<const void*>(tempPixels_));
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+					static_cast<GLsizei>(mWidth),
+					static_cast<GLsizei>(mHeight), 0,
+					GL_RGBA, GL_UNSIGNED_BYTE, reinterpret_cast<const void*>(tempPixels_));
 				glGenerateMipmap(GL_TEXTURE_2D);
-				glBindTexture(GL_TEXTURE_2D, 0);
 				stbi_image_free(tempPixels_);
+				glBindTexture(GL_TEXTURE_2D, 0);
 			}
 		}
 	}
@@ -86,16 +89,16 @@ namespace Graphics {
 	*   Binds the Texture to the OpenGL render pipeline
 	*/ // --------------------------------------------------------------------
 	void Texture::Bind() const {
-		switch(mType) {
+		switch (mType) {
 		default:
 			glActiveTexture(GL_TEXTURE0);
 			break;
-			
+
 		case TextureType::eNormal:
 			glActiveTexture(GL_TEXTURE1);
 			break;
 		}
-	
+
 		glBindTexture(GL_TEXTURE_2D, mHandle);
 	}
 }

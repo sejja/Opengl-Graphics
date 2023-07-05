@@ -40,11 +40,11 @@ namespace Core {
 			glGenTextures(1, &depthMap);
 			glBindTexture(GL_TEXTURE_2D, depthMap);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-			float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+			float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 			glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 			// attach depth texture as FBO's depth buffer
 			glBindFramebuffer(GL_FRAMEBUFFER, mDepthBuffer);
@@ -75,10 +75,12 @@ namespace Core {
 		void OpenGLPipeline::Render() {
 			static Primitives::Camera cam;
 
-			float near_plane = 1.0f, far_plane = 1000;
-			glm::mat4 lightProjection = glm::perspective<float>(glm::radians(45.0f), 1.0f, 2.0f, 50.0f);
-			glm::mat4 lightView = glm::lookAt(glm::vec3(::Graphics::Primitives::Light::sLightData[0].mPosition),
-				glm::vec3(::Graphics::Primitives::Light::sLightData[0].mPosition) - glm::vec3(::Graphics::Primitives::Light::sLightData[0].mDirection), glm::vec3(0, 1, 0));
+			glm::vec3 up = glm::normalize(glm::cross(glm::cross(-::Graphics::Primitives::Light::sLightData[0].mPosition, glm::vec3(0, 1, 0)), -::Graphics::Primitives::Light::sLightData[0].mPosition));
+
+			float near_plane = 0.1f, far_plane = 10;
+			glm::mat4 lightProjection = glm::perspective(glm::radians(40.f * 2.0f), 1.0f, 0.1f, 200.f);
+			glm::mat4 lightView = glm::lookAt(::Graphics::Primitives::Light::sLightData[0].mPosition,
+				glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 
 			{
 
@@ -153,13 +155,16 @@ namespace Core {
 					else
 						glPolygonMode(GL_FRONT, GL_FILL);
 
+					glm::mat4 biasMatrix(
+						0.5, 0.0, 0.0, 0.0,
+						0.0, 0.5, 0.0, 0.0,
+						0.0, 0.0, 0.5, 0.0,
+						0.5, 0.5, 0.5, 1.0
+					);
+
 					glm::mat4 view = cam.GetViewMatrix();
 					glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 10000.0f);
-					glm::mat4 scale_bias_mtx = glm::mat4(glm::vec4(0.5, 0, 0, 0),
-																			glm::vec4(0, 0.5, 0, 0),
-																			glm::vec4(0, 0, 0.5, 0),
-																			glm::vec4(0.5, 0.5, 0.5, 1));
-					glm::mat4 shadow_matrix = scale_bias_mtx * lightProjection * lightView;
+					glm::mat4 shadow_matrix =  lightProjection * lightView;
 					std::unordered_multimap<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Core::Renderable>>::const_iterator> obsoletes;
 
 					std::for_each(std::execution::unseq, mRenderables.begin(), mRenderables.end(), [this, &shadow_matrix, &obsoletes, &projection, &view](const std::pair<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Core::Renderable>>>& it) {
