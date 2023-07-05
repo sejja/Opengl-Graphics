@@ -90,6 +90,9 @@
     <ClCompile Include="Graphics\Tools\FrameBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\Tools\OpenGLInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dependencies\STB\stb.h">
@@ -1521,6 +1524,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\Downloads\patterns.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Tools\OpenGLInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

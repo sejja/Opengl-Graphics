@@ -7,6 +7,8 @@
 //
 
 #include "FrameBuffer.h"
+#include "OpenGLInfo.h"
+#include "Core/Singleton.h"
 
 namespace Core {
 	namespace Graphics {
@@ -24,6 +26,7 @@ namespace Core {
 		*   Releases the FrameBuffer resources from the GPU
 		*/ //----------------------------------------------------------------------
 		FrameBuffer::~FrameBuffer() noexcept {
+			Unbind();
 			if(mTexture) glDeleteTextures(1, &mTexture);
 			if(mHandle) glDeleteBuffers(1, &mHandle);
 		}
@@ -68,7 +71,6 @@ namespace Core {
 				glReadBuffer(GL_NONE);
 			}
 
-			Unbind();
 			mDimensions = dimensions;
 
 			if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) throw FrameBufferException("FrameBuffer is Incomplete");
@@ -84,10 +86,30 @@ namespace Core {
 			if (!mHandle) throw FrameBufferException("We don't have a framebuffer created yet. Did you forget to call Create()?");
 #endif
 
-			glBindFramebuffer(GL_FRAMEBUFFER, mHandle);
+			auto& openglinfo = Singleton<OpenGLInfo>::Instance();
 
-			if(mTexture)
-				glViewport(0, 0, mDimensions.x, mDimensions.y);
+			//If this framebuffer is not currently binded
+			if (openglinfo.mBindedBuffer != mHandle) {
+				openglinfo.mBindedBuffer = mHandle;
+				glBindFramebuffer(GL_FRAMEBUFFER, mHandle);
+
+				if (mTexture)
+					glViewport(0, 0, mDimensions.x, mDimensions.y);
+			}
+		}
+
+		// ------------------------------------------------------------------------
+		/*! Unbind
+		*
+		*   Unbinds this buffer
+		*/ //----------------------------------------------------------------------
+		void inline FrameBuffer::Unbind() noexcept {
+			auto& openglinfo = Singleton<OpenGLInfo>::Instance();
+
+			if(openglinfo.mBindedBuffer) {
+				Singleton<OpenGLInfo>::Instance().mBindedBuffer = 0;
+				glBindFramebuffer(GL_FRAMEBUFFER, NULL);
+			}
 		}
 
 		// ------------------------------------------------------------------------

@@ -9,10 +9,10 @@
 #ifndef _FRAME_BUFFER__H_
 #define _FRAME_BUFFER__H_
 
-#include "CommonDefines.h"
-#include "../Primitives/Texture.h"
 #include <glew.h>
 #include <glm/glm.hpp>
+#include "CommonDefines.h"
+#include "../Primitives/Texture.h"
 
 namespace Core {
 	namespace Graphics {
@@ -43,15 +43,6 @@ namespace Core {
 			glm::lowp_u16vec2 mDimensions;
 		#pragma endregion
 		};
-
-		// ------------------------------------------------------------------------
-		/*! Unbind
-		*
-		*   Unbinds this buffer
-		*/ //----------------------------------------------------------------------
-		void inline FrameBuffer::Unbind() noexcept {
-			glBindFramebuffer(GL_FRAMEBUFFER, NULL);
-		}
 	}
 }
 
