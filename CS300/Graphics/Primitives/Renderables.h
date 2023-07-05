@@ -11,6 +11,7 @@
 
 #include <glm/glm.hpp>
 #include "Core/ECSystem/Component.h"
+#include "Core/Pipeline.h"
 #include "Graphics/Primitives/Model.h"
 #include "Core/ResourceManager.h"
 #include "Graphics/Primitives/ShaderProgram.h"
