@@ -23,15 +23,15 @@ namespace Core {
 		#pragma endregion
 
 		#pragma region //Constructors & Destructors
-			FrameBuffer();
-			~FrameBuffer();
+			FrameBuffer() noexcept;
+			~FrameBuffer() noexcept;
 		#pragma endregion
 
 		#pragma region //Functions
 			void Create();
-			void CreateRenderTexture(glm::lowp_u16vec2 dimensions, bool readable = true);
+			void CreateRenderTexture(glm::lowp_u16vec2 dimensions, bool readable = true) ;
 			void Bind();
-			void Unbind();
+			void inline Unbind() noexcept;
 			void BindTexture(unsigned i = 0);
 			void Clear(bool depthOnly = false);
 		#pragma endregion
@@ -43,6 +43,15 @@ namespace Core {
 			glm::lowp_u16vec2 mDimensions;
 		#pragma endregion
 		};
+
+		// ------------------------------------------------------------------------
+		/*! Unbind
+		*
+		*   Unbinds this buffer
+		*/ //----------------------------------------------------------------------
+		void inline FrameBuffer::Unbind() noexcept {
+			glBindFramebuffer(GL_FRAMEBUFFER, NULL);
+		}
 	}
 }
 

@@ -15,21 +15,28 @@ namespace Core {
 		*
 		*   Constructs a FrameBuffer of said dimensions
 		*/ //----------------------------------------------------------------------
-		FrameBuffer::FrameBuffer() {
-			
-		}
+		FrameBuffer::FrameBuffer() noexcept :
+			mHandle(NULL), mTexture(NULL), mDimensions() {}
 
 		// ------------------------------------------------------------------------
 		/*! Destructor
 		*
 		*   Releases the FrameBuffer resources from the GPU
 		*/ //----------------------------------------------------------------------
-		FrameBuffer::~FrameBuffer() {
-			glDeleteTextures(1, &mTexture);
-			glDeleteBuffers(1, &mHandle);
+		FrameBuffer::~FrameBuffer() noexcept {
+			if(mTexture) glDeleteTextures(1, &mTexture);
+			if(mHandle) glDeleteBuffers(1, &mHandle);
 		}
-		
+
+		// ------------------------------------------------------------------------
+		/*! Create
+		*
+		*   Creates a FrameBuffer allocation on the GPU
+		*/ //----------------------------------------------------------------------		
 		void FrameBuffer::Create() {
+		#ifdef _DEBUG
+			if(mHandle) throw FrameBufferException("We already have a buffer assigned!");
+		#endif
 			glGenFramebuffers(1, &mHandle);
 		}
 
@@ -39,6 +46,10 @@ namespace Core {
 		*   Allocates a new rendertarget associated with this render texture
 		*/ //----------------------------------------------------------------------
 		void FrameBuffer::CreateRenderTexture(glm::lowp_u16vec2 dimensions, bool readable) {
+		#ifdef _DEBUG
+			if(!mHandle) throw FrameBufferException("We don't have a framebuffer created yet. Did you forget to call Create()?");
+		#endif
+
 			glGenTextures(1, &mTexture);
 			glBindTexture(GL_TEXTURE_2D, mTexture);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, dimensions.x, dimensions.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
@@ -60,8 +71,7 @@ namespace Core {
 			Unbind();
 			mDimensions = dimensions;
 
-			if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-				throw FrameBufferException("FrameBuffer is Incomplete");
+			if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) throw FrameBufferException("FrameBuffer is Incomplete");
 		}
 
 		// ------------------------------------------------------------------------
@@ -70,19 +80,14 @@ namespace Core {
 		*   Sets this FrameBuffer as the current target for drawing operations
 		*/ //----------------------------------------------------------------------
 		void FrameBuffer::Bind() {
+#ifdef _DEBUG
+			if (!mHandle) throw FrameBufferException("We don't have a framebuffer created yet. Did you forget to call Create()?");
+#endif
+
 			glBindFramebuffer(GL_FRAMEBUFFER, mHandle);
 
 			if(mTexture)
 				glViewport(0, 0, mDimensions.x, mDimensions.y);
-		}
-
-		// ------------------------------------------------------------------------
-		/*! Unbind
-		*
-		*   Unbinds this buffer
-		*/ //----------------------------------------------------------------------
-		void FrameBuffer::Unbind() {
-			glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 		}
 
 		// ------------------------------------------------------------------------
@@ -91,6 +96,10 @@ namespace Core {
 		*   Binds the framebuffer render texture
 		*/ //----------------------------------------------------------------------
 		void FrameBuffer::BindTexture(unsigned i) {
+#ifdef _DEBUG
+			if (!mTexture) throw FrameBufferException("We don't have a texture associated yer. Did you forget to call CreateRenderTexture()?");
+#endif
+
 			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, mTexture);
 		}
@@ -101,6 +110,9 @@ namespace Core {
 		*   Clears the FrameBuffer memory
 		*/ //----------------------------------------------------------------------
 		void FrameBuffer::Clear(bool depthOnly) {
+			Bind();
+
+			//Switch depending on wether we need a full clean or just the depth
 			if(depthOnly) glClear(GL_DEPTH_BUFFER_BIT);
 			else glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
