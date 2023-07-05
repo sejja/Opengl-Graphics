@@ -189,6 +189,7 @@
     <ClCompile Include="Core\Window\SDLWindow.cpp" />
     <ClCompile Include="Dependencies\GLM\detail\glm.cpp" />
     <ClCompile Include="Dependencies\STB\stb_vorbis.c" />
+    <ClCompile Include="Graphics\Tools\FrameBuffer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Graphics\OpenGLPipeline.cpp" />
   </ItemGroup>
@@ -655,6 +656,7 @@
     <ClInclude Include="Graphics\OpenGLPipeline.h" />
     <ClInclude Include="Core\Math\Transform.h" />
     <ClInclude Include="Core\Singleton.h" />
+    <ClInclude Include="Graphics\Tools\FrameBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\Maps\Scene.level" />

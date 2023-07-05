@@ -34,27 +34,8 @@ namespace Core {
 			glDisable(GL_STENCIL_TEST);
 			glClearColor(0.f, 0.f, 0.f, 0.f);
 		#if 1
-			const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
-			glGenFramebuffers(1, &mDepthBuffer);
-			// create depth texture
-			glGenTextures(1, &depthMap);
-			glBindTexture(GL_TEXTURE_2D, depthMap);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-			float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-			glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
-			// attach depth texture as FBO's depth buffer
-			glBindFramebuffer(GL_FRAMEBUFFER, mDepthBuffer);
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
-			glDrawBuffer(GL_NONE);
-			glReadBuffer(GL_NONE);
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-			// Always check that our framebuffer is ok
-			assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+			mShadowBuffer.Create();
+			mShadowBuffer.CreateRenderTexture(mDimensions, false);
 		#endif
 		}
 
@@ -86,8 +67,8 @@ namespace Core {
 
 				#if 1
 				// 1. first render to depth map
-				glBindFramebuffer(GL_FRAMEBUFFER, mDepthBuffer);
-				glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+				mShadowBuffer.Bind();
+				glViewport(0, 0, mDimensions.x, mDimensions.y);
 				glClearDepth(1.0f);
 				glClear(GL_DEPTH_BUFFER_BIT);
 				glEnable(GL_POLYGON_OFFSET_FILL);
@@ -144,7 +125,7 @@ namespace Core {
 				glViewport(0, 0, mDimensions.x, mDimensions.y);
 				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 				glActiveTexture(GL_TEXTURE2);
-				glBindTexture(GL_TEXTURE_2D, depthMap);
+				mShadowBuffer.BindTexture();
 				glBindFramebuffer(GL_FRAMEBUFFER, 0);
 				#endif
 				
@@ -244,6 +225,16 @@ namespace Core {
 			}
 
 			shadptr->SetShaderUniform("uLightCount", static_cast<int>(::Graphics::Primitives::Light::sLightReg));
+		}
+
+		// ------------------------------------------------------------------------
+		/*! Set Dimension
+		*
+		*   Sets the Viewport Size on OpenGL
+		*/ //----------------------------------------------------------------------
+		void OpenGLPipeline::SetDimensions(const glm::lowp_u16vec2& dim) {
+			glViewport(0, 0, dim.x, dim.y);
+			mDimensions = dim;
 		}
 	}
 }

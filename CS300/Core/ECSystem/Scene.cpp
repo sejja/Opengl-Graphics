@@ -42,10 +42,10 @@ void Scene::CreateScene(const std::string_view& file, std::function<void(const s
 		obj->transform.mPostion = x.pos;
 		obj->transform.mScale = { 1.f, 1.f, 1.f };
 		obj->transform.mRotation = glm::vec3(0.f, 0.f, 0.f);
-		//std::shared_ptr<Core::ModelRenderer<Core::GraphicsAPIS::OpenGL>> renderer = std::move(std::make_shared<Core::ModelRenderer<Core::GraphicsAPIS::OpenGL>>(obj));
+		std::shared_ptr<Core::ModelRenderer<Core::GraphicsAPIS::OpenGL>> renderer = std::move(std::make_shared<Core::ModelRenderer<Core::GraphicsAPIS::OpenGL>>(obj));
 		std::shared_ptr<Graphics::Primitives::Light> light = std::move(std::make_shared<Graphics::Primitives::Light>(obj));
-		//renderer->SetMesh(Singleton<ResourceManager>::Instance().GetResource<Model>("Content/Meshes/sphere_20_averaged.obj"));
-		//renderer->SetShaderProgram(Singleton<ResourceManager>::Instance().GetResource<Core::Graphics::ShaderProgram>("Content/Shaders/White.shader"));
+		renderer->SetMesh(Singleton<ResourceManager>::Instance().GetResource<Model>("Content/Meshes/sphere_20_averaged.obj"));
+		renderer->SetShaderProgram(Singleton<ResourceManager>::Instance().GetResource<Core::Graphics::ShaderProgram>("Content/Shaders/White.shader"));
 		light->SetPosition(x.pos);
 		light->mData.mDirection = x.dir;
 		light->mData.mAmbient = glm::vec3(x.amb, x.amb, x.amb);
@@ -66,7 +66,7 @@ void Scene::CreateScene(const std::string_view& file, std::function<void(const s
 		//else, it's a spot light
 		else light->mData.mType = Graphics::Primitives::Light::LightType::Spot;
 
-		//obj->components.emplace_back(std::move(renderer));
+		obj->components.emplace_back(std::move(renderer));
 		obj->components.emplace_back(std::move(light));
 		
 		//Switch by the light index (to switch behaviors)

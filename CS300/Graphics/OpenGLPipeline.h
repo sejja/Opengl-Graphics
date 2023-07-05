@@ -15,26 +15,26 @@
 #include "Core/Pipeline.h"
 #include "Graphics/Primitives/ShaderProgram.h"
 #include "Graphics/Primitives/Renderables.h"
+#include "Tools/FrameBuffer.h"
 
 namespace Core {
 	namespace Graphics {
-		class OpenGLPipeline : public Core::Pipeline {
+		class OpenGLPipeline : public Pipeline {
 		public:
 			void Init() override;
 			void PreRender() override;
 			void Render() override;
 			inline void PostRender() override;
 			inline void Shutdown() override;
-			virtual inline void SetDimensions(const glm::lowp_u16vec2& dim) override;
+			virtual void SetDimensions(const glm::lowp_u16vec2& dim) override;
 			inline void AddRenderable(const std::weak_ptr<Core::Renderable>& renderer);
-			void UploadLightDataToGPU(const AssetReference<Core::Graphics::ShaderProgram>& shader);
 
 		private:
+			void UploadLightDataToGPU(const AssetReference<Core::Graphics::ShaderProgram>& shader);
+
 			std::unordered_map<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Core::Renderable>>> mRenderables;
-			GLuint mDepthBuffer;
 			glm::lowp_u16vec2 mDimensions;
-			unsigned int depthMap;
-			const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+			FrameBuffer mShadowBuffer;
 		};
 
 		// ------------------------------------------------------------------------
@@ -50,16 +50,6 @@ namespace Core {
 		*   EMPTY FUNCTION
 		*/ //----------------------------------------------------------------------
 		void OpenGLPipeline::Shutdown() {}
-		
-		// ------------------------------------------------------------------------
-		/*! Set Dimension
-		*
-		*   Sets the Viewport Size on OpenGL
-		*/ //----------------------------------------------------------------------
-		void OpenGLPipeline::SetDimensions(const glm::lowp_u16vec2& dim) {
-			glViewport(0, 0, dim.x, dim.y);
-			mDimensions = dim;
-		}
 		
 		// ------------------------------------------------------------------------
 		/*! Add Renderable

@@ -87,6 +87,9 @@
     <ClCompile Include="Core\Events\EventDispatcher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\Tools\FrameBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dependencies\STB\stb.h">
@@ -1473,6 +1476,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Core\RTTI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Tools\FrameBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
