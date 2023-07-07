@@ -54,11 +54,11 @@ namespace Core {
 			static Primitives::Camera cam;
 			glm::mat4 lightProjection = glm::perspective(glm::radians(40.f * 2.0f), 1.0f, 0.1f, 200.f);
 			glm::mat4 lightView = glm::lookAt(::Graphics::Primitives::Light::sLightData[0].mPosition, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-			std::unordered_multimap<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Core::Renderable>>::const_iterator> obsoletes;
+			std::unordered_multimap<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Renderable>>::const_iterator> obsoletes;
 
 			auto f_flushobosoletes = [this , &obsoletes]() {
-				std::for_each(std::execution::par, obsoletes.begin(), obsoletes.end(), [this, &obsoletes](std::pair<const Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Core::Renderable>>::const_iterator> x) {
-					std::vector<std::weak_ptr<Core::Renderable>>& it = mGroupedRenderables.find(x.first)->second;
+				std::for_each(std::execution::par, obsoletes.begin(), obsoletes.end(), [this, &obsoletes](std::pair<const Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Renderable>>::const_iterator> x) {
+					std::vector<std::weak_ptr<Renderable>>& it = mGroupedRenderables.find(x.first)->second;
 					it.erase(x.second);
 
 					//If we don't have any other renderables, erase it
@@ -66,9 +66,9 @@ namespace Core {
 					});
 			};
 
-			auto f_grouprender = [&obsoletes](const std::pair<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Core::Renderable>>>& it, ShaderProgram * shader) {
+			auto f_grouprender = [&obsoletes](const std::pair<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Renderable>>>& it, ShaderProgram * shader) {
 				//For each renderable in shader program
-				for (std::vector<std::weak_ptr<Core::Renderable>>::const_iterator it2 = it.second.begin(); it2 != it.second.end(); it2++) {
+				for (std::vector<std::weak_ptr<Renderable>>::const_iterator it2 = it.second.begin(); it2 != it.second.end(); it2++) {
 					//If it isn't expired
 					if (auto renderable = it2->lock()) {
 						const std::shared_ptr<Object> parent = renderable->mParent.lock();
@@ -78,7 +78,7 @@ namespace Core {
 							glm::rotate(glm::mat4(1.0f), parent->transform.mRotation.x, glm::vec3(0.0f, 1.0f, 0.0f)) *
 							glm::scale(glm::mat4(1.0f), parent->transform.mScale);
 						shader->SetShaderUniform("uModel", &matrix);
-						reinterpret_cast<Core::ModelRenderer<Core::GraphicsAPIS::OpenGL>*>(renderable.get())->Render();
+						reinterpret_cast<ModelRenderer<Core::GraphicsAPIS::OpenGL>*>(renderable.get())->Render();
 					}
 					else {
 						obsoletes.insert(std::make_pair(it.first, it2));
@@ -96,7 +96,7 @@ namespace Core {
 				shadow->SetShaderUniform("uTransform", &lightProjection);
 				shadow->SetShaderUniform("uView", &lightView);
 
-				std::for_each(std::execution::unseq, mGroupedRenderables.begin(), mGroupedRenderables.end(), [this, &shadow, &obsoletes, &f_grouprender](const std::pair<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Core::Renderable>>>& it) {
+				std::for_each(std::execution::unseq, mGroupedRenderables.begin(), mGroupedRenderables.end(), [this, &shadow, &obsoletes, &f_grouprender](const std::pair<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Renderable>>>& it) {
 					f_grouprender(it, shadow);
 					});
 
@@ -113,7 +113,7 @@ namespace Core {
 				glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 10000.0f);
 				glm::mat4 shadow_matrix =  lightProjection * lightView;
 
-				std::for_each(std::execution::unseq, mGroupedRenderables.begin(), mGroupedRenderables.end(), [this, &shadow_matrix, &obsoletes, &projection, &view, &f_grouprender](const std::pair<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Core::Renderable>>>& it) {
+				std::for_each(std::execution::unseq, mGroupedRenderables.begin(), mGroupedRenderables.end(), [this, &shadow_matrix, &obsoletes, &projection, &view, &f_grouprender](const std::pair<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Renderable>>>& it) {
 					Core::Graphics::ShaderProgram* shader = it.first->Get();
 
 					shader->Bind();

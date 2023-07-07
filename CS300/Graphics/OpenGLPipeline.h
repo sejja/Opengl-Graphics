@@ -24,12 +24,12 @@ namespace Core {
 			inline void PostRender() override;
 			inline void Shutdown() override;
 			virtual void SetDimensions(const glm::lowp_u16vec2& dim) override;
-			inline void AddRenderable(const std::weak_ptr<Core::Renderable>& renderer);
+			inline void AddRenderable(const std::weak_ptr<Renderable>& renderer);
 
 		private:
 			void UploadLightDataToGPU(const AssetReference<Core::Graphics::ShaderProgram>& shader);
 
-			std::unordered_map<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Core::Renderable>>> mGroupedRenderables;
+			std::unordered_map<Asset<ShaderProgram>, std::vector<std::weak_ptr<Renderable>>> mGroupedRenderables;
 			glm::lowp_u16vec2 mDimensions;
 			FrameBuffer mShadowBuffer;
 		};
@@ -53,8 +53,8 @@ namespace Core {
 		*
 		*   Adds a Renderable into the pipeline
 		*/ //----------------------------------------------------------------------
-		void OpenGLPipeline::AddRenderable(const std::weak_ptr<Core::Renderable>& renderer) {
-			mGroupedRenderables[(std::dynamic_pointer_cast<Core::ModelRenderer<Core::GraphicsAPIS::OpenGL>>(renderer.lock()))->GetShaderProgram().lock()].push_back(renderer);
+		void OpenGLPipeline::AddRenderable(const std::weak_ptr<Renderable>& renderer) {
+			mGroupedRenderables[(std::dynamic_pointer_cast<ModelRenderer<Core::GraphicsAPIS::OpenGL>>(renderer.lock()))->GetShaderProgram().lock()].push_back(renderer);
 		}
 	}
 }

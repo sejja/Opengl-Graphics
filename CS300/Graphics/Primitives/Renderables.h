@@ -17,73 +17,75 @@
 #include "Graphics/Primitives/ShaderProgram.h"
 
 namespace Core {
-	struct Vertex {
+	namespace Graphics {
+		struct Vertex {
 #pragma region //Variables
-		glm::vec3 mPosition;
-		glm::vec2 mUVs;
+			glm::vec3 mPosition;
+			glm::vec2 mUVs;
 #pragma endregion
-	};
+		};
 
-	class Renderable : public Component {
+		class Renderable : public Component {
 #pragma region //Constructor
-	public:
-		explicit Renderable(const std::weak_ptr<Object>& parent);
+		public:
+			explicit Renderable(const std::weak_ptr<Object>& parent);
 #pragma endregion
 
 #pragma region //Function
-		virtual void Render() const = 0;
+			virtual void Render() const = 0;
 #pragma endregion
-	};
+		};
 
-	template<GraphicsAPIS E>
-	class ModelRenderer : public Renderable {};
+		template<GraphicsAPIS E>
+		class ModelRenderer : public Renderable {};
 
-	template<>
-	class ModelRenderer<GraphicsAPIS::OpenGL> : public Renderable {
+		template<>
+		class ModelRenderer<GraphicsAPIS::OpenGL> : public Renderable {
 #pragma region //Constructor
-	public:
-		ModelRenderer(const std::weak_ptr<Object>& parent): Renderable(parent) {}
+		public:
+			ModelRenderer(const std::weak_ptr<Object>& parent) : Renderable(parent) {}
 #pragma endregion
 
 #pragma region //Functions
-		inline void SetMesh(const AssetReference<Model>& model);
-		inline void SetShaderProgram(const AssetReference<Graphics::ShaderProgram>& s);
-		DONTDISCARD inline AssetReference<Graphics::ShaderProgram> GetShaderProgram();
-		void Render() const noexcept override;
+			inline void SetMesh(const AssetReference<Model>& model);
+			inline void SetShaderProgram(const AssetReference<Graphics::ShaderProgram>& s);
+			DONTDISCARD inline AssetReference<Graphics::ShaderProgram> GetShaderProgram();
+			void Render() const noexcept override;
 #pragma endregion
 
 #pragma region //Variables
-	private:
-		Asset<Model> mModel;
-		Asset<Graphics::ShaderProgram> mShaderProgram;
+		private:
+			Asset<Model> mModel;
+			Asset<Graphics::ShaderProgram> mShaderProgram;
 #pragma endregion
-	};
-	
-	// ------------------------------------------------------------------------
-	/*! Set Mesh
-	*
-	*   Sets the Mesh associated with this renderer
-	*/ // ---------------------------------------------------------------------
-	void ModelRenderer<GraphicsAPIS::OpenGL>::SetMesh(const AssetReference<Model>& model) {
-		mModel = model.lock();
-	}
+		};
 
-	// ------------------------------------------------------------------------
-	/*! Set Shader Program
-	*
-	*   Sets the Shader Program associated with this renderer
-	*/ // ---------------------------------------------------------------------
-	void ModelRenderer<GraphicsAPIS::OpenGL>::SetShaderProgram(const AssetReference<Graphics::ShaderProgram>& s) {
-		mShaderProgram = s.lock();
-	}
+		// ------------------------------------------------------------------------
+		/*! Set Mesh
+		*
+		*   Sets the Mesh associated with this renderer
+		*/ // ---------------------------------------------------------------------
+		void ModelRenderer<GraphicsAPIS::OpenGL>::SetMesh(const AssetReference<Model>& model) {
+			mModel = model.lock();
+		}
 
-	// ------------------------------------------------------------------------
-	/*! Get Shader Program
-	*
-	*   Gets the Shader Program associated with this renderer
-	*/ // ---------------------------------------------------------------------
-	AssetReference<Graphics::ShaderProgram> ModelRenderer<GraphicsAPIS::OpenGL>::GetShaderProgram() {
-		return mShaderProgram;
+		// ------------------------------------------------------------------------
+		/*! Set Shader Program
+		*
+		*   Sets the Shader Program associated with this renderer
+		*/ // ---------------------------------------------------------------------
+		void ModelRenderer<GraphicsAPIS::OpenGL>::SetShaderProgram(const AssetReference<Graphics::ShaderProgram>& s) {
+			mShaderProgram = s.lock();
+		}
+
+		// ------------------------------------------------------------------------
+		/*! Get Shader Program
+		*
+		*   Gets the Shader Program associated with this renderer
+		*/ // ---------------------------------------------------------------------
+		AssetReference<Graphics::ShaderProgram> ModelRenderer<GraphicsAPIS::OpenGL>::GetShaderProgram() {
+			return mShaderProgram;
+		}
 	}
 }
 

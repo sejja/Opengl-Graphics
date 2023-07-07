@@ -19,6 +19,8 @@ namespace Assets {
 	*   Imports Models from File
 	*/ //----------------------------------------------------------------------
 	std::shared_ptr<IResource> ModelImporter::ImportFromFile(const std::string_view& filename) const {
+		using Core::Graphics::Model;
+
 		PageAllocator<TResource<Model>> resalloc;
 		PageAllocator<Model> modealloc;
 

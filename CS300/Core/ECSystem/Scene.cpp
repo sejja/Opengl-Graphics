@@ -27,8 +27,8 @@ void Scene::CreateScene(const std::string_view& file, std::function<void(const s
 		obj->transform.mPostion = x.pos;
 		obj->transform.mRotation = glm::radians(x.rot);
 		obj->transform.mScale = x.sca;
-		std::unique_ptr<Core::ModelRenderer<Core::GraphicsAPIS::OpenGL>> renderer = std::move(std::make_unique<Core::ModelRenderer<Core::GraphicsAPIS::OpenGL>>(obj));
-		renderer->SetMesh(Singleton<ResourceManager>::Instance().GetResource<Model>(x.mesh.c_str()));
+		std::unique_ptr<Core::Graphics::ModelRenderer<Core::GraphicsAPIS::OpenGL>> renderer = std::move(std::make_unique<Core::Graphics::ModelRenderer<Core::GraphicsAPIS::OpenGL>>(obj));
+		renderer->SetMesh(Singleton<ResourceManager>::Instance().GetResource<Core::Graphics::Model>(x.mesh.c_str()));
 		renderer->SetShaderProgram(Singleton<ResourceManager>::Instance().GetResource<Core::Graphics::ShaderProgram>("Content/Shaders/Textured.shader"));
 		obj->components.emplace_back(std::move(renderer));
 		upload(obj);

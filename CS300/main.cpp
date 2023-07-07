@@ -24,7 +24,7 @@ int main() {
     
 	app.mScene.CreateScene("Content/Maps/Scene.level", [&app](const std::shared_ptr<Object>& obj) {
         std::for_each(std::execution::unseq, obj->components.begin(), obj->components.end(), [&app](const std::shared_ptr<Component>& comp) {
-            std::shared_ptr<Core::Renderable> renderable = std::dynamic_pointer_cast<Core::Renderable>(comp);
+            std::shared_ptr<Core::Graphics::Renderable> renderable = std::dynamic_pointer_cast<Core::Graphics::Renderable>(comp);
 
             //If the object is a renderable
             if (renderable) app.GetPipelineRef().AddRenderable(renderable);
