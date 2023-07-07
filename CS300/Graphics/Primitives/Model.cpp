@@ -187,7 +187,7 @@ void Model::LoadFromFile(const std::string& inputfile) {
 	UploadToGPU(vertices, indexes);
 }
 
-void Model::set_uniforms(Core::Graphics::ShaderProgram& s) const {
+void Model::SetUniforms(Core::Graphics::ShaderProgram& s) const {
 	float _shininess = mMaterial.GetShininess();
 	glm::vec4 buffer[] = {
 		mMaterial.GetEmissive(),

@@ -27,11 +27,11 @@ namespace Core {
 	class Renderable : public Component {
 #pragma region //Constructor
 	public:
-		Renderable(const std::weak_ptr<Object>& parent);
+		explicit Renderable(const std::weak_ptr<Object>& parent);
 #pragma endregion
 
 #pragma region //Function
-		virtual void Render() = 0;
+		virtual void Render() const = 0;
 #pragma endregion
 	};
 
@@ -49,7 +49,7 @@ namespace Core {
 		inline void SetMesh(const AssetReference<Model>& model);
 		inline void SetShaderProgram(const AssetReference<Graphics::ShaderProgram>& s);
 		DONTDISCARD inline AssetReference<Graphics::ShaderProgram> GetShaderProgram();
-		void Render() override;
+		void Render() const noexcept override;
 #pragma endregion
 
 #pragma region //Variables

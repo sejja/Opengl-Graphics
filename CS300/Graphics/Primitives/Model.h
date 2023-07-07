@@ -21,7 +21,7 @@ public:
 	void LoadFromFile(const std::string& inputfile);
 	GLuint GetVao() { return mVAO; }
 	size_t GetVertexCount() { return mCount; }
-	void set_uniforms(Core::Graphics::ShaderProgram& s) const;
+	void SetUniforms(Core::Graphics::ShaderProgram& s) const;
 
 private:
 	void UploadToGPU(std::vector<float>& vertices, std::vector<int>& indexes);
