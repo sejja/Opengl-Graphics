@@ -663,6 +663,9 @@
   <ItemGroup>
     <None Include="Content\Maps\Scene.level" />
     <None Include="Content\Maps\Scene2.level" />
+    <None Include="Content\Shaders\DebugDepth.frag" />
+    <None Include="Content\Shaders\DebugDepth.shader" />
+    <None Include="Content\Shaders\DebugDepth.vert" />
     <None Include="Content\Shaders\Shadow.frag" />
     <None Include="Content\Shaders\Shadow.shader" />
     <None Include="Content\Shaders\Shadow.vert" />

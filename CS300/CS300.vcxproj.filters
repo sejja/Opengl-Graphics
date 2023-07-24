@@ -1913,6 +1913,9 @@
     <None Include="Content\Shaders\Shadow.frag" />
     <None Include="Content\Shaders\Shadow.shader" />
     <None Include="Content\Shaders\Shadow.vert" />
+    <None Include="Content\Shaders\DebugDepth.frag" />
+    <None Include="Content\Shaders\DebugDepth.vert" />
+    <None Include="Content\Shaders\DebugDepth.shader" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Dependencies\GLM\CMakeLists.txt" />

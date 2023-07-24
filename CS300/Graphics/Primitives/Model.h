@@ -9,6 +9,7 @@
 #ifndef _MODEL__H_
 #define _MODEL__H_
 
+#include "CommonDefines.h"
 #include <string>
 #include <glew.h>
 #include <vector>
@@ -20,6 +21,7 @@ namespace Core {
 	namespace Graphics {
 		class Model {
 		public:
+#pragma region //Declarations
 			struct ModelVertex {
 				tinyobj::real_t pos[3];
 				tinyobj::real_t normal[3];
@@ -28,18 +30,31 @@ namespace Core {
 				tinyobj::real_t bitangent[3];
 			};
 
+			CLASS_EXCEPTION(MODEL)
+#pragma endregion
+
+#pragma region //Constructor & Destructors
+			Model() noexcept;
 			~Model() noexcept;
+#pragma endregion
+
+#pragma region //Functions
 			void Clear() noexcept;
 			void LoadFromFile(const std::string_view& inputfile);
 			DONTDISCARD GLuint inline GetHandle() const noexcept;
 			DONTDISCARD size_t inline GetVertexCount() const noexcept;
-			void SetUniforms(ShaderProgram& s) const;
+			void SetShaderUniforms(const ShaderProgram& s) const;
 
 		private:
 			void UploadToGPU(std::vector<float>& vertices, std::vector<int>& indexes);
+			void GramSchmidt(glm::vec3& n, glm::vec3& t, glm::vec3& b);
+#pragma endregion
+
+#pragma region //Variables
 			std::size_t mCount;
 			GLuint mVAO, mVBO, mIBO;
 			::Graphics::Material mMaterial;
+#pragma endregion
 		};
 
 		// ------------------------------------------------------------------------

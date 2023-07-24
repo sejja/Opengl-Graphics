@@ -6,38 +6,44 @@
 
 namespace Core {
 	namespace Graphics {
+		// ------------------------------------------------------------------------
+		/*! Constructor
+		*
+		*   Constructs an empty model class
+		*/ //----------------------------------------------------------------------
+		Model::Model() noexcept :
+			mVAO(NULL), mVBO(NULL), mIBO(NULL), mCount(0), mMaterial() {}
+		
+		// ------------------------------------------------------------------------
+		/*! Destructor
+		*
+		*   Clears all verteces from the GPU
+		*/ //----------------------------------------------------------------------
 		Model::~Model() noexcept {
 			Clear();
 		}
 
+		// ------------------------------------------------------------------------
+		/*! Clear
+		*
+		*   Clears all verteces from the GPU
+		*/ //----------------------------------------------------------------------
 		void Model::Clear() noexcept {
-			glDeleteVertexArrays(1, &mVAO);
-			glDeleteBuffers(1, &mVBO);
-			glDeleteBuffers(1, &mIBO);
+			//If there is a valid handle
+			if (mVAO > 0) {
+				glDeleteVertexArrays(1, &mVAO);
+				glDeleteBuffers(1, &mVBO);
+				glDeleteBuffers(1, &mIBO);
+				mVAO = mVBO = mIBO = -1;
+			}
 		}
 
-		void GramSchmidt(glm::vec3& n, glm::vec3& t, glm::vec3& b)
-		{
-			n = normalize(n);
-			// Gram-Schmidt orthogonalization
-			glm::vec3 orthoT = t - dot(t, n) * n;
-
-			// Set tangent to (1,0,0) when lenght is 0
-			t = glm::length(orthoT) > 0.0f ?
-				glm::normalize(orthoT) :
-				glm::vec3(1.0f, 0.0f, 0.0f);
-
-			// Compute the new perpendicular bitangent
-			glm::vec3 orthoB = cross(n, t);
-
-			b = glm::dot(orthoB, b) > 0.0f ?
-				glm::normalize(orthoB) :
-				-glm::normalize(orthoB);
-		}
-
+		// ------------------------------------------------------------------------
+		/*! Load From File
+		*
+		*   Loads the a model from file, and uploads it to the GPU
+		*/ //----------------------------------------------------------------------
 		void Model::LoadFromFile(const std::string_view& inputfile) {
-			Clear();
-
 			tinyobj::attrib_t attrib;
 			std::vector<tinyobj::shape_t> shapes;
 			std::vector<tinyobj::material_t> materials;
@@ -50,15 +56,17 @@ namespace Core {
 			std::string warn;
 			std::string err;
 
-			bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, inputfile.data());
+			if(!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, inputfile.data())) return;
 
 			if (!warn.empty()) {
-				std::cout << warn << std::endl;
+				std::cerr << warn << std::endl;
 			}
 
 			if (!err.empty()) {
 				std::cerr << err << std::endl;
 			}
+
+			Clear();
 
 			// Loop over shapes
 			for (size_t s = 0; s < shapes.size(); s++) {
@@ -190,7 +198,7 @@ namespace Core {
 			UploadToGPU(vertices, indexes);
 		}
 
-		void Model::SetUniforms(Core::Graphics::ShaderProgram& s) const {
+		void Model::SetShaderUniforms(const Core::Graphics::ShaderProgram& s) const {
 			float _shininess = mMaterial.GetShininess();
 			glm::vec4 buffer[] = {
 				mMaterial.GetEmissive(),
@@ -241,6 +249,22 @@ namespace Core {
 			glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, ModelVertex::bitangent));
 
 			glBindVertexArray(0);
+		}
+
+		void Model::GramSchmidt(glm::vec3& n, glm::vec3& t, glm::vec3& b) {
+			n = normalize(n);
+			// Gram-Schmidt orthogonalization
+			glm::vec3 orthoT = t - dot(t, n) * n;
+
+			// Set tangent to (1,0,0) when lenght is 0
+			t = glm::length(orthoT) > 0.0f ?
+				glm::normalize(orthoT) :
+				glm::vec3(1.0f, 0.0f, 0.0f);
+
+			// Compute the new perpendicular bitangent
+			glm::vec3 orthoB = cross(n, t);
+
+			b = glm::dot(orthoB, b) > 0.0f ? glm::normalize(orthoB) : -glm::normalize(orthoB);
 		}
 	}
 }

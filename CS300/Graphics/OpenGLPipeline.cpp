@@ -33,7 +33,7 @@ namespace Core {
 			glDisable(GL_STENCIL_TEST);
 			glClearColor(0.f, 0.f, 0.f, 0.f);
 			mShadowBuffer.Create();
-			mShadowBuffer.CreateRenderTexture(mDimensions, false);
+			mShadowBuffer.CreateRenderTexture({mDimensions.x * 2, mDimensions.y * 2}, false);
 		}
 
 		// ------------------------------------------------------------------------
@@ -45,6 +45,34 @@ namespace Core {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
 
+		unsigned int quadVAO = 0;
+		unsigned int quadVBO;
+		void renderQuad() {
+			if (quadVAO == 0)
+			{
+				float quadVertices[] = {
+					// positions        // texture Coords
+					-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+					-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+					 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+					 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+				};
+				// setup plane VAO
+				glGenVertexArrays(1, &quadVAO);
+				glGenBuffers(1, &quadVBO);
+				glBindVertexArray(quadVAO);
+				glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+				glEnableVertexAttribArray(0);
+				glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+				glEnableVertexAttribArray(1);
+				glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+			}
+			glBindVertexArray(quadVAO);
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+			glBindVertexArray(0);
+		}
+
 		// ------------------------------------------------------------------------
 		/*! Render
 		*
@@ -52,8 +80,9 @@ namespace Core {
 		*/ //----------------------------------------------------------------------
 		void OpenGLPipeline::Render() {
 			static Primitives::Camera cam;
-			glm::mat4 lightProjection = glm::perspective(glm::radians(40.f * 2.0f), 1.0f, 0.1f, 200.f);
-			glm::mat4 lightView = glm::lookAt(::Graphics::Primitives::Light::sLightData[0].mPosition, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+			auto up = glm::normalize(glm::cross(glm::cross(-::Graphics::Primitives::Light::sLightData[0].mPosition, glm::vec3(0, 1, 0)), -::Graphics::Primitives::Light::sLightData[0].mPosition));
+			glm::mat4 lightProjection = glm::perspective(glm::radians(90.f), 1.0f, 1.f, 2000.f);
+			glm::mat4 lightView = glm::lookAt(::Graphics::Primitives::Light::sLightData[0].mPosition, glm::vec3(0.0, -15, 50), glm::vec3(0, 1, 0));
 			std::unordered_multimap<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Renderable>>::const_iterator> obsoletes;
 
 			auto f_flushobosoletes = [this , &obsoletes]() {
@@ -107,7 +136,9 @@ namespace Core {
 			glViewport(0, 0, mDimensions.x, mDimensions.y);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			mShadowBuffer.BindTexture(2);	
-				
+
+			#if 1
+
 			{
 				glm::mat4 view = cam.GetViewMatrix();
 				glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 10000.0f);
@@ -117,7 +148,7 @@ namespace Core {
 					Core::Graphics::ShaderProgram* shader = it.first->Get();
 
 					shader->Bind();
-					shader->SetShaderUniform("uCameraPos", &cam.GetPositionRef());
+					//shader->SetShaderUniform("uCameraPos", &cam.GetPositionRef());
 					shader->SetShaderUniform("uTransform", &projection);
 					shader->SetShaderUniform("uView", &view);
 					shader->SetShaderUniform("uShadowMatrix", &shadow_matrix);
@@ -134,6 +165,14 @@ namespace Core {
 
 				f_flushobosoletes();
 			}
+
+			#else
+
+			static auto debugdepth = Singleton<ResourceManager>::Instance().GetResource<ShaderProgram>("Content/Shaders/DebugDepth.shader")->Get();
+			debugdepth->Bind();
+			renderQuad();
+		
+			#endif
 		}
 
 		// ------------------------------------------------------------------------

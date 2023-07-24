@@ -22,7 +22,7 @@ namespace Core {
 		void ModelRenderer<GraphicsAPIS::OpenGL>::Render() const noexcept {
 			Model* const model = mModel->Get();
 
-			model->SetUniforms(*mShaderProgram->Get());
+			model->SetShaderUniforms(*mShaderProgram->Get());
 			glBindVertexArray(model->GetHandle());
 			glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(model->GetVertexCount()));
 		}
