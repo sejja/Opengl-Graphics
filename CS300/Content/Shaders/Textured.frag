@@ -45,43 +45,37 @@ in vec4 oShadowCoord;
 
 layout(binding = 0) uniform sampler2D uDiffuseTex;
 layout(binding = 1) uniform sampler2D uNormalTex;
-layout(binding = 2) uniform sampler2D depth_texture2;
+layout(binding = 2) uniform sampler2D depth_texture2[8];
 
-float ShadowCalculation(vec4 fragPosLightSpace)
+float ShadowCalculation(vec4 fragPosLightSpace, int light)
 {
     // perform perspective divide
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     // transform to [0,1] range
     projCoords = projCoords * 0.5 + 0.5;
     // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-    float closestDepth = texture(depth_texture2, projCoords.xy).r; 
+    float closestDepth = texture(depth_texture2[0] , projCoords.xy).r; 
     // get depth of current fragment from light's perspective
     float currentDepth = projCoords.z;
-    // calculate bias (based on depth map resolution and slope)
-    vec3 normal = normalize(oNormal);
-    vec3 lightDir = normalize(uLight[0].pos - oPosition);
-    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
     // check whether current frag pos is in shadow
-    // float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
-    // PCF
-    float shadow = 0.0;
-    vec2 texelSize = 1.0 / textureSize(depth_texture2, 0);
-    for(int x = -1; x <= 1; ++x)
-    {
-        for(int y = -1; y <= 1; ++y)
-        {
-            float pcfDepth = texture(depth_texture2, projCoords.xy + vec2(x, y) * texelSize).r; 
-            shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;        
-        }    
-    }
-    shadow /= 9.0;
-    
-    // keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
-    if(projCoords.z > 1.0)
-        shadow = 0.0;
-        
+  float bias = 0.002;
+
+  float shadow = 0.0;
+  vec2 texelSize = 1.0 / textureSize(depth_texture2[0], 0);
+  for(int x = -1; x <= 1; ++x)
+  {
+      for(int y = -1; y <= 1; ++y)
+      {
+          float pcfDepth = texture(depth_texture2[0], projCoords.xy + vec2(x, y) * texelSize).r; 
+          shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;        
+      }    
+  }
+  shadow /= 9.0;
+
     return shadow;
-}
+} 
+
+
 void main() {
     mat4 VM = uView * uModel;
     mat3 VM3 = mat3(VM);
@@ -89,7 +83,7 @@ void main() {
     mat3 V_M_TBN = iVM3 * mat3(oTangent, oBitangent, oNormal);
     vec3 N = normalize(V_M_TBN * (texture(uNormalTex, oUVs).rgb * 2.0f - 1.0f));
     float bias = 0.005;
-    float f = ShadowCalculation(oShadowCoord);
+    float f = ShadowCalculation(oShadowCoord, 0);
 
     vec3 totalLightShine = vec3(0, 0, 0);
     

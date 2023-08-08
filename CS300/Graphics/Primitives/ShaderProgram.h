@@ -32,7 +32,7 @@ namespace Core {
 		#pragma endregion
 
 		#pragma region //Methods
-			void Bind() const noexcept;
+			void inline Bind() const noexcept;
 			void inline SetShaderUniform(const std::string_view& name, const int value);
 			void inline SetShaderUniform(const std::string_view& name, const bool value);
 			void inline SetShaderUniform(const std::string_view& name, int* value, const int count = 1);
@@ -141,6 +141,15 @@ namespace Core {
 		*/ // --------------------------------------------------------------------
 		void ShaderProgram::SetShaderUniform(const std::string_view& name, Color* value, const int count) {
 			glUniform4fv(getUniformLocation(name), count, reinterpret_cast<float*>(value));
+		}
+
+		// ------------------------------------------------------------------------
+		/*! Bind
+		*
+		*   Binds the Shader Program
+		*/ // --------------------------------------------------------------------
+		void ShaderProgram::Bind() const noexcept {
+			glUseProgram(mHandle);
 		}
 	}
 }

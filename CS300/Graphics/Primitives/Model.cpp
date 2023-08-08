@@ -47,24 +47,13 @@ namespace Core {
 			tinyobj::attrib_t attrib;
 			std::vector<tinyobj::shape_t> shapes;
 			std::vector<tinyobj::material_t> materials;
-			std::vector<tinyobj::real_t> vertices;
-			std::vector<tinyobj::real_t> normals;
-			std::vector<tinyobj::real_t> tangents;
-			std::vector<tinyobj::real_t> bitangents;
+			std::vector<tinyobj::real_t> vertices, normals, tangents, bitangents;
 			std::vector<int> indexes;
+			std::string warn, err;
 
-			std::string warn;
-			std::string err;
-
-			if(!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, inputfile.data())) return;
-
-			if (!warn.empty()) {
-				std::cerr << warn << std::endl;
-			}
-
-			if (!err.empty()) {
-				std::cerr << err << std::endl;
-			}
+			//If we had any issue loading the class
+			if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, inputfile.data()) || !warn.empty() || !err.empty())
+				throw ModelException(("Error: " + err + ", warning; " + warn).c_str());
 
 			Clear();
 
@@ -73,10 +62,9 @@ namespace Core {
 				// Loop over faces(polygon)
 				size_t index_offset = 0;
 				for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
-					size_t fv = size_t(shapes[s].mesh.num_face_vertices[f]);
+					const size_t fv = size_t(shapes[s].mesh.num_face_vertices[f]);
 
-					glm::vec3 tangent;
-					glm::vec3 bitangent;
+					glm::vec3 tangent, bitangent;
 
 					if (fv == 3) {
 						tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + 0];
@@ -131,7 +119,6 @@ namespace Core {
 					for (size_t v = 0; v < fv; v++) {
 						// access to vertex
 						tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
-
 
 						vertices.push_back(attrib.vertices[3 * size_t(idx.vertex_index) + 0]);
 						vertices.push_back(attrib.vertices[3 * size_t(idx.vertex_index) + 1]);

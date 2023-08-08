@@ -31,7 +31,7 @@ namespace Core {
 
 			std::unordered_map<Asset<ShaderProgram>, std::vector<std::weak_ptr<Renderable>>> mGroupedRenderables;
 			glm::lowp_u16vec2 mDimensions;
-			FrameBuffer mShadowBuffer;
+			std::vector<FrameBuffer> mShadowBuffers;
 		};
 
 		// ------------------------------------------------------------------------

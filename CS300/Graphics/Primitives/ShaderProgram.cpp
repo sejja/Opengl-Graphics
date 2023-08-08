@@ -50,15 +50,6 @@ namespace Core {
 		}
 
 		// ------------------------------------------------------------------------
-		/*! Bind
-		*
-		*   Binds the Shader Program
-		*/ // --------------------------------------------------------------------
-		void ShaderProgram::Bind() const noexcept {
-			glUseProgram(mHandle);
-		}
-
-		// ------------------------------------------------------------------------
 		/*! Get Uniform Location
 		*
 		*  Get the location of an Uniform within a shader

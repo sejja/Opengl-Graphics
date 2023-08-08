@@ -32,8 +32,12 @@ namespace Core {
 			glDisable(GL_BLEND);
 			glDisable(GL_STENCIL_TEST);
 			glClearColor(0.f, 0.f, 0.f, 0.f);
-			mShadowBuffer.Create();
-			mShadowBuffer.CreateRenderTexture({mDimensions.x * 2, mDimensions.y * 2}, false);
+			mShadowBuffers.emplace_back();
+			mShadowBuffers.emplace_back();
+			mShadowBuffers[0].Create();
+			mShadowBuffers[0].CreateRenderTexture({mDimensions.x * 2, mDimensions.y * 2}, false);
+			mShadowBuffers[1].Create();
+			mShadowBuffers[1].CreateRenderTexture({ mDimensions.x * 2, mDimensions.y * 2 }, false);
 		}
 
 		// ------------------------------------------------------------------------
@@ -116,8 +120,8 @@ namespace Core {
 			};
 
 
-			mShadowBuffer.Bind();
-			mShadowBuffer.Clear(true);
+			mShadowBuffers[0].Bind();
+			mShadowBuffers[0].Clear(true);
 				
 			{
 				const auto shadow = Singleton<ResourceManager>::Instance().GetResource<ShaderProgram>("Content/Shaders/Shadow.shader")->Get();
@@ -132,10 +136,10 @@ namespace Core {
 				f_flushobosoletes();
 			}
 
-			mShadowBuffer.Unbind();
+			mShadowBuffers[0].Unbind();
 			glViewport(0, 0, mDimensions.x, mDimensions.y);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			mShadowBuffer.BindTexture(2);	
+			mShadowBuffers[0].BindTexture(2);
 
 			#if 1
 
@@ -148,7 +152,8 @@ namespace Core {
 					Core::Graphics::ShaderProgram* shader = it.first->Get();
 
 					shader->Bind();
-					//shader->SetShaderUniform("uCameraPos", &cam.GetPositionRef());
+					
+					shader->SetShaderUniform("uCameraPos", &cam.GetPositionRef());
 					shader->SetShaderUniform("uTransform", &projection);
 					shader->SetShaderUniform("uView", &view);
 					shader->SetShaderUniform("uShadowMatrix", &shadow_matrix);

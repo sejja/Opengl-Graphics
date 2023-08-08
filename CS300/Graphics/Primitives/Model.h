@@ -30,7 +30,7 @@ namespace Core {
 				tinyobj::real_t bitangent[3];
 			};
 
-			CLASS_EXCEPTION(MODEL)
+			CLASS_EXCEPTION(Model)
 #pragma endregion
 
 #pragma region //Constructor & Destructors
