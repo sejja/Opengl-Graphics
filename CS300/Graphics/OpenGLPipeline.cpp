@@ -120,26 +120,34 @@ namespace Core {
 			};
 
 
-			mShadowBuffers[0].Bind();
-			mShadowBuffers[0].Clear(true);
-				
-			{
-				const auto shadow = Singleton<ResourceManager>::Instance().GetResource<ShaderProgram>("Content/Shaders/Shadow.shader")->Get();
-				shadow->Bind();
-				shadow->SetShaderUniform("uTransform", &lightProjection);
-				shadow->SetShaderUniform("uView", &lightView);
+			for(int i = 0; i < 1; i++) {
 
-				std::for_each(std::execution::unseq, mGroupedRenderables.begin(), mGroupedRenderables.end(), [this, &shadow, &obsoletes, &f_grouprender](const std::pair<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Renderable>>>& it) {
-					f_grouprender(it, shadow);
-					});
+				mShadowBuffers[i].Bind();
+				mShadowBuffers[i].Clear(true);
 
-				f_flushobosoletes();
+				{
+					const auto shadow = Singleton<ResourceManager>::Instance().GetResource<ShaderProgram>("Content/Shaders/Shadow.shader")->Get();
+					shadow->Bind();
+					shadow->SetShaderUniform("uTransform", &lightProjection);
+					shadow->SetShaderUniform("uView", &lightView);
+
+					std::for_each(std::execution::unseq, mGroupedRenderables.begin(), mGroupedRenderables.end(), [this, &shadow, &obsoletes, &f_grouprender](const std::pair<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Renderable>>>& it) {
+						f_grouprender(it, shadow);
+						});
+
+					f_flushobosoletes();
+				}
+
+				mShadowBuffers[i].Unbind();
+
 			}
 
-			mShadowBuffers[0].Unbind();
 			glViewport(0, 0, mDimensions.x, mDimensions.y);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			mShadowBuffers[0].BindTexture(2);
+
+			for(int i = 0; i < 1; i++) {
+				mShadowBuffers[i].BindTexture(2);
+			}
 
 			#if 1
 
