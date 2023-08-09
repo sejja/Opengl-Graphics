@@ -11,7 +11,6 @@
 
 #include "CommonDefines.h"
 #include "glm/vec4.hpp"
-#include <exception>
 
 namespace Graphics {
 	class Material {
@@ -32,17 +31,16 @@ namespace Graphics {
 	#pragma endregion
 
 	#pragma region //Functions
-		void SetAmbient(const glm::vec4& ambient);
-		void SetDiffuse(const glm::vec4& diffuse);
-		void SetSpecular(const glm::vec4& specular);
-		void SetEmissive(const glm::vec4& emissive);
+		inline void SetAmbient(const glm::vec4& ambient) noexcept;
+		inline void SetDiffuse(const glm::vec4& diffuse) noexcept;
+		inline void SetSpecular(const glm::vec4& specular) noexcept;
+		inline void SetEmissive(const glm::vec4& emissive) noexcept;
 		void SetShininess(const float n);
-		DONTDISCARD constexpr inline glm::vec4 GetAmbient() const;
-		DONTDISCARD constexpr inline glm::vec4 GetDiffuse() const;
-		DONTDISCARD constexpr inline glm::vec4 GetSpecular() const;
-		DONTDISCARD constexpr inline glm::vec4 GetEmissive() const;
-		DONTDISCARD constexpr inline float GetShininess() const;
-		void UploadToGPU() const;
+		DONTDISCARD constexpr inline glm::vec4 GetAmbient() const noexcept;
+		DONTDISCARD constexpr inline glm::vec4 GetDiffuse() const noexcept;
+		DONTDISCARD constexpr inline glm::vec4 GetSpecular() const noexcept;
+		DONTDISCARD constexpr inline glm::vec4 GetEmissive() const noexcept;
+		DONTDISCARD constexpr inline float GetShininess() const noexcept;
 	#pragma endregion
 
 #pragma region // Variables
@@ -56,11 +54,48 @@ namespace Graphics {
 	};
 
 	// ------------------------------------------------------------------------
+	/*! Set Ambient
+	*
+	*  Sets the Ambient Color of a Material
+	*/ // ---------------------------------------------------------------------
+	void Material::SetAmbient(const glm::vec4& ambient) noexcept {
+		mAmbient = ambient;
+	}
+
+	// ------------------------------------------------------------------------
+	/*! Set Diffuse
+	*
+	*  Sets the Diffuse Color of a Material
+	*/ // ---------------------------------------------------------------------
+	void Material::SetDiffuse(const glm::vec4& diffuse) noexcept {
+		mDiffuse = diffuse;
+	}
+
+	// ------------------------------------------------------------------------
+	/*! Set Specular
+	*
+	*  Sets the Specular Color of a Material
+	*/ // ---------------------------------------------------------------------
+	void Material::SetSpecular(const glm::vec4& specular) noexcept {
+		mSpecular = specular;
+
+	}
+
+	// ------------------------------------------------------------------------
+	/*! Set Emissive
+	*
+	*  Sets the Emissive Color of a Material
+	*/ // ---------------------------------------------------------------------
+	void Material::SetEmissive(const glm::vec4& emissive) noexcept {
+		mEmissive = emissive;
+	}
+
+	// ------------------------------------------------------------------------
 	/*! Get Ambient
 	*
 	*  Returns the Ambient Color
 	*/ // ---------------------------------------------------------------------
-	constexpr inline glm::vec4 Material::GetAmbient() const {
+	constexpr inline glm::vec4 Material::GetAmbient() const noexcept {
 		return mAmbient;
 	}
 
@@ -69,7 +104,7 @@ namespace Graphics {
 	*
 	*  Returns the Diffuse Color
 	*/ // ---------------------------------------------------------------------
-	constexpr inline glm::vec4 Material::GetDiffuse() const {
+	constexpr inline glm::vec4 Material::GetDiffuse() const noexcept {
 		return mDiffuse;
 	}
 
@@ -78,7 +113,7 @@ namespace Graphics {
 	*
 	*  Returns the Specular Color
 	*/ // ---------------------------------------------------------------------
-	constexpr inline glm::vec4 Material::GetSpecular() const {
+	constexpr inline glm::vec4 Material::GetSpecular() const noexcept {
 		return mSpecular;
 	}
 
@@ -87,16 +122,16 @@ namespace Graphics {
 	*
 	*  Returns the Emissive Color
 	*/ // ---------------------------------------------------------------------
-	constexpr inline glm::vec4 Material::GetEmissive() const {
+	constexpr inline glm::vec4 Material::GetEmissive() const noexcept {
 		return mEmissive;
 	}
 
 	// ------------------------------------------------------------------------
 	/*! Get Shininess
 	*
-	*  Returns the Shininess Color
+	*  Returns the Shininess intensity
 	*/ // ---------------------------------------------------------------------
-	constexpr  inline float Material::GetShininess() const {
+	constexpr  inline float Material::GetShininess() const noexcept {
 		return mShininess;
 	}
 }
