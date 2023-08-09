@@ -41,7 +41,7 @@ in vec3 oNormal;
 in vec3 oPosition;
 in vec3 oTangent;
 in vec3 oBitangent;
-in vec4 oShadowCoord;
+in vec4 oShadowCoord[8];
 
 layout(binding = 0) uniform sampler2D uDiffuseTex;
 layout(binding = 1) uniform sampler2D uNormalTex;
@@ -61,16 +61,19 @@ float ShadowCalculation(vec4 fragPosLightSpace, int light)
   float bias = 0.002;
 
   float shadow = 0.0;
-  vec2 texelSize = 1.0 / textureSize(depth_texture2[0], 0);
+  vec2 texelSize = 1.0 / textureSize(depth_texture2[light], 0);
   for(int x = -1; x <= 1; ++x)
   {
       for(int y = -1; y <= 1; ++y)
       {
-          float pcfDepth = texture(depth_texture2[0], projCoords.xy + vec2(x, y) * texelSize).r; 
+          float pcfDepth = texture(depth_texture2[light], projCoords.xy + vec2(x, y) * texelSize).r; 
           shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;        
       }    
   }
   shadow /= 9.0;
+
+    if(projCoords.z > 1.0)
+        shadow = 0.0;
 
     return shadow;
 } 
@@ -82,12 +85,11 @@ void main() {
     mat3 iVM3 = inverse(transpose(VM3));
     mat3 V_M_TBN = iVM3 * mat3(oTangent, oBitangent, oNormal);
     vec3 N = normalize(V_M_TBN * (texture(uNormalTex, oUVs).rgb * 2.0f - 1.0f));
-    float bias = 0.005;
-    float f = ShadowCalculation(oShadowCoord, 0);
 
     vec3 totalLightShine = vec3(0, 0, 0);
     
     for(int i = 0; i < uLightCount; i++) {
+        float f = ShadowCalculation(oShadowCoord[i], i);
         //ambient
         float ambientStrength = 0.1;
         vec3 ambient = uLight[i].amb;
@@ -97,9 +99,10 @@ void main() {
         
         vec3 lightDir;
         
-       if(uLight[i].type == 2)
+       if(uLight[i].type == 2) {
+            f = 0;
 			lightDir = -uLight[i].dir;
-		else
+		} else
 		     lightDir = normalize(uLight[i].pos - oPosition); 
 
         float diff = max(dot(norm, lightDir), 0.0);

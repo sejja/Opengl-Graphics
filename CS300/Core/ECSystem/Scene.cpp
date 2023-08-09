@@ -37,7 +37,7 @@ void Scene::CreateScene(const std::string_view& file, std::function<void(const s
 
 	int i = 0;
 	
-	std::for_each(std::execution::seq, mParser.lights.begin() + 2, mParser.lights.begin() + 4, [this, &i, &upload](const CS300Parser::Light& x) {
+	std::for_each(std::execution::seq, mParser.lights.begin(), mParser.lights.end(), [this, &i, &upload](const CS300Parser::Light& x) {
 		std::shared_ptr<Object> obj = std::move(std::make_shared<Object>());
 		obj->transform.mPostion = x.pos;
 		obj->transform.mScale = { 1.f, 1.f, 1.f };
