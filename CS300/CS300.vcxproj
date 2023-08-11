@@ -183,6 +183,7 @@
     <ClCompile Include="Graphics\Primitives\Shader.cpp" />
     <ClCompile Include="Graphics\Primitives\ShaderProgram.cpp" />
     <ClCompile Include="Graphics\Primitives\Model.cpp" />
+    <ClCompile Include="Graphics\Primitives\Skybox.cpp" />
     <ClCompile Include="Graphics\Primitives\Texture.cpp" />
     <ClCompile Include="Graphics\Primitives\Renderables.cpp" />
     <ClCompile Include="Core\ECSystem\Scene.cpp" />
@@ -257,6 +258,7 @@
     <ClInclude Include="Graphics\Primitives\Shader.h" />
     <ClInclude Include="Graphics\Primitives\ShaderProgram.h" />
     <ClInclude Include="Graphics\Primitives\Model.h" />
+    <ClInclude Include="Graphics\Primitives\Skybox.h" />
     <ClInclude Include="Graphics\Primitives\Texture.h" />
     <ClInclude Include="Graphics\Primitives\Renderables.h" />
     <ClInclude Include="Core\ECSystem\Scene.h" />

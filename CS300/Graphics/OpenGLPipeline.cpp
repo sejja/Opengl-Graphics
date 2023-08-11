@@ -44,8 +44,6 @@ namespace Core {
 			mShadowBuffers[2].CreateRenderTexture({ mDimensions.x * 2, mDimensions.y * 2 }, false);
 			mShadowBuffers[3].Create();
 			mShadowBuffers[3].CreateRenderTexture({ mDimensions.x * 2, mDimensions.y * 2 }, false);
-			mShadowBuffers[4].Create();
-			mShadowBuffers[4].CreateRenderTexture({ mDimensions.x * 2, mDimensions.y * 2 }, false);
 		}
 
 		// ------------------------------------------------------------------------
@@ -55,34 +53,6 @@ namespace Core {
 		*/ //----------------------------------------------------------------------
 		void OpenGLPipeline::PreRender() {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		}
-
-		unsigned int quadVAO = 0;
-		unsigned int quadVBO;
-		void renderQuad() {
-			if (quadVAO == 0)
-			{
-				float quadVertices[] = {
-					// positions        // texture Coords
-					-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-					-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-					 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
-					 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-				};
-				// setup plane VAO
-				glGenVertexArrays(1, &quadVAO);
-				glGenBuffers(1, &quadVBO);
-				glBindVertexArray(quadVAO);
-				glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-				glEnableVertexAttribArray(0);
-				glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-				glEnableVertexAttribArray(1);
-				glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-			}
-			glBindVertexArray(quadVAO);
-			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-			glBindVertexArray(0);
 		}
 
 		// ------------------------------------------------------------------------
@@ -164,8 +134,6 @@ namespace Core {
 				shadow_matrices.push_back(shadow_matrix);
 			}
 
-			#if 1
-
 			{
 				glm::mat4 view = cam.GetViewMatrix();
 				glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 10000.0f);
@@ -197,14 +165,6 @@ namespace Core {
 
 				f_flushobosoletes();
 			}
-
-			#else
-
-			static auto debugdepth = Singleton<ResourceManager>::Instance().GetResource<ShaderProgram>("Content/Shaders/DebugDepth.shader")->Get();
-			debugdepth->Bind();
-			renderQuad();
-		
-			#endif
 		}
 
 		// ------------------------------------------------------------------------
