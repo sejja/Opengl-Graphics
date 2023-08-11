@@ -8,7 +8,6 @@
 
 #include <execution>
 #include "OpenGLPipeline.h"
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Graphics/Camera.h"
 #include "Graphics/Primitives/Texture.h"
@@ -33,6 +32,18 @@ namespace Core {
 			glDisable(GL_BLEND);
 			glDisable(GL_STENCIL_TEST);
 			glClearColor(0.f, 0.f, 0.f, 0.f);
+			mShadowBuffers.emplace_back();
+			mShadowBuffers.emplace_back();
+			mShadowBuffers.emplace_back();
+			mShadowBuffers.emplace_back();
+			mShadowBuffers[0].Create();
+			mShadowBuffers[0].CreateRenderTexture({mDimensions.x * 2, mDimensions.y * 2}, false);
+			mShadowBuffers[1].Create();
+			mShadowBuffers[1].CreateRenderTexture({ mDimensions.x * 2, mDimensions.y * 2 }, false);
+			mShadowBuffers[2].Create();
+			mShadowBuffers[2].CreateRenderTexture({ mDimensions.x * 2, mDimensions.y * 2 }, false);
+			mShadowBuffers[3].Create();
+			mShadowBuffers[3].CreateRenderTexture({ mDimensions.x * 2, mDimensions.y * 2 }, false);
 		}
 
 		// ------------------------------------------------------------------------
@@ -51,63 +62,109 @@ namespace Core {
 		*/ //----------------------------------------------------------------------
 		void OpenGLPipeline::Render() {
 			static Primitives::Camera cam;
+			std::unordered_multimap<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Renderable>>::const_iterator> obsoletes;
 
-			//If we want to see the Wireframe
-			if (Singleton<InputManager>::Instance().IsKeyDown('Z'))
-				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-			else
-				glPolygonMode(GL_FRONT, GL_FILL);
+			auto f_flushobosoletes = [this , &obsoletes]() {
+				std::for_each(std::execution::par, obsoletes.begin(), obsoletes.end(), [this, &obsoletes](std::pair<const Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Renderable>>::const_iterator> x) {
+					std::vector<std::weak_ptr<Renderable>>& it = mGroupedRenderables.find(x.first)->second;
+					it.erase(x.second);
 
-			glm::mat4 view = cam.GetViewMatrix();
-			glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 10000.0f);
-			std::unordered_multimap<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Core::Renderable>>::const_iterator> obsoletes;
+					//If we don't have any other renderables, erase it
+					if (!it.size()) mGroupedRenderables.erase(x.first);
+					});
+			};
 
-			std::for_each(std::execution::unseq, mRenderables.begin(), mRenderables.end(), [this, &obsoletes, &projection, &view](const std::pair<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Core::Renderable>>>& it) {
-				Core::Graphics::ShaderProgram* shader = it.first->Get();
-
-				//If we want to see the UV Channels, toogle to them
-				if (Singleton<InputManager>::Instance().IsKeyDown('V')) {
-					shader = Singleton<ResourceManager>::Instance().GetResource<Core::Graphics::ShaderProgram>("Content/Shaders/UVs.shader")->Get();
-					shader->Bind();
-				} else {
-					shader->Bind();
-					shader->SetShaderUniform("uCameraPos", &cam.mPosition);
-					UploadLightDataToGPU(it.first);
-					auto tex = Singleton<ResourceManager>::Instance().GetResource<::Graphics::Texture>("Content/Textures/UV.jpg")->Get();
-					tex->SetTextureType(::Graphics::Texture::TextureType::eDiffuse);
-					tex->Bind();
-					auto normals = Singleton<ResourceManager>::Instance().GetResource<::Graphics::Texture>("Content/Textures/BrickNormal.png")->Get();
-					normals->SetTextureType(::Graphics::Texture::TextureType::eNormal);
-					normals->Bind();
-				}
-
-				shader->SetShaderUniform("uTransform", &projection);
-				shader->SetShaderUniform("uView", &view);
-
+			auto f_grouprender = [&obsoletes](const std::pair<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Renderable>>>& it, ShaderProgram * shader) {
 				//For each renderable in shader program
-				for (std::vector<std::weak_ptr<Core::Renderable>>::const_iterator it2 = it.second.begin(); it2 != it.second.end(); it2++) {
+				for (std::vector<std::weak_ptr<Renderable>>::const_iterator it2 = it.second.begin(); it2 != it.second.end(); it2++) {
 					//If it isn't expired
 					if (auto renderable = it2->lock()) {
 						const std::shared_ptr<Object> parent = renderable->mParent.lock();
 						glm::mat4 matrix = glm::translate(glm::mat4(1.0f), parent->transform.mPostion) *
+							glm::rotate(glm::mat4(1.0f), parent->transform.mRotation.z, glm::vec3(0.0f, 0.0f, 1.0f)) *
 							glm::rotate(glm::mat4(1.0f), parent->transform.mRotation.y, glm::vec3(1.0f, 0.0f, 0.0f)) *
 							glm::rotate(glm::mat4(1.0f), parent->transform.mRotation.x, glm::vec3(0.0f, 1.0f, 0.0f)) *
 							glm::scale(glm::mat4(1.0f), parent->transform.mScale);
 						shader->SetShaderUniform("uModel", &matrix);
-						reinterpret_cast<Core::ModelRenderer<Core::GraphicsAPIS::OpenGL>*>(renderable.get())->Render();
-					} else {
+						reinterpret_cast<ModelRenderer<Core::GraphicsAPIS::OpenGL>*>(renderable.get())->Render();
+					}
+					else {
 						obsoletes.insert(std::make_pair(it.first, it2));
 					}
 				}
-			});
-			
-			std::for_each(std::execution::par, obsoletes.begin(), obsoletes.end(), [this](std::pair<const Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Core::Renderable>>::const_iterator> x) {
-				std::vector<std::weak_ptr<Core::Renderable>>& it = mRenderables.find(x.first)->second;
-				it.erase(x.second);
-			
-				//If we don't have any other renderables, erase it
-				if (!it.size()) mRenderables.erase(x.first);
-				});
+			};
+
+			glCullFace(GL_FRONT);
+			for(int i = 0; i < ::Graphics::Primitives::Light::sLightReg; i++) {
+				mShadowBuffers[i].Bind();
+				mShadowBuffers[i].Clear(true);
+
+				auto up = glm::normalize(glm::cross(glm::cross(-::Graphics::Primitives::Light::sLightData[i].mPosition, glm::vec3(0, 1, 0)), -::Graphics::Primitives::Light::sLightData[i].mPosition));
+				glm::mat4 lightProjection = glm::perspective(glm::radians(120.f), 1.33f, 1.f, 2000.f);
+				glm::mat4 lightView = glm::lookAt(::Graphics::Primitives::Light::sLightData[i].mPosition, glm::vec3(0.0, -15, 50), glm::vec3(0, 1, 0));
+
+				{
+					const auto shadow = Singleton<ResourceManager>::Instance().GetResource<ShaderProgram>("Content/Shaders/Shadow.shader")->Get();
+					shadow->Bind();
+					shadow->SetShaderUniform("uTransform", &lightProjection);
+					shadow->SetShaderUniform("uView", &lightView);
+
+					std::for_each(std::execution::unseq, mGroupedRenderables.begin(), mGroupedRenderables.end(), [this, &shadow, &obsoletes, &f_grouprender](const std::pair<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Renderable>>>& it) {
+						f_grouprender(it, shadow);
+						});
+
+					f_flushobosoletes();
+				}
+
+				mShadowBuffers[i].Unbind();
+
+			}
+
+			glCullFace(GL_BACK);
+			glViewport(0, 0, mDimensions.x, mDimensions.y);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			std::vector<glm::mat4> shadow_matrices;
+
+			for(int i = 0; i < ::Graphics::Primitives::Light::sLightReg; i++) {
+				mShadowBuffers[i].BindTexture(2 + i);
+				auto up = glm::normalize(glm::cross(glm::cross(-::Graphics::Primitives::Light::sLightData[i].mPosition, glm::vec3(0, 1, 0)), -::Graphics::Primitives::Light::sLightData[i].mPosition));
+				glm::mat4 lightProjection = glm::perspective(glm::radians(120.f), 1.33f, 1.f, 2000.f);
+				glm::mat4 lightView = glm::lookAt(::Graphics::Primitives::Light::sLightData[i].mPosition, glm::vec3(0.0, -15, 50), glm::vec3(0, 1, 0));
+				glm::mat4 shadow_matrix = lightProjection * lightView;
+				shadow_matrices.push_back(shadow_matrix);
+			}
+
+			{
+				glm::mat4 view = cam.GetViewMatrix();
+				glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 10000.0f);
+
+				std::for_each(std::execution::unseq, mGroupedRenderables.begin(), mGroupedRenderables.end(), [this, &shadow_matrices, &obsoletes, &projection, &view, &f_grouprender](const std::pair<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Renderable>>>& it) {
+					Core::Graphics::ShaderProgram* shader = it.first->Get();
+
+					shader->Bind();
+					
+					shader->SetShaderUniform("uCameraPos", &cam.GetPositionRef());
+					shader->SetShaderUniform("uTransform", &projection);
+					shader->SetShaderUniform("uView", &view);
+
+					for(int i = 0; i < ::Graphics::Primitives::Light::sLightReg; i++) {
+						shader->SetShaderUniform("uShadowMatrix[" + std::to_string(i) + "]", shadow_matrices.data() + i);
+					}
+
+					
+					UploadLightDataToGPU(it.first);
+					auto tex = Singleton<ResourceManager>::Instance().GetResource<Texture>("Content/Textures/UV.jpg")->Get();
+					tex->SetTextureType(Texture::TextureType::eDiffuse);
+					tex->Bind();
+					auto normals = Singleton<ResourceManager>::Instance().GetResource<Texture>("Content/Textures/BrickNormal.png")->Get();
+					normals->SetTextureType(Texture::TextureType::eNormal);
+					normals->Bind();
+					f_grouprender(it, shader);
+
+					});
+
+				f_flushobosoletes();
+			}
 		}
 
 		// ------------------------------------------------------------------------
@@ -134,6 +191,16 @@ namespace Core {
 			}
 
 			shadptr->SetShaderUniform("uLightCount", static_cast<int>(::Graphics::Primitives::Light::sLightReg));
+		}
+
+		// ------------------------------------------------------------------------
+		/*! Set Dimension
+		*
+		*   Sets the Viewport Size on OpenGL
+		*/ //----------------------------------------------------------------------
+		void OpenGLPipeline::SetDimensions(const glm::lowp_u16vec2& dim) {
+			glViewport(0, 0, dim.x, dim.y);
+			mDimensions = dim;
 		}
 	}
 }

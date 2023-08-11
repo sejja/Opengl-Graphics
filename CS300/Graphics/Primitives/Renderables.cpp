@@ -13,16 +13,26 @@
 #include <glew.h>
 
 namespace Core {
-	// ------------------------------------------------------------------------
-	/*! Render
-	*
-	*   Renders this  Model
-	*/ //----------------------------------------------------------------------
-	void ModelRenderer<GraphicsAPIS::OpenGL>::Render() {
-		Model* const model = mModel->Get();
-	
-		model->set_uniforms(*mShaderProgram->Get());
-		glBindVertexArray(model->GetVao());
-		glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(model->GetVertexCount()));
+	namespace Graphics {
+		// ------------------------------------------------------------------------
+		/*! Render
+		*
+		*   Renders this  Model
+		*/ //----------------------------------------------------------------------
+		void ModelRenderer<GraphicsAPIS::OpenGL>::Render() const noexcept {
+			Model* const model = mModel->Get();
+
+			model->SetShaderUniforms(*mShaderProgram->Get());
+			glBindVertexArray(model->GetHandle());
+			glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(model->GetVertexCount()));
+		}
+
+		// ------------------------------------------------------------------------
+		/*! Constructor
+		*
+		*   Constructs a renderable with it's parent object
+		*/ //----------------------------------------------------------------------
+		Renderable::Renderable(const std::weak_ptr<Object>& parent) :
+			Component(parent) {}
 	}
 }

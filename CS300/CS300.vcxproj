@@ -23,7 +23,8 @@
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{f9f07724-0104-491b-b7a5-8ab417e1bb33}</ProjectGuid>
     <RootNamespace>CS300</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.22000.0</WindowsTargetPlatformVersion>
+    <ProjectName>OpenGL Graphics</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -182,12 +183,15 @@
     <ClCompile Include="Graphics\Primitives\Shader.cpp" />
     <ClCompile Include="Graphics\Primitives\ShaderProgram.cpp" />
     <ClCompile Include="Graphics\Primitives\Model.cpp" />
+    <ClCompile Include="Graphics\Primitives\Skybox.cpp" />
     <ClCompile Include="Graphics\Primitives\Texture.cpp" />
     <ClCompile Include="Graphics\Primitives\Renderables.cpp" />
     <ClCompile Include="Core\ECSystem\Scene.cpp" />
     <ClCompile Include="Core\Window\SDLWindow.cpp" />
     <ClCompile Include="Dependencies\GLM\detail\glm.cpp" />
     <ClCompile Include="Dependencies\STB\stb_vorbis.c" />
+    <ClCompile Include="Graphics\Tools\FrameBuffer.cpp" />
+    <ClCompile Include="Graphics\Tools\OpenGLInfo.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Graphics\OpenGLPipeline.cpp" />
   </ItemGroup>
@@ -254,6 +258,7 @@
     <ClInclude Include="Graphics\Primitives\Shader.h" />
     <ClInclude Include="Graphics\Primitives\ShaderProgram.h" />
     <ClInclude Include="Graphics\Primitives\Model.h" />
+    <ClInclude Include="Graphics\Primitives\Skybox.h" />
     <ClInclude Include="Graphics\Primitives\Texture.h" />
     <ClInclude Include="Graphics\Primitives\Renderables.h" />
     <ClInclude Include="Core\ECSystem\Scene.h" />
@@ -654,10 +659,18 @@
     <ClInclude Include="Graphics\OpenGLPipeline.h" />
     <ClInclude Include="Core\Math\Transform.h" />
     <ClInclude Include="Core\Singleton.h" />
+    <ClInclude Include="Graphics\Tools\FrameBuffer.h" />
+    <ClInclude Include="Graphics\Tools\OpenGLInfo.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\Maps\Scene.level" />
     <None Include="Content\Maps\Scene2.level" />
+    <None Include="Content\Shaders\DebugDepth.frag" />
+    <None Include="Content\Shaders\DebugDepth.shader" />
+    <None Include="Content\Shaders\DebugDepth.vert" />
+    <None Include="Content\Shaders\Shadow.frag" />
+    <None Include="Content\Shaders\Shadow.shader" />
+    <None Include="Content\Shaders\Shadow.vert" />
     <None Include="Content\Shaders\SolidColor.vert" />
     <None Include="Content\Shaders\Textured.frag" />
     <None Include="Content\Shaders\Textured.shader" />

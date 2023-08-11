@@ -87,6 +87,15 @@
     <ClCompile Include="Core\Events\EventDispatcher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\Tools\FrameBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Tools\OpenGLInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Primitives\Skybox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dependencies\STB\stb.h">
@@ -1475,6 +1484,15 @@
     <ClInclude Include="Core\RTTI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Graphics\Tools\FrameBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Tools\OpenGLInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Primitives\Skybox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies\SDL\Include\SDL_config.h.cmake" />
@@ -1898,6 +1916,12 @@
     <None Include="Content\Shaders\SolidColor.vert" />
     <None Include="Content\Shaders\White.shader" />
     <None Include="Content\Maps\Scene2.level" />
+    <None Include="Content\Shaders\Shadow.frag" />
+    <None Include="Content\Shaders\Shadow.shader" />
+    <None Include="Content\Shaders\Shadow.vert" />
+    <None Include="Content\Shaders\DebugDepth.frag" />
+    <None Include="Content\Shaders\DebugDepth.vert" />
+    <None Include="Content\Shaders\DebugDepth.shader" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Dependencies\GLM\CMakeLists.txt" />
