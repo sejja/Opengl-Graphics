@@ -51,6 +51,8 @@ namespace Core {
 			inline void SetShaderProgram(const AssetReference<Graphics::ShaderProgram>& s);
 			DONTDISCARD inline AssetReference<Graphics::ShaderProgram> GetShaderProgram();
 			void Render() const noexcept override;
+			inline void SetProcudesShadow(const bool shadow) noexcept;
+			inline bool GetProcudesShadow() const noexcept;
 #pragma endregion
 
 #pragma region //Variables

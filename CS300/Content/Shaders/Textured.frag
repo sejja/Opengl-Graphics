@@ -58,7 +58,7 @@ float ShadowCalculation(vec4 fragPosLightSpace, int light)
     // get depth of current fragment from light's perspective
     float currentDepth = projCoords.z;
     // check whether current frag pos is in shadow
-  float bias = 0.002;
+  float bias = 0.001;
 
   float shadow = 0.0;
   vec2 texelSize = 1.0 / textureSize(depth_texture2[light], 0);
@@ -95,7 +95,7 @@ void main() {
         vec3 ambient = uLight[i].amb;
   
         //diffuse
-        vec3 norm = normalize(mat3(transpose(inverse(uModel))) * oNormal);
+        vec3 norm = normalize(mat3(transpose(inverse(uModel))) * N);
         
         vec3 lightDir;
         
@@ -141,5 +141,5 @@ void main() {
         totalLightShine += att * ((ambient + Spotlight * (1 - f) * diffuse + specular));
    }
   
-    FragColor = vec4(totalLightShine, 1.0);
+    FragColor = texture(uDiffuseTex, oUVs) * vec4(totalLightShine, 1.0);
 }

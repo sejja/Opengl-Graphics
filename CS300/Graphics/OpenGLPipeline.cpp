@@ -32,6 +32,8 @@ namespace Core {
 			glDisable(GL_BLEND);
 			glDisable(GL_STENCIL_TEST);
 			glClearColor(0.f, 0.f, 0.f, 0.f);
+			Singleton<ResourceManager>::Instance().GetResource<Texture>("Content/Textures/UV.jpg")->Get();
+			Singleton<ResourceManager>::Instance().GetResource<Texture>("Content/Textures/BrickNormal.png")->Get();
 			mShadowBuffers.emplace_back();
 			mShadowBuffers.emplace_back();
 			mShadowBuffers.emplace_back();
@@ -143,22 +145,25 @@ namespace Core {
 
 					shader->Bind();
 					
-					shader->SetShaderUniform("uCameraPos", &cam.GetPositionRef());
 					shader->SetShaderUniform("uTransform", &projection);
 					shader->SetShaderUniform("uView", &view);
 
-					for(int i = 0; i < ::Graphics::Primitives::Light::sLightReg; i++) {
-						shader->SetShaderUniform("uShadowMatrix[" + std::to_string(i) + "]", shadow_matrices.data() + i);
-					}
+					try {
+						shader->SetShaderUniform("uCameraPos", &cam.GetPositionRef());
 
-					
-					UploadLightDataToGPU(it.first);
-					auto tex = Singleton<ResourceManager>::Instance().GetResource<Texture>("Content/Textures/UV.jpg")->Get();
-					tex->SetTextureType(Texture::TextureType::eDiffuse);
-					tex->Bind();
-					auto normals = Singleton<ResourceManager>::Instance().GetResource<Texture>("Content/Textures/BrickNormal.png")->Get();
-					normals->SetTextureType(Texture::TextureType::eNormal);
-					normals->Bind();
+						for (int i = 0; i < ::Graphics::Primitives::Light::sLightReg; i++) {
+							shader->SetShaderUniform("uShadowMatrix[" + std::to_string(i) + "]", shadow_matrices.data() + i);
+						}
+
+
+						UploadLightDataToGPU(it.first);
+						auto tex = Singleton<ResourceManager>::Instance().GetResource<Texture>("Content/Textures/UV.jpg")->Get();
+						tex->SetTextureType(Texture::TextureType::eDiffuse);
+						tex->Bind();
+						auto normals = Singleton<ResourceManager>::Instance().GetResource<Texture>("Content/Textures/BrickNormal.png")->Get();
+						normals->SetTextureType(Texture::TextureType::eNormal);
+						normals->Bind();
+					} catch (...) {}
 					f_grouprender(it, shader);
 
 					});
