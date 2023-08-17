@@ -11,6 +11,7 @@
 #include "Core/Pipeline.h"
 #include "Graphics/Primitives/Light.h"
 #include "Core/Singleton.h"
+#include "Graphics/Primitives/Skybox.h"
 
 CS300Parser Scene::mParser;
 
@@ -29,7 +30,11 @@ void Scene::CreateScene(const std::string_view& file, std::function<void(const s
 		obj->transform.mScale = x.sca;
 		std::unique_ptr<Core::Graphics::ModelRenderer<Core::GraphicsAPIS::OpenGL>> renderer = std::move(std::make_unique<Core::Graphics::ModelRenderer<Core::GraphicsAPIS::OpenGL>>(obj));
 		renderer->SetMesh(Singleton<ResourceManager>::Instance().GetResource<Core::Graphics::Model>(x.mesh.c_str()));
-		renderer->SetShaderProgram(Singleton<ResourceManager>::Instance().GetResource<Core::Graphics::ShaderProgram>("Content/Shaders/Textured.shader"));
+		
+		if(x.name == "suzanne_mesh")
+			renderer->SetShaderProgram(Singleton<ResourceManager>::Instance().GetResource<Core::Graphics::ShaderProgram>("Content/Shaders/Refractive.shader"));
+		else
+			renderer->SetShaderProgram(Singleton<ResourceManager>::Instance().GetResource<Core::Graphics::ShaderProgram>("Content/Shaders/Textured.shader"));
 		obj->components.emplace_back(std::move(renderer));
 		upload(obj);
 		mObjects.emplace_back(std::move(obj));
@@ -92,6 +97,13 @@ void Scene::CreateScene(const std::string_view& file, std::function<void(const s
 		upload(obj);
 		mObjects.emplace_back(std::move(obj));
 	});
+
+	std::shared_ptr<Object> sky = std::move(std::make_shared<Object>());
+	auto skycomp = std::make_shared<Core::Graphics::Skybox>(sky);
+	skycomp->CreateCubeMap();
+	sky->components.emplace_back(skycomp);
+	mObjects.emplace_back(sky);
+
 }
 
 // ------------------------------------------------------------------------

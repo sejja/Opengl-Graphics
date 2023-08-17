@@ -1922,6 +1922,11 @@
     <None Include="Content\Shaders\DebugDepth.frag" />
     <None Include="Content\Shaders\DebugDepth.vert" />
     <None Include="Content\Shaders\DebugDepth.shader" />
+    <None Include="Content\Shaders\SkyBox.vert" />
+    <None Include="Content\Shaders\SkyBox.frag" />
+    <None Include="Content\Shaders\SkyBox.shader" />
+    <None Include="Content\Shaders\Refractive.frag" />
+    <None Include="Content\Shaders\Refractive.shader" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Dependencies\GLM\CMakeLists.txt" />

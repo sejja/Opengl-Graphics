@@ -46,6 +46,8 @@ in vec4 oShadowCoord[8];
 layout(binding = 0) uniform sampler2D uDiffuseTex;
 layout(binding = 1) uniform sampler2D uNormalTex;
 layout(binding = 2) uniform sampler2D depth_texture2[8];
+layout(binding = 9) uniform samplerCube uSkyBox;
+
 
 float ShadowCalculation(vec4 fragPosLightSpace, int light)
 {
@@ -84,7 +86,6 @@ void main() {
     mat3 VM3 = mat3(VM);
     mat3 iVM3 = inverse(transpose(VM3));
     mat3 V_M_TBN = iVM3 * mat3(oTangent, oBitangent, oNormal);
-    vec3 N = normalize(V_M_TBN * (texture(uNormalTex, oUVs).rgb * 2.0f - 1.0f));
 
     vec3 totalLightShine = vec3(0, 0, 0);
     
@@ -95,7 +96,7 @@ void main() {
         vec3 ambient = uLight[i].amb;
   
         //diffuse
-        vec3 norm = normalize(mat3(transpose(inverse(uModel))) * N);
+        vec3 norm = normalize(mat3(transpose(inverse(uModel))) * oNormal);
         
         vec3 lightDir;
         
@@ -141,5 +142,7 @@ void main() {
         totalLightShine += att * ((ambient + Spotlight * (1 - f) * diffuse + specular));
    }
   
-    FragColor = texture(uDiffuseTex, oUVs) * vec4(totalLightShine, 1.0);
+    vec3 I = normalize(oPosition - uCameraPos);
+    vec3 R = reflect(I, normalize(oNormal));
+    FragColor = vec4(texture(uSkyBox, R).rgb, 1.0) * vec4(totalLightShine, 1.0);
 }

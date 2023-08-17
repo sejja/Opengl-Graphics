@@ -668,9 +668,14 @@
     <None Include="Content\Shaders\DebugDepth.frag" />
     <None Include="Content\Shaders\DebugDepth.shader" />
     <None Include="Content\Shaders\DebugDepth.vert" />
+    <None Include="Content\Shaders\Refractive.frag" />
+    <None Include="Content\Shaders\Refractive.shader" />
     <None Include="Content\Shaders\Shadow.frag" />
     <None Include="Content\Shaders\Shadow.shader" />
     <None Include="Content\Shaders\Shadow.vert" />
+    <None Include="Content\Shaders\SkyBox.frag" />
+    <None Include="Content\Shaders\SkyBox.shader" />
+    <None Include="Content\Shaders\SkyBox.vert" />
     <None Include="Content\Shaders\SolidColor.vert" />
     <None Include="Content\Shaders\Textured.frag" />
     <None Include="Content\Shaders\Textured.shader" />
