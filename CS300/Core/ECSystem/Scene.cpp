@@ -11,6 +11,7 @@
 #include "Core/Pipeline.h"
 #include "Graphics/Primitives/Light.h"
 #include "Core/Singleton.h"
+#include "Graphics/Primitives/Skybox.h"
 
 CS300Parser Scene::mParser;
 
@@ -92,6 +93,13 @@ void Scene::CreateScene(const std::string_view& file, std::function<void(const s
 		upload(obj);
 		mObjects.emplace_back(std::move(obj));
 	});
+
+	std::shared_ptr<Object> sky = std::move(std::make_shared<Object>());
+	auto skycomp = std::make_shared<Core::Graphics::Skybox>(sky);
+	skycomp->CreateCubeMap();
+	sky->components.emplace_back(skycomp);
+	mObjects.emplace_back(sky);
+
 }
 
 // ------------------------------------------------------------------------

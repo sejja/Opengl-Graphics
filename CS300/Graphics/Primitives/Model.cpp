@@ -209,8 +209,7 @@ namespace Core {
 			glBindVertexArray(mVAO);
 
 			glBindBuffer(GL_ARRAY_BUFFER, mVBO);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(tinyobj::real_t) * vertices.size(),
-				vertices.data(), GL_STATIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(tinyobj::real_t), vertices.data(), GL_STATIC_DRAW);
 			mCount = vertices.size();
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBO);

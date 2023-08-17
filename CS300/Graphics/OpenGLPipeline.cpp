@@ -15,6 +15,7 @@
 #include "Graphics/Primitives/Light.h"
 #include "Core/Singleton.h"
 #include "Graphics/Primitives/Texture.h"
+#include "Graphics/Primitives/Skybox.h"
 
 namespace Core {
 	namespace Graphics {
@@ -102,7 +103,7 @@ namespace Core {
 				mShadowBuffers[i].Clear(true);
 
 				auto up = glm::normalize(glm::cross(glm::cross(-::Graphics::Primitives::Light::sLightData[i].mPosition, glm::vec3(0, 1, 0)), -::Graphics::Primitives::Light::sLightData[i].mPosition));
-				glm::mat4 lightProjection = glm::perspective(glm::radians(120.f), 1.33f, 1.f, 2000.f);
+				glm::mat4 lightProjection = glm::perspective(glm::radians(120.f), 1.33f, 2.f, 2000.f);
 				glm::mat4 lightView = glm::lookAt(::Graphics::Primitives::Light::sLightData[i].mPosition, glm::vec3(0.0, -15, 50), glm::vec3(0, 1, 0));
 
 				{
@@ -130,7 +131,7 @@ namespace Core {
 			for(int i = 0; i < ::Graphics::Primitives::Light::sLightReg; i++) {
 				mShadowBuffers[i].BindTexture(2 + i);
 				auto up = glm::normalize(glm::cross(glm::cross(-::Graphics::Primitives::Light::sLightData[i].mPosition, glm::vec3(0, 1, 0)), -::Graphics::Primitives::Light::sLightData[i].mPosition));
-				glm::mat4 lightProjection = glm::perspective(glm::radians(120.f), 1.33f, 1.f, 2000.f);
+				glm::mat4 lightProjection = glm::perspective(glm::radians(120.f), 1.33f, 2.f, 2000.f);
 				glm::mat4 lightView = glm::lookAt(::Graphics::Primitives::Light::sLightData[i].mPosition, glm::vec3(0.0, -15, 50), glm::vec3(0, 1, 0));
 				glm::mat4 shadow_matrix = lightProjection * lightView;
 				shadow_matrices.push_back(shadow_matrix);
@@ -170,6 +171,8 @@ namespace Core {
 
 				f_flushobosoletes();
 			}
+
+			Skybox::sCurrentSky->Render(cam);
 		}
 
 		// ------------------------------------------------------------------------
