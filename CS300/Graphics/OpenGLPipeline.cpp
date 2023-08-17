@@ -140,6 +140,7 @@ namespace Core {
 			{
 				glm::mat4 view = cam.GetViewMatrix();
 				glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 10000.0f);
+				Skybox::sCurrentSky->UploadSkyboxCubeMap();
 
 				std::for_each(std::execution::unseq, mGroupedRenderables.begin(), mGroupedRenderables.end(), [this, &shadow_matrices, &obsoletes, &projection, &view, &f_grouprender](const std::pair<Asset<Core::Graphics::ShaderProgram>, std::vector<std::weak_ptr<Renderable>>>& it) {
 					Core::Graphics::ShaderProgram* shader = it.first->Get();

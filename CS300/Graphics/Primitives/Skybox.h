@@ -13,6 +13,7 @@ namespace Core {
 			void LoadCubeMap(std::string path);
 			void CreateCubeMap();
 			void Render(Core::Primitives::Camera& cam);
+			void UploadSkyboxCubeMap();
 			static Skybox* sCurrentSky;
 		private:
 			Asset<ShaderProgram> mShaderProgram;

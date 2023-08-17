@@ -1927,7 +1927,6 @@
     <None Include="Content\Shaders\SkyBox.shader" />
     <None Include="Content\Shaders\Refractive.frag" />
     <None Include="Content\Shaders\Refractive.shader" />
-    <None Include="Content\Shaders\Refractive.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Dependencies\GLM\CMakeLists.txt" />

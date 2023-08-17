@@ -87,5 +87,10 @@ namespace Core {
 
             glDepthFunc(GL_LESS);
         }
+
+        void Skybox::UploadSkyboxCubeMap() {
+            glActiveTexture(GL_TEXTURE9);
+            glBindTexture(GL_TEXTURE_CUBE_MAP, mMapHandle);
+        }
     }
 }

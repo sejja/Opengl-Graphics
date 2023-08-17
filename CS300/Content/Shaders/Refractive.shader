@@ -1,4 +1,4 @@
 {
-	"Vertex" : "Content/Shaders/Refractive.vert",
+	"Vertex" : "Content/Shaders/Transform.vert",
 	"Fragment" : "Content/Shaders/Refractive.frag"
 }
