@@ -17,6 +17,12 @@
 ⚡️ Skybox
 ⚡️ Refraction
 
+## Controls🎮 
+- w: move camera forward
+- a: move camera left
+- s: move camera backwards
+- d: move camera right
+
 ## Installation & Deployment 📦
 - Clone the repository
 - Open and build using Visual Studio 2023
